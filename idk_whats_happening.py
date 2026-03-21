@@ -2,6 +2,8 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+from dotenv import load_dotenv
+load_dotenv()
 
 # your factor extraction logic using LangChain
 sample_text = """
