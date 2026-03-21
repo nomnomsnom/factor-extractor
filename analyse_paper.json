@@ -1,0 +1,28 @@
+{
+    "factors": [
+        {
+            "name": "momentum factor",
+            "description": "12-month return excluding the most recent month",
+            "data_required": [
+                "monthly returns",
+                "historical price data"
+            ]
+        },
+        {
+            "name": "value factor",
+            "description": "measured by book-to-market ratio",
+            "data_required": [
+                "book value",
+                "market value",
+                "financial statements"
+            ]
+        }
+    ],
+    "research_papers": [
+        {
+            "name": "snom's practice paper",
+            "methodology": "OLS regression",
+            "sample_size": "5,000 US equities from 1990 to 2020"
+        }
+    ]
+}
