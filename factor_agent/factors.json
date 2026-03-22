@@ -1,0 +1,178 @@
+[
+    {
+        "factor_name": "Factor Momentum",
+        "description": "Momentum strategy based on factor returns rather than individual stock returns, where factors that have performed well recently continue to outperform",
+        "data_required": [
+            "factor returns",
+            "factor performance history",
+            "factor rankings"
+        ],
+        "methodology": "Rank factors based on recent performance and go long top-performing factors while shorting poor-performing factors",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 0
+    },
+    {
+        "factor_name": "Stock Momentum",
+        "description": "Traditional momentum strategy based on individual stock price momentum, where stocks with strong recent performance continue to outperform",
+        "data_required": [
+            "individual stock returns",
+            "stock price history",
+            "stock rankings"
+        ],
+        "methodology": "Rank stocks based on recent return performance and construct long-short portfolios",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 0
+    },
+    {
+        "factor_name": "Factor Exposure",
+        "description": "The sensitivity or loading of individual stocks to specific risk factors",
+        "data_required": [
+            "stock returns",
+            "factor returns",
+            "factor loadings",
+            "beta coefficients"
+        ],
+        "methodology": "Calculate factor betas through regression of stock returns on factor returns",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 0
+    },
+    {
+        "factor_name": "Stock Momentum",
+        "description": "Momentum effect observed in individual stock returns across different time lags",
+        "data_required": [
+            "individual stock returns",
+            "historical price data",
+            "return time series"
+        ],
+        "methodology": "Analysis of momentum patterns in stock returns at various lag periods",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 0
+    },
+    {
+        "factor_name": "Factor Momentum",
+        "description": "Momentum effect observed in factor returns across different time lags",
+        "data_required": [
+            "factor returns",
+            "factor performance data",
+            "factor time series"
+        ],
+        "methodology": "Analysis of momentum patterns in factor returns at various lag periods",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 0
+    },
+    {
+        "factor_name": "Factor Momentum",
+        "description": "A phenomenon where factors that have performed well in the recent past tend to continue performing well in the future",
+        "data_required": [
+            "Historical factor returns",
+            "Factor performance rankings",
+            "Time series of factor returns"
+        ],
+        "methodology": "Sort factors based on past performance and analyze persistence of returns across time periods",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Stock Momentum",
+        "description": "The tendency for stocks that have performed well (poorly) in the recent past to continue performing well (poorly) in the near future",
+        "data_required": [
+            "Historical stock returns",
+            "Stock price data",
+            "Return rankings"
+        ],
+        "methodology": "Sort stocks based on past returns and analyze continuation of performance patterns",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Factor Momentum",
+        "description": "Momentum effect observed in factor returns, where factors that have performed well continue to perform well",
+        "data_required": [
+            "Factor returns",
+            "Historical factor performance"
+        ],
+        "methodology": "Analysis of persistent returns in factors over time",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Stock Momentum",
+        "description": "Momentum effect observed in individual stock returns, where stocks that have performed well continue to perform well",
+        "data_required": [
+            "Individual stock returns",
+            "Historical stock performance"
+        ],
+        "methodology": "Analysis of persistent returns in individual stocks over time",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "72 Documented Signals",
+        "description": "Collection of 72 academic signals used to construct factors from published literature",
+        "data_required": [
+            "US stock data",
+            "Signal construction variables as per literature"
+        ],
+        "methodology": "Replication of factor construction as long-short dollar-neutral portfolios with dynamic market exposure hedging",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Equal-Risk Factor Portfolio",
+        "description": "Portfolio constructed by taking equal-risk weighted average of multiple factors",
+        "data_required": [
+            "Individual factor returns",
+            "Factor volatilities for risk weighting"
+        ],
+        "methodology": "Equal-risk weighting of 72 factors to create diversified factor portfolio",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Factor Momentum (Cross-sectional)",
+        "description": "A strategy that buys the most successful factors and sells the least performing ones based on relative performance rankings",
+        "data_required": [
+            "Factor returns",
+            "Performance rankings",
+            "Cross-sectional factor performance data"
+        ],
+        "methodology": "Rank factors by performance and construct long-short portfolio based on relative performance",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Factor Momentum (Directional)",
+        "description": "A strategy that buys factors with past positive returns and sells factors with past negative returns",
+        "data_required": [
+            "Historical factor returns",
+            "Factor sign/direction data"
+        ],
+        "methodology": "Construct portfolio by buying factors with positive past returns and selling factors with negative past returns",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Equal-Risk Factor Portfolio",
+        "description": "An equally-weighted portfolio of factors based on risk contribution rather than dollar allocation",
+        "data_required": [
+            "Factor returns",
+            "Factor volatilities",
+            "Risk measures"
+        ],
+        "methodology": "Weight factors equally by risk contribution to create balanced risk exposure",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Dollar-Neutral Portfolio",
+        "description": "Portfolio construction methodology that maintains zero net dollar exposure",
+        "data_required": [
+            "Long positions",
+            "Short positions",
+            "Dollar exposures"
+        ],
+        "methodology": "Construct portfolio with equal dollar amounts in long and short positions",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    }
+]
