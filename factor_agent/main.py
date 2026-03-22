@@ -7,6 +7,6 @@ chunks = load_and_chunk("papers/")
 all_factors = []
 for chunk in chunks[:CHUNKS_TO_PROCESS]:
     factors = extract_factors_from_chunk(chunk)
-    all_factors.extend(factors)
-save_factors(all_factors)
-print(load_factors())
+    all_factors.extend(factors) #factors and all_factors are lists, so use extend
+save_factors(all_factors,'factors.json')
+print(load_factors('factors.json'))
