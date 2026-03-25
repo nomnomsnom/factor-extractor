@@ -1,0 +1,12 @@
+{
+    "test": "Welch two-sample t-test",
+    "n1_npov": 92,
+    "n2_non_npov": 92,
+    "mean_npov": 3229.618576029445,
+    "mean_non_npov": 1061.9155759799783,
+    "variance_npov": 40211961.81170201,
+    "variance_non_npov": 9800526.910008445,
+    "t_statistic": 2.9400482588288552,
+    "degrees_of_freedom": 132.87024265787346,
+    "p_value": 0.003871633922653217
+}

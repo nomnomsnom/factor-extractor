@@ -2,22 +2,98 @@
 Wikipedia NPOV Dispute Study
 Compares monthly view counts of NPOV-tagged vs non-tagged articles (2024 onwards)
 """
-
+from scipy.stats import t
 import requests
 import sqlite3
 import time
 import random
 from datetime import datetime
+import json
+import math
+import os
 
 #parameters
-SAMPLE_SIZE = 100          # articles per category
+SAMPLE_SIZE = 92         # articles per category
 START_MONTH = "2024010100" # January 2024 YYYYMMDDHR btw
 END_MONTH   = "2026033000" # march 2026
 DB_PATH     = "wiki_study.db"
 HEADERS     = {"User-Agent": "WikiStudy/1.0 (research project; contact@example.com)"} #wiki requests some info
 #ProjectName/Version (description; contact) wiki format
 
+
+def compute_t_test(output_file="t_test_results.json"):
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+
+    # Compute mean monthly views per article
+    rows = conn.execute("""
+        SELECT 
+            a.title,
+            a.is_npov,
+            AVG(v.view_count) as avg_views
+        FROM views v
+        JOIN articles a ON v.title = a.title
+        GROUP BY a.title
+    """).fetchall()
+
+    conn.close()
+
+    if not rows:
+        print("No data for t-test.")
+        return
+
+    # Split into two groups: use only SAMPLE_SIZE articles per group
+    npov_all = [row["avg_views"] for row in rows if row["is_npov"] == 1]
+    non_all  = [row["avg_views"] for row in rows if row["is_npov"] == 0]
+
+    npov = npov_all[:SAMPLE_SIZE]
+    non  = non_all[:SAMPLE_SIZE]
+
+    n1, n2 = len(npov), len(non)
+
+    # compute sample means
+    mean1 = sum(npov) / n1
+    mean2 = sum(non) / n2
+
+    # compute sample variances
+    var1 = sum((x - mean1) ** 2 for x in npov) / (n1 - 1)
+    var2 = sum((x - mean2) ** 2 for x in non) / (n2 - 1)
+
+    # Welch’s t-test
+    t_stat = (mean1 - mean2) / math.sqrt(var1/n1 + var2/n2)
+
+    # degrees of freedom (Welch-Satterthwaite)
+    df = (var1/n1 + var2/n2) ** 2 / (
+        ((var1/n1) ** 2) / (n1 - 1) +
+        ((var2/n2) ** 2) / (n2 - 1)
+    )
+
+    # exact p-value using scipy
+    p_value = 2 * (1 - t.cdf(abs(t_stat), df))
+
+    results = {
+        "test": "Welch two-sample t-test",
+        "n1_npov": n1,
+        "n2_non_npov": n2,
+        "mean_npov": mean1,
+        "mean_non_npov": mean2,
+        "variance_npov": var1,
+        "variance_non_npov": var2,
+        "t_statistic": t_stat,
+        "degrees_of_freedom": df,
+        "p_value": p_value
+    }
+
+    with open(output_file, "w") as f:
+        json.dump(results, f, indent=4)
+
+    print(f"T-test results saved to {output_file}")
+
+
 def init_db():
+    if os.path.exists(DB_PATH):
+        os.remove(DB_PATH)
+        print(f"Old database {DB_PATH} removed.")
     conn = sqlite3.connect(DB_PATH)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS articles (
@@ -35,6 +111,14 @@ def init_db():
             view_count  INTEGER,
             UNIQUE(title, month)
         )
+    """)
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS summary (
+        id INTEGER PRIMARY KEY,
+        group_type TEXT,
+        avg_views REAL,
+        computed_at TEXT
+    )
     """)
     conn.commit()
     conn.close()
@@ -109,6 +193,41 @@ def get_random_articles(limit=200):
 
     print(f"  Found {len(articles)} random articles.")
     return articles
+def store_avg():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+
+    avg_npov = conn.execute("""
+        SELECT AVG(v.view_count) as avg
+        FROM views v
+        JOIN articles a ON v.title = a.title
+        WHERE a.is_npov = 1
+    """).fetchone()["avg"]
+
+    avg_non = conn.execute("""
+        SELECT AVG(v.view_count) as avg
+        FROM views v
+        JOIN articles a ON v.title = a.title
+        WHERE a.is_npov = 0
+    """).fetchone()["avg"]
+
+    now = datetime.now().isoformat()
+
+    if avg_npov is not None:
+        conn.execute(
+            "INSERT OR IGNORE INTO summary (group_type, avg_views, computed_at) VALUES (?, ?, ?)",
+            ("npov", avg_npov, now)
+        )
+
+    if avg_non is not None:
+        conn.execute(
+            "INSERT OR IGNORE INTO summary (group_type, avg_views, computed_at) VALUES (?, ?, ?)",
+            ("non_npov", avg_non, now)
+        )
+
+    conn.commit()
+    conn.close()
+    print("Averages stored in database.")
 
 def get_monthly_views(title, start=START_MONTH, end=END_MONTH):
     """Fetch monthly view counts for a single article."""
@@ -243,8 +362,9 @@ def main():
         views = get_monthly_views(title)
         save_views(title, views)
         time.sleep(0.3)
-
+    compute_t_test()
     print_summary()
+    store_avg()
     print(f"\nData saved to {DB_PATH}")
 #You can open wiki_study.db with db Browser for sqlite to explore the data
 
