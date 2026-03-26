@@ -1,12 +1,14 @@
 {
     "test": "Welch two-sample t-test",
-    "n1_npov": 92,
-    "n2_non_npov": 92,
-    "mean_npov": 3229.618576029445,
-    "mean_non_npov": 1061.9155759799783,
-    "variance_npov": 40211961.81170201,
-    "variance_non_npov": 9800526.910008445,
-    "t_statistic": 2.9400482588288552,
-    "degrees_of_freedom": 132.87024265787346,
-    "p_value": 0.003871633922653217
+    "view_period": "2025090100 to 2026020100",
+    "n_npov": 200,
+    "n_non_npov": 200,
+    "mean_monthly_views_npov": 5439.0584166666695,
+    "mean_monthly_views_non_npov": 528.9778333333331,
+    "variance_npov": 478050702.13534886,
+    "variance_non_npov": 1557812.161655806,
+    "t_statistic": 3.1707366705445468,
+    "degrees_of_freedom": 200.29693911918136,
+    "p_value": 0.001759373391810204,
+    "significant_at_0.05": true
 }

@@ -1,6 +1,8 @@
 """
 Wikipedia NPOV Dispute Study
-Compares monthly view counts of NPOV-tagged vs non-tagged articles (2024 onwards)
+Compares mean monthly view counts (Sept 2025 - Feb 2026) of NPOV-tagged vs non-tagged articles.
+Runs a Welch two-sample t-test on mean monthly views per article.
+Only articles with actual view data in the 6-month window are counted.
 """
 from scipy.stats import t
 import requests
@@ -13,81 +15,12 @@ import math
 import os
 
 #parameters
-SAMPLE_SIZE = 92         # articles per category
-START_MONTH = "2024010100" # January 2024 YYYYMMDDHR btw
-END_MONTH   = "2026033000" # march 2026
+TARGET_N    = 200          # articles per category
+START_MONTH = "2025090100" # September 2025 YYYYMMDDHR btw
+END_MONTH   = "2026020100" # February 2026
 DB_PATH     = "wiki_study.db"
 HEADERS     = {"User-Agent": "WikiStudy/1.0 (research project; contact@example.com)"} #wiki requests some info
 #ProjectName/Version (description; contact) wiki format
-
-
-def compute_t_test(output_file="t_test_results.json"):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-
-    # Compute mean monthly views per article
-    rows = conn.execute("""
-        SELECT 
-            a.title,
-            a.is_npov,
-            AVG(v.view_count) as avg_views
-        FROM views v
-        JOIN articles a ON v.title = a.title
-        GROUP BY a.title
-    """).fetchall()
-
-    conn.close()
-
-    if not rows:
-        print("No data for t-test.")
-        return
-
-    # Split into two groups: use only SAMPLE_SIZE articles per group
-    npov_all = [row["avg_views"] for row in rows if row["is_npov"] == 1]
-    non_all  = [row["avg_views"] for row in rows if row["is_npov"] == 0]
-
-    npov = npov_all[:SAMPLE_SIZE]
-    non  = non_all[:SAMPLE_SIZE]
-
-    n1, n2 = len(npov), len(non)
-
-    # compute sample means
-    mean1 = sum(npov) / n1
-    mean2 = sum(non) / n2
-
-    # compute sample variances
-    var1 = sum((x - mean1) ** 2 for x in npov) / (n1 - 1)
-    var2 = sum((x - mean2) ** 2 for x in non) / (n2 - 1)
-
-    # Welch’s t-test
-    t_stat = (mean1 - mean2) / math.sqrt(var1/n1 + var2/n2)
-
-    # degrees of freedom (Welch-Satterthwaite)
-    df = (var1/n1 + var2/n2) ** 2 / (
-        ((var1/n1) ** 2) / (n1 - 1) +
-        ((var2/n2) ** 2) / (n2 - 1)
-    )
-
-    # exact p-value using scipy
-    p_value = 2 * (1 - t.cdf(abs(t_stat), df))
-
-    results = {
-        "test": "Welch two-sample t-test",
-        "n1_npov": n1,
-        "n2_non_npov": n2,
-        "mean_npov": mean1,
-        "mean_non_npov": mean2,
-        "variance_npov": var1,
-        "variance_non_npov": var2,
-        "t_statistic": t_stat,
-        "degrees_of_freedom": df,
-        "p_value": p_value
-    }
-
-    with open(output_file, "w") as f:
-        json.dump(results, f, indent=4)
-
-    print(f"T-test results saved to {output_file}")
 
 
 def init_db():
@@ -113,147 +46,108 @@ def init_db():
         )
     """)
     conn.execute("""
-    CREATE TABLE IF NOT EXISTS summary (
-        id INTEGER PRIMARY KEY,
-        group_type TEXT,
-        avg_views REAL,
-        computed_at TEXT
-    )
+        CREATE TABLE IF NOT EXISTS article_means (
+            id                 INTEGER PRIMARY KEY,
+            title              TEXT UNIQUE,
+            is_npov            INTEGER,
+            mean_monthly_views REAL
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS summary (
+            id          INTEGER PRIMARY KEY,
+            group_type  TEXT,
+            avg_views   REAL,
+            computed_at TEXT
+        )
     """)
     conn.commit()
     conn.close()
     print("Database initialised.")
 
 
-def get_npov_articles(limit=200): #200 because some articles might not be viewable, buffer
-    """Fetch articles tagged with NPOV dispute template."""
-    print("Fetching NPOV-tagged articles...")
+def get_npov_articles_batch(params):
     url = "https://en.wikipedia.org/w/api.php"
+    try:
+        r = requests.get(url, params=params, headers=HEADERS, timeout=10) #sends HTTP request, timeout means if no response after 10 seconds, stop
+        data = r.json() #parses text into python dict since r is raw text
+        members = data.get("query", {}).get("embeddedin", []) #get(key,default)
+        titles = [m["title"] for m in members]
+        continuation = data.get("continue", {}).get("eicontinue", None)
+        return titles, continuation
+    except Exception as e:
+        print(f"  Error fetching NPOV batch: {e}")
+        return [], None
+
+
+def get_npov_articles(target=TARGET_N * 3): #buffer
+    print("Fetching NPOV-tagged articles...")
     articles = []
     params = {
-    "action":      "query",        # what we want to do
-    "list": "embeddedin", # which type of query
-    "eititle": "Template:NPOV", # which category
-    "eilimit": "500",          # max results per page
-    "einamespace": "0",            # namespace 0 = main articles only (not talk pages etc)
-    "format":      "json"          # return data as JSON
+        "action":      "query",        # what we want to do
+        "list":        "embeddedin",   # which type of query
+        "eititle": "Template:POV", # which template
+        "eilimit":     "500",          # max results per page
+        "einamespace": "0",            # namespace 0 = main articles only (not talk pages etc)
+        "format":      "json"          # return data as JSON
     }
-    while len(articles) < limit:
-        try:
-            r = requests.get(url, params=params, headers=HEADERS, timeout=10)#sends HTTP request, timeout means if no response after 10 seconds,stop
-            data = r.json()#parses text into python dict since r is raw text
-#wiki returns something like this
-# {
-#   "query": {
-#     "categorymembers": [
-#       {"title": "Some Article"},
-#       {"title": "Another Article"}
-#     ]
-#   }
-# }
-            print("STATUS:", r.status_code)
-            print("RESPONSE:", r.text[:300])
-            members = data.get("query", {}).get("embeddedin", [])#get(key,default)
-            articles.extend([m["title"] for m in members])#store found articles in the variable
-            # handle pagination
-            if "continue" in data and len(articles) < limit: #wiki has limit of 500 results per request, if there are more, it includes a "continue" key. so we want to know if the continue key exists or if we havent reached our predetermined limit
-                params["cmcontinue"] = data["continue"]["cmcontinue"]
-            else:
-                break
-        except Exception as e:
-            print(f"Error fetching NPOV articles: {e}")
+    while len(articles) < target:
+        titles, continuation = get_npov_articles_batch(params)
+        articles.extend(titles)
+        if continuation and len(articles) < target: #wiki has limit of 500 results per request, if there are more, it includes a "continue" key
+            params["eicontinue"] = continuation
+        else:
             break
-        time.sleep(0.5)  #let wiki api rest a bit.
-    print("Sample NPOV articles:", articles[:5])
+        time.sleep(0.5) #let wiki api rest a bit
+    random.shuffle(articles)
     print(f"  Found {len(articles)} NPOV articles.")
     return articles
 
-def get_random_articles(limit=200):
-    """Fetch random non-NPOV articles."""
-    print("Fetching random articles...")
+
+def get_random_articles_batch():
     url = "https://en.wikipedia.org/w/api.php"
-    articles = []
-    while len(articles) < limit:
-        params = {
-            "action":      "query",
-            "list":        "random",
-            "rnlimit":     "50",
-            "rnnamespace": "0",
-            "format":      "json"
-        }#random wiki api is limited to 50 per call, so we loop till we get 100 or more if needed
-        try:
-            r = requests.get(url, params=params, headers=HEADERS, timeout=10)
-            data = r.json()
-            pages = data.get("query", {}).get("random", [])
-            articles.extend([p["title"] for p in pages])
-        except Exception as e:
-            print(f"Error fetching random articles: {e}")
-            break
-        time.sleep(0.5)
+    params = {
+        "action":      "query",
+        "list":        "random",
+        "rnlimit":     "50", #random wiki api is limited to 50 per call, so we loop till we get enough
+        "rnnamespace": "0",
+        "format":      "json"
+    }
+    try:
+        r = requests.get(url, params=params, headers=HEADERS, timeout=10)
+        data = r.json()
+        pages = data.get("query", {}).get("random", [])
+        return [p["title"] for p in pages]
+    except Exception as e:
+        print(f"Error fetching random batch: {e}")
+        return []
 
-    print(f"  Found {len(articles)} random articles.")
-    return articles
-def store_avg():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-
-    avg_npov = conn.execute("""
-        SELECT AVG(v.view_count) as avg
-        FROM views v
-        JOIN articles a ON v.title = a.title
-        WHERE a.is_npov = 1
-    """).fetchone()["avg"]
-
-    avg_non = conn.execute("""
-        SELECT AVG(v.view_count) as avg
-        FROM views v
-        JOIN articles a ON v.title = a.title
-        WHERE a.is_npov = 0
-    """).fetchone()["avg"]
-
-    now = datetime.now().isoformat()
-
-    if avg_npov is not None:
-        conn.execute(
-            "INSERT OR IGNORE INTO summary (group_type, avg_views, computed_at) VALUES (?, ?, ?)",
-            ("npov", avg_npov, now)
-        )
-
-    if avg_non is not None:
-        conn.execute(
-            "INSERT OR IGNORE INTO summary (group_type, avg_views, computed_at) VALUES (?, ?, ?)",
-            ("non_npov", avg_non, now)
-        )
-
-    conn.commit()
-    conn.close()
-    print("Averages stored in database.")
 
 def get_monthly_views(title, start=START_MONTH, end=END_MONTH):
-    """Fetch monthly view counts for a single article."""
     safe_title = title.replace(" ", "_")
     url = (
         f"https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/"
         f"en.wikipedia/all-access/all-agents/{requests.utils.quote(safe_title, safe='')}"
         f"/monthly/{start}/{end}"
     )
-#https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Some_Article/monthly/2024010100/2026033000
-#sample url output.
-#no params needed since start and end date are directly embedded in the url
-# that would break the url, this converts them to safe versions. for example Che Guevara & Castro becomes Che%20Guevara%20%26%20Castro
+    #https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Some_Article/monthly/2025090100/2026020100
+    #sample url output. no params needed since start and end date are directly embedded in the url
+    # requests.utils.quote converts special characters so they don't break the url. for example Che Guevara & Castro becomes Che%20Guevara%20%26%20Castro
     try:
         r = requests.get(url, headers=HEADERS, timeout=10)
+        # 200 — request succeeded
+        # 404 — not found, article doesn't exist or has no data
+        # 429 — too many requests
+        # 500 — server error
         if r.status_code == 200:
             data = r.json()
             return data.get("items", [])
 # {
 #   "items": [
-#     {"timestamp": "2024010100", "views": 1523},
-#     {"timestamp": "2024020100", "views": 892},
-#     {"timestamp": "2024030100", "views": 1104}
+#     {"timestamp": "2025090100", "views": 1523},
+#     {"timestamp": "2025100100", "views": 892},
 #   ]
 # }
-#wiki returns something like this as a string in r
         elif r.status_code == 404:
             return []  # article has no view data
         else:
@@ -262,28 +156,20 @@ def get_monthly_views(title, start=START_MONTH, end=END_MONTH):
     except Exception as e:
         print(f"  Error fetching views for {title}: {e}")
         return []
-# 200 — request succeeded
-# 404 — not found, article doesn't exist or has no data
-# 429 — too many requests
-# 500 — server error
 
 
-def save_article(title, is_npov):
-    conn = sqlite3.connect(DB_PATH)
+def save_article(conn, title, is_npov):
     try:
         conn.execute(
             "INSERT OR IGNORE INTO articles (title, is_npov, fetched_at) VALUES (?, ?, ?)",
-           #try to insert, if it exists, skip 
+            #try to insert, if it exists, skip
             (title, int(is_npov), datetime.now().isoformat())
         )
-        conn.commit()
     except sqlite3.Error as e:
         print(f"  DB error saving article {title}: {e}")
-    finally:
-        conn.close()
 
-def save_views(title, view_items):
-    conn = sqlite3.connect(DB_PATH)
+
+def save_views(conn, title, view_items):
     for item in view_items:
         try:
             conn.execute(
@@ -292,8 +178,115 @@ def save_views(title, view_items):
             )
         except sqlite3.Error as e:
             print(f"  DB error saving views for {title}: {e}")
-    conn.commit()
+
+
+def save_mean(conn, title, is_npov, view_items):
+    if not view_items:
+        return
+    total_views = sum(item.get("views", 0) for item in view_items)
+    mean_views = total_views / len(view_items)
+    try:
+        conn.execute(
+            "INSERT OR IGNORE INTO article_means (title, is_npov, mean_monthly_views) VALUES (?, ?, ?)",
+            (title, int(is_npov), mean_views)
+        )
+    except sqlite3.Error as e:
+        print(f"  DB error saving mean for {title}: {e}")
+
+
+def collect_articles(candidate_pool, is_npov, npov_titles_set=None):
+    group_label = "NPOV" if is_npov else "non-tagged"
+    print(f"\nCollecting {TARGET_N} usable {group_label} articles...")
+    usable = []
+    conn = sqlite3.connect(DB_PATH)
+    for title in candidate_pool:
+        if len(usable) >= TARGET_N:
+            break
+        if npov_titles_set and title in npov_titles_set:
+            continue
+        views = get_monthly_views(title)
+        if not views:
+            continue  # skip articles with no view data in the window
+        save_article(conn, title, is_npov)
+        save_views(conn, title, views)
+        save_mean(conn, title, is_npov, views)
+        conn.commit()
+        usable.append(title)
+        print(f"  [{len(usable)}/{TARGET_N}] {title} ({len(views)} months of data)")
+        time.sleep(0.3)  # rate limiting
     conn.close()
+    print(f"  Collected {len(usable)} usable {group_label} articles.")
+    return usable
+
+
+def compute_t_test(output_file="t_test_results.json"):
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row #allows u to use column names instead of index
+
+    npov_rows = conn.execute(
+        "SELECT mean_monthly_views FROM article_means WHERE is_npov = 1"
+    ).fetchall()
+    non_rows = conn.execute(
+        "SELECT mean_monthly_views FROM article_means WHERE is_npov = 0"
+    ).fetchall()
+    conn.close()
+
+    npov = [row["mean_monthly_views"] for row in npov_rows]
+    non  = [row["mean_monthly_views"] for row in non_rows]
+
+    n1, n2 = len(npov), len(non)
+
+    if n1 < 2 or n2 < 2:
+        print("Not enough data for t-test.")
+        return
+
+    # compute sample means
+    mean1 = sum(npov) / n1
+    mean2 = sum(non)  / n2
+
+    # compute sample variances
+    var1 = sum((x - mean1) ** 2 for x in npov) / (n1 - 1)
+    var2 = sum((x - mean2) ** 2 for x in non)  / (n2 - 1)
+
+    # Welch's t-test
+    t_stat = (mean1 - mean2) / math.sqrt(var1/n1 + var2/n2)
+
+    # degrees of freedom (Welch-Satterthwaite)
+    df = (var1/n1 + var2/n2) ** 2 / (
+        ((var1/n1) ** 2) / (n1 - 1) +
+        ((var2/n2) ** 2) / (n2 - 1)
+    )
+
+    # exact p-value using scipy
+    p_value = 2 * (1 - t.cdf(abs(t_stat), df))
+
+    results = {
+        "test":                        "Welch two-sample t-test",
+        "view_period":                 f"{START_MONTH} to {END_MONTH}",
+        "n_npov":                      n1,
+        "n_non_npov":                  n2,
+        "mean_monthly_views_npov":     mean1,
+        "mean_monthly_views_non_npov": mean2,
+        "variance_npov":               var1,
+        "variance_non_npov":           var2,
+        "t_statistic":                 t_stat,
+        "degrees_of_freedom":          df,
+        "p_value":                     p_value,
+        "significant_at_0.05": bool(p_value < 0.05)
+    }
+
+    with open(output_file, "w") as f:
+        json.dump(results, f, indent=4)
+
+    print(f"T-test results saved to {output_file}")
+    print(f"  n (NPOV):           {n1}")
+    print(f"  n (non-NPOV):       {n2}")
+    print(f"  mean NPOV:          {mean1:.1f} views/month")
+    print(f"  mean non-NPOV:      {mean2:.1f} views/month")
+    print(f"  t-statistic:        {t_stat:.4f}")
+    print(f"  degrees of freedom: {df:.1f}")
+    print(f"  p-value:            {p_value:.4f}")
+    print(f"  significant:        {p_value < 0.05}")
 
 
 def print_summary():
@@ -304,19 +297,16 @@ def print_summary():
     npov  = conn.execute("SELECT COUNT(*) as c FROM articles WHERE is_npov=1").fetchone()["c"]
     non   = conn.execute("SELECT COUNT(*) as c FROM articles WHERE is_npov=0").fetchone()["c"]
     views = conn.execute("SELECT COUNT(*) as c FROM views").fetchone()["c"]
+    means = conn.execute("SELECT COUNT(*) as c FROM article_means").fetchone()["c"]
 
     avg_npov = conn.execute("""
-        SELECT AVG(v.view_count) as avg
-        FROM views v
-        JOIN articles a ON v.title = a.title
-        WHERE a.is_npov = 1
-    """).fetchone()["avg"] #returns matching rows as a list
+        SELECT AVG(mean_monthly_views) as avg
+        FROM article_means WHERE is_npov = 1
+    """).fetchone()["avg"]
 
     avg_non = conn.execute("""
-        SELECT AVG(v.view_count) as avg
-        FROM views v
-        JOIN articles a ON v.title = a.title
-        WHERE a.is_npov = 0
+        SELECT AVG(mean_monthly_views) as avg
+        FROM article_means WHERE is_npov = 0
     """).fetchone()["avg"]
 
     conn.close()
@@ -324,49 +314,46 @@ def print_summary():
     print("\n" + "="*50)
     print("STUDY SUMMARY")
     print("="*50)
-    print(f"total articles:        {total}")
-    print(f"  NPOV tagged:         {npov}")
-    print(f"  Non-tagged:          {non}")
-    print(f"total view records:    {views}")
-    print(f"avg monthly views (NPOV):     {avg_npov:.0f}" if avg_npov else "Avg monthly views (NPOV): N/A")
-    print(f"avg monthly views (non-NPOV): {avg_non:.0f}" if avg_non else "Avg monthly views (non-NPOV): N/A")
+    print(f"total articles:            {total}")
+    print(f"  NPOV tagged:             {npov}")
+    print(f"  Non-tagged:              {non}")
+    print(f"total view records:        {views}")
+    print(f"total article means saved: {means}")
+    print(f"avg mean views (NPOV):     {avg_npov:.1f}" if avg_npov else "avg mean views (NPOV): N/A")
+    print(f"avg mean views (non-NPOV): {avg_non:.1f}" if avg_non else "avg mean views (non-NPOV): N/A")
     print("="*50)
 
 
 def main():
     init_db()
 
-#random.sample(list, n) — picks n random items from a list without replacement
-    npov_all = get_npov_articles(limit=300)
-    npov_sample = random.sample(npov_all, min(SAMPLE_SIZE, len(npov_all)))
-    print(f"Sampled {len(npov_sample)} NPOV articles.")
+    npov_pool = get_npov_articles(target=TARGET_N * 3) #buffer
+    npov_usable = collect_articles(npov_pool, is_npov=True)
 
+    if len(npov_usable) < TARGET_N:
+        print(f"Warning: only found {len(npov_usable)} usable NPOV articles.")
 
-    random_all = get_random_articles(limit=300)#again, limit is buffer
-    random_filtered = [a for a in random_all if a not in npov_all]
-    random_sample = random.sample(random_filtered, min(SAMPLE_SIZE, len(random_filtered)))
-    print(f"Sampled {len(random_sample)} non-tagged articles.")
+    npov_set = set(npov_pool) #set for fast lookup
+    print("\nBuilding random article pool...")
+    random_pool = []
+    while len(random_pool) < TARGET_N * 3: #buffer
+        batch = get_random_articles_batch()
+        filtered = [a for a in batch if a not in npov_set]
+        random_pool.extend(filtered)
+        time.sleep(0.5)
+        print(f"  Pool size: {len(random_pool)}")
 
-    print("\nfetching views for npov articles")
-    for i, title in enumerate(npov_sample):
-        print(f"  [{i+1}/{len(npov_sample)}] {title}")
-        save_article(title, is_npov=True)
-        views = get_monthly_views(title)
-        save_views(title, views)
-        time.sleep(0.3)  # rate limiting again
+    random.shuffle(random_pool)
+    non_usable = collect_articles(random_pool, is_npov=False, npov_titles_set=npov_set)
 
-    print("\nfetching views for non-tagged articles")
-    for i, title in enumerate(random_sample):
-        print(f"  [{i+1}/{len(random_sample)}] {title}")
-        save_article(title, is_npov=False)
-        views = get_monthly_views(title)
-        save_views(title, views)
-        time.sleep(0.3)
-    compute_t_test()
+    if len(non_usable) < TARGET_N:
+        print(f"Warning: only found {len(non_usable)} usable non-tagged articles.")
+
     print_summary()
-    store_avg()
+    compute_t_test()
+
     print(f"\nData saved to {DB_PATH}")
-#You can open wiki_study.db with db Browser for sqlite to explore the data
+    #You can open wiki_study.db with db Browser for sqlite to explore the data
 
 if __name__ == "__main__":
     main()
