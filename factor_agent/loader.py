@@ -1,6 +1,7 @@
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+
 def load_and_chunk(folder_path: str) -> list:
     loader = PyPDFDirectoryLoader(folder_path)
     docs = loader.load()
@@ -15,3 +16,4 @@ def load_and_chunk(folder_path: str) -> list:
     print(f"Split into {len(chunks)} chunks")
     
     return chunks
+

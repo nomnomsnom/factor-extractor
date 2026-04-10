@@ -3,8 +3,10 @@ import json
 from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+import re
 
 load_dotenv()
+
 
 def extract_factors_from_chunk(chunk) -> list:
     chat_model = ChatAnthropic(model="claude-sonnet-4-20250514")
@@ -12,7 +14,8 @@ def extract_factors_from_chunk(chunk) -> list:
     prompt = ChatPromptTemplate.from_messages([
         ("system", """You are a quantitative finance research assistant.
 Extract all financial factors from the provided text.
-Return ONLY a valid JSON array, no other text.
+Return ONLY a valid JSON array with no other text, explanation, or commentary.
+Do not include any text before or after the JSON array.
 Return an empty array [] if no factors are present.
 Use this format:
 [
@@ -28,19 +31,24 @@ Use this format:
     
     chain = prompt | chat_model | StrOutputParser()
     raw = chain.invoke({"text": chunk.page_content})
-    
-    # clean markdown fences
-    raw = raw.strip()
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-    raw = raw.strip()
-    
+    try:
+        match = re.search(r'\[.*\]', raw, re.DOTALL)
+        if match:
+            raw = match.group()
+        else:
+            return []
+        # this is not very useful anymore (except block)
+    except Exception as e:
+        print(f"Something went wrong with the API call: {e}")
+        raw = None
     # parse JSON
     try:
         factors = json.loads(raw)
     except json.JSONDecodeError:
+        print(f"Decode error, raw was: {repr(raw)}")
+        return []
+    except Exception as e:
+        print(f'raw is None, error:{e}')
         return []
     
     # attach metadata to each factor

@@ -174,5 +174,66 @@
         "methodology": "Construct portfolio with equal dollar amounts in long and short positions",
         "source_paper": "papers\\2009.04824v1.pdf",
         "page_number": 1
+    },
+    {
+        "factor_name": "Stock-Factor Momentum Comovement",
+        "description": "Natural comovement between profit and loss (PNL) of stock momentum and factor momentum strategies",
+        "data_required": [
+            "stock momentum PNL",
+            "factor momentum PNL",
+            "cross-correlation data",
+            "multiple time horizons"
+        ],
+        "methodology": "Analysis of comovement patterns between stock and factor momentum PNLs across all horizons",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 0
+    },
+    {
+        "factor_name": "Long-Short Dollar-Neutral Portfolios",
+        "description": "Portfolio construction method that goes long certain stocks and short others while maintaining dollar neutrality",
+        "data_required": [
+            "Stock prices",
+            "Factor signals",
+            "Portfolio weights"
+        ],
+        "methodology": "Construction of portfolios with equal dollar amounts long and short, based on factor signals",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Market Exposure Hedging",
+        "description": "Dynamic hedging strategy to remove residual market exposure from factor portfolios",
+        "data_required": [
+            "Portfolio returns",
+            "Market returns",
+            "Beta estimates"
+        ],
+        "methodology": "Dynamic adjustment of portfolio positions to neutralize market beta exposure",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Cross-sectional Factor Momentum",
+        "description": "A strategy that buys the most successful factors and sells the least performing ones based on relative performance rankings",
+        "data_required": [
+            "factor returns",
+            "factor performance rankings",
+            "cross-sectional factor performance data"
+        ],
+        "methodology": "Rank factors by performance and construct long-short portfolios buying top-performing factors and selling bottom-performing factors",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
+    },
+    {
+        "factor_name": "Directional Factor Momentum",
+        "description": "A strategy that buys factors with past positive returns and sells factors with past negative returns",
+        "data_required": [
+            "historical factor returns",
+            "factor return signs",
+            "time series factor performance data"
+        ],
+        "methodology": "Buy factors with positive past returns and sell factors with negative past returns based on directional performance",
+        "source_paper": "papers\\2009.04824v1.pdf",
+        "page_number": 1
     }
 ]
