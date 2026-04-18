@@ -41,9 +41,6 @@ def save_factors(factors: list) -> None:
     create_table()
     conn = get_connection()
 
-# get existing factor keys to avoid duplicates
-    existing = conn.execute("SELECT factor_name, source_paper, page_number FROM factors").fetchall()
-    
 
 
     for factor in factors:
@@ -62,24 +59,24 @@ def save_factors(factors: list) -> None:
                 """, (
                     factor.get("factor_name", ""),
                     factor.get("description", ""),
-                    to_json(factor.get("data_required", "")),
+                    to_json(factor.get("data_required", [])),
                     factor.get("methodology", ""),
-                    factor.get("is_valid",""),
+                    factor.get("is_valid",0),
                     factor.get("confidence", 0),
                     factor.get("reason", ""),
                     factor.get("source_paper", ""),
                     factor.get("page_number", 0),
                 ))
-            elif factor.get("confidence", 0) > existing["confidence"]:
+            elif factor.get("confidence", 0) > (existing["confidence"] or 0):
             # seen before but this version has higher confidence — update it
                 conn.execute("""
                     UPDATE factors SET description=?, data_required=?, methodology=?, is_valid=?, confidence=?, reason=?, page_number=?
                     WHERE id=?
                 """, (
                     factor["description"],
-                    to_json(factor.get("data_required","")),
+                    to_json(factor.get("data_required",[])),
                     factor.get("methodology", ""),
-                    factor.get("is_valid",""),
+                    factor.get("is_valid",0),
                     factor.get("confidence", 0),
                     factor.get("reason", ""),
                     factor.get("page_number", 0),
