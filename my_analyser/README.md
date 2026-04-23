@@ -1,7 +1,8 @@
-#Simple RAG agent
+# Simple RAG agent
+
 Answers queries with pdf context using claude sonnet 4
 
-##How it works
+## How it works
 1 Loads PDF papers and splits into chunks with overlap to preserve context at boundaries
 2 Stores chunks in ChromaDB vector store
 3 Retrieves relevant context using similarity search
