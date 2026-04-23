@@ -1,4 +1,4 @@
-Simple RAG agent
+#Simple RAG agent
 Answers queries with pdf context using claude sonnet 4
 
 ##How it works
