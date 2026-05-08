@@ -23,7 +23,7 @@ those bugs automatically.
 | `'--'` string in numeric columns | NASDAQ's eps_diluted and book_val_per_sh contain the literal string `'--'` instead of NaN. | Forces the column to non-numeric type; pandas operations like `.mean()` will raise. |
 | Field completeness in wide format | Each HKEX symbol must have all six columns (Open/High/Low/Close/Vol/Turnover). | Missing columns silently break per-symbol analytics. |
 | Lunch-break null partition (HKEX) | 12:30 rows are null *by design*. Nulls at any other time are vendor errors. | Tells the user which nulls to drop and which to investigate. |
-| Duplicate timestamps | A wide-format daily file should have one row per Datetime. |
+| Duplicate timestamps | A wide-format daily file should have one row per Datetime. | We found 2 duplicate rows in HKEX `daily_prices.csv` — a real bug. |
 | `volume == price × shares` consistency | NASDAQ's description says `volume` is the dollar notional, equal to px_last × shares_traded. We verify it. | If a future export ships share count in the volume column instead, this check fires. |
 | Date format (NYSE / TSE) | NYSE uses MM/DD/YYYY. TSE uses YYYY/MM/DD. NASDAQ uses ISO 8601. | Not corrupt data — but a footgun for cross-market joins. Some systems mis-parse MM/DD/YYYY as DD/MM/YYYY. |
 | Look-ahead bias warning (NYSE) | Reminds the user to filter by `report_date`, not `fiscal_period_end`. | Backtests using filing-period-end pretend the user knew Q3 numbers on Sept 30, even though companies file weeks later. Looks good but isn't real. |
@@ -51,13 +51,19 @@ Why:
 
 ## How to run
 
-From `snom/dataset/`: 
+> Note: `snom/dataset/` is my own personal working directory — it's where I
+> placed the `ai_agent_dataset.zip`. The skill itself is
+> location-agnostic: run it from any directory that contains either an
+> `ai_agent_dataset/` folder or `ai_agent_dataset.zip` next to the
+> `financial-data-quality/` folder.
+
+From `snom/dataset/`:
 
 ```bash
 python financial-data-quality/run.py
 ```
 
-That's it. The orchestrator:
+The orchestrator:
 
 1. Extracts `ai_agent_dataset.zip` if the folder isn't already present.
 2. Runs every per-market scanner and the cross-market scanner.
