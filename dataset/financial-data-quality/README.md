@@ -34,20 +34,15 @@ those bugs automatically.
 
 **Claude Code Agent Skill** (`SKILL.md` + helper Python scripts).
 
-Why:
-
-1. **The brief recommended it first.** The assessment lists Claude Code
-   Agent Skills as the first recommended approach.
-2. **Workflow is the point.** A skill keeps the *workflow* (read
-   descriptions → probe data → report) separate from the *tooling*
-   (scripts that load HDF5/CSV). The grading rubric is process-focused —
-   it wants to see how the agent decomposes the problem, not just a
-   monolithic dump of issues. The SKILL.md makes that visible.
-3. **No framework runtime cost.** Compared to LangGraph or the OpenAI
-   Agents SDK, a Claude Code skill needs nothing beyond pandas / numpy /
-   pytables. Easy to clone into another repo.
-4. **Drop-in reusable.** A user in any other Claude Code project can
-   copy this folder and the skill is ready to go.
+- Workflow lives in `SKILL.md` (markdown), tooling lives in `scan/`
+  (Python). Edit one without touching the other.
+- No agent loop, no graph executor, no LLM calls in the scanner. Just
+  `pandas` + `tables`.
+- Self-contained folder. Drop into `.claude/skills/`, or lift `scan/`
+  out into any other Python project.
+- Markdown-only entry point. Readable without learning a framework.
+- Add a check = one module in `scan/` + one bullet in `SKILL.md`. No
+  API surface, no version pinning, no redeploy.
 
 ## How to run
 
