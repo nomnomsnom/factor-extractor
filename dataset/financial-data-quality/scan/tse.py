@@ -23,6 +23,7 @@ from pathlib import Path
 import pandas as pd
 
 from .common import ScanResult, read_text_with_fallback, read_csv_with_fallback
+from . import generic
 
 
 COL_MAP_DAILY = {
@@ -118,6 +119,37 @@ def _check_daily(result: ScanResult, base: Path):
 
         df_en = df.rename(columns=COL_MAP_DAILY)
 
+        # Generic tier-1/2/3 checks on the renamed (English) frame
+        generic.check_columns(
+            result, df_en,
+            document=f"{sym}/daily.csv",
+            expected=["date", "open", "high", "low", "close", "volume"],
+            symbol=sym,
+        )
+        generic.check_no_duplicate_keys(
+            result, df_en,
+            document=f"{sym}/daily.csv",
+            key_columns=["date"],
+            symbol=sym,
+        )
+        generic.check_completeness_summary(
+            result, df_en,
+            document=f"{sym}/daily.csv",
+            symbol=sym,
+        )
+        generic.check_numeric_columns(
+            result, df_en,
+            document=f"{sym}/daily.csv",
+            numeric_columns=["open", "high", "low", "close", "volume", "turnover"],
+            symbol=sym,
+        )
+        generic.check_no_negative(
+            result, df_en,
+            document=f"{sym}/daily.csv",
+            positive_columns=["open", "high", "low", "close", "volume", "turnover"],
+            symbol=sym,
+        )
+
         if not fmt_reported and "date" in df_en.columns:
             sample_date = str(df_en["date"].iloc[0])
             if "/" in sample_date and len(sample_date) == 10:
@@ -159,36 +191,7 @@ def _check_daily(result: ScanResult, base: Path):
                         recommended_fix="Re-fetch this row. Check whether high/low were transposed.",
                     )
 
-        # Duplicate trading-day rows
-        if "date" in df_en.columns:
-            dup_mask = df_en["date"].duplicated(keep=False)
-            if dup_mask.any():
-                dup_dates = sorted(set(df_en.loc[dup_mask, "date"].astype(str)))
-                result.add(
-                    document=f"{sym}/daily.csv",
-                    symbol=sym,
-                    date=", ".join(dup_dates[:3]) + ("..." if len(dup_dates) > 3 else ""),
-                    category="Cross-Field Inconsistency",
-                    severity="warning",
-                    description=f"{int(dup_mask.sum())} rows share a date with another row "
-                                f"({len(dup_dates)} duplicate keys). One row per trading day "
-                                f"is expected.",
-                    recommended_fix="Drop duplicates on read with df.drop_duplicates(subset='日付', keep='last'). "
-                                    "Then ask the vendor why their pipeline emitted the duplicate.",
-                )
-
-        # Nulls
-        nulls = int(df_en.isnull().sum().sum())
-        if nulls > 0:
-            result.add(
-                document=f"{sym}/daily.csv",
-                symbol=sym,
-                date="multiple",
-                category="Missing Data",
-                severity="warning",
-                description=f"{nulls} null cells in daily.csv. Could indicate trading halt or feed gap.",
-                recommended_fix="Verify against TSE trading calendar; re-fetch if unexpected.",
-            )
+        # Duplicate-date and null-rate checks now run via generic.* above.
 
 
 def _check_quarterly(result: ScanResult, base: Path):

@@ -1,12 +1,12 @@
 # Financial Data Quality Report
 
-_Generated 2026-05-08T23:05:51_
+_Generated 2026-05-09T07:53:36_
 
-- Total issues: **22** (critical 2 / warning 14 / info 6)
+- Total issues: **24** (critical 4 / warning 14 / info 6)
 - Markets: ashare, hkex, nasdaq, nyse, tse, cross_market
 - Files scanned: 77 (ashare=12, hkex=2, nasdaq=20, nyse=3, tse=40, cross_market=0)
 
-## Critical (2)
+## Critical (4)
 
 ### Critical #1 — ashare / Type Error
 - **Symbol:** ALL
@@ -21,6 +21,20 @@ _Generated 2026-05-08T23:05:51_
 - **Document:** daily/close.h5, daily/high.h5
 - **Issue:** Close exceeds High on 2025-11-20 for 601318: 370.080 vs 37.317 (close > high).
 - **Recommended fix:** Re-fetch from WindQuant. Ratio 9.92 suggests a 10x decimal error; dividing by 10 gives 37.008.
+
+### Critical #3 — nasdaq / Outlier
+- **Symbol:** NVDA
+- **Date:** 2025-10-15T00:00:00Z
+- **Document:** NVDA.csv
+- **Issue:** 1 negative value(s) in column 'volume' (first: -895328267.7192). This column is documented as non-negative.
+- **Recommended fix:** Re-fetch from vendor. Sustained negatives suggest a sign-flip in the export pipeline.
+
+### Critical #4 — nasdaq / Outlier
+- **Symbol:** NVDA
+- **Date:** 2025-10-15T00:00:00Z
+- **Document:** NVDA.csv
+- **Issue:** 1 negative value(s) in column 'shares_traded' (first: -7091128.0000). This column is documented as non-negative.
+- **Recommended fix:** Re-fetch from vendor. Sustained negatives suggest a sign-flip in the export pipeline.
 
 ## Warning (14)
 
@@ -56,8 +70,8 @@ _Generated 2026-05-08T23:05:51_
 - **Symbol:** ALL
 - **Date:** 2025-10-20 00:00:00+08:00
 - **Document:** daily_prices.csv
-- **Issue:** 2 rows share Datetime values with another row (1 duplicate keys total). A wide-format file should have one row per timestamp.
-- **Recommended fix:** De-duplicate on read: df = df.drop_duplicates(subset='Datetime'). Investigate the vendor pipeline — duplicates often indicate a botched incremental refresh.
+- **Issue:** 2 rows share ['Datetime'] with another row (1 duplicate keys). Each key combination should be unique.
+- **Recommended fix:** De-duplicate on read: df.drop_duplicates(subset=['Datetime']). Then investigate the vendor pipeline for the source of duplicates.
 
 ### Warning #6 — nasdaq / Type Error
 - **Symbol:** ALL
@@ -112,8 +126,8 @@ _Generated 2026-05-08T23:05:51_
 - **Symbol:** 9984
 - **Date:** 2025/12/15
 - **Document:** 9984/daily.csv
-- **Issue:** 2 rows share a date with another row (1 duplicate keys). One row per trading day is expected.
-- **Recommended fix:** Drop duplicates on read with df.drop_duplicates(subset='日付', keep='last'). Then ask the vendor why their pipeline emitted the duplicate.
+- **Issue:** 2 rows share ['date'] with another row (1 duplicate keys). Each key combination should be unique.
+- **Recommended fix:** De-duplicate on read: df.drop_duplicates(subset=['date']). Then investigate the vendor pipeline for the source of duplicates.
 
 ### Warning #14 — cross_market / Cross-Market Inconsistency
 - **Symbol:** 601318 / 2318.HK

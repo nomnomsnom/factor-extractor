@@ -30,9 +30,11 @@ import numpy as np
 import pandas as pd
 
 from .common import ScanResult
+from . import generic
 
 
 FIELDS = ("open", "high", "low", "close", "volume", "turnover")
+EXPECTED_FILES = [f"daily/{f}.h5" for f in FIELDS] + [f"30min/{f}.h5" for f in FIELDS]
 
 
 def _load_daily(base: Path) -> dict[str, pd.DataFrame]:
@@ -246,12 +248,47 @@ def _check_30min_sentinels(result: ScanResult, data_dir: Path):
             )
 
 
+def _generic_negative_check(result: ScanResult, dfs: dict[str, pd.DataFrame]):
+    """Per-field non-negative check for ashare's wide HDF5 layout. Each
+    field file's columns are symbols, so we check the matrix as a whole."""
+    for fld in ("open", "high", "low", "close", "volume", "turnover"):
+        if fld not in dfs:
+            continue
+        df = dfs[fld]
+        if df.shape[0] == 0:
+            continue
+        try:
+            negs = (df < 0)
+        except TypeError:
+            continue  # non-numeric (already flagged by schema check)
+        n_bad = int(negs.values.sum())
+        if n_bad == 0:
+            continue
+        bad_locs = list(zip(*np.where(negs.values)))[:1]
+        if not bad_locs:
+            continue
+        r, c = bad_locs[0]
+        result.add(
+            document=f"daily/{fld}.h5",
+            symbol=str(df.columns[c]),
+            date=str(df.index[r].date()),
+            category="Outlier",
+            severity="critical",
+            description=f"{n_bad} negative value(s) in '{fld}'. Documented as non-negative.",
+            recommended_fix="Re-fetch from WindQuant. Sustained negatives suggest a "
+                            "sign-flip in the export pipeline.",
+        )
+
+
 def scan(data_dir: Path) -> ScanResult:
     result = ScanResult(market="ashare")
     base = data_dir / "ashare"
     if not base.exists():
         result.error = f"folder not found: {base}"
         return result
+
+    # Tier 1: every expected file is present
+    generic.check_files_exist(result, base, EXPECTED_FILES)
 
     try:
         with warnings.catch_warnings():
@@ -265,6 +302,8 @@ def scan(data_dir: Path) -> ScanResult:
         _check_extreme_moves(result, dfs)
         _check_daily_vs_30min(result, dfs, data_dir)
         _check_30min_sentinels(result, data_dir)
+        # Tier 3 generic: prices and volumes must be non-negative.
+        _generic_negative_check(result, dfs)
     except Exception as e:
         result.error = f"{type(e).__name__}: {e}"
 

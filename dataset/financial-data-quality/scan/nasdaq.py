@@ -20,9 +20,16 @@ from pathlib import Path
 import pandas as pd
 
 from .common import ScanResult
+from . import generic
 
 
 PRICE_FIELDS = ("px_open", "px_high", "px_low", "px_last")
+NUMERIC_FIELDS = (
+    "px_open", "px_high", "px_low", "px_last", "volume", "shares_traded",
+    "eps_diluted", "book_val_per_sh",
+)
+EXPECTED_COLUMNS = ("date", "px_open", "px_high", "px_low", "px_last",
+                    "volume", "shares_traded", "eps_diluted", "book_val_per_sh")
 JUMP_THRESHOLD = 0.40   # 40% single-day move
 
 
@@ -72,24 +79,6 @@ def _check_jumps(result: ScanResult, df: pd.DataFrame, sym: str, fname: str):
                             f"If a split, apply backward adjustment factor {curr/prev:.4f} "
                             f"to all pre-split prices.",
         )
-
-
-def _check_negative_prices(result: ScanResult, df: pd.DataFrame, sym: str, fname: str):
-    for col in PRICE_FIELDS:
-        if col not in df.columns:
-            continue
-        bad = df[df[col] < 0]
-        if len(bad) > 0:
-            result.add(
-                document=fname,
-                symbol=sym,
-                date=str(bad.iloc[0]["date"]),
-                category="Outlier",
-                severity="critical",
-                description=f"Negative value in column '{col}': {float(bad.iloc[0][col]):.4f}. "
-                            f"Equity prices cannot be negative.",
-                recommended_fix="Re-fetch from BQuant. If repeated, suspect a sign-flip in the export.",
-            )
 
 
 def _check_volume_notional(result: ScanResult, df: pd.DataFrame, sym: str, fname: str):
@@ -180,12 +169,44 @@ def scan(data_dir: Path) -> ScanResult:
     csvs = sorted(p for p in base.iterdir() if p.suffix == ".csv")
     eps_reported = False  # field-wide issue: report once
     fmt_reported = False
+    schema_reported = False
+    # eps_diluted/book_val_per_sh have their own dedicated string-'--' check.
+    # Suppress those columns from the generic numeric-dtype check so the same
+    # underlying problem is not flagged twice.
+    GENERIC_NUMERIC_SUPPRESS = {"eps_diluted", "book_val_per_sh"}
 
     for fpath in csvs:
         sym = fpath.stem
         try:
             df = pd.read_csv(fpath)
             result.files_scanned += 1
+
+            if not schema_reported:
+                # Tier-1 schema: column presence (run on first file only since
+                # vendor exports the same schema for every ticker)
+                generic.check_columns(
+                    result, df,
+                    document="ALL nasdaq CSV files",
+                    expected=list(EXPECTED_COLUMNS),
+                )
+                schema_reported = True
+
+            # Tier-3 validity: numeric dtype + non-negative prices/volumes,
+            # silenced where market-specific checks already cover the column.
+            generic.check_numeric_columns(
+                result, df,
+                document=fpath.name,
+                numeric_columns=list(NUMERIC_FIELDS),
+                suppress_columns=GENERIC_NUMERIC_SUPPRESS,
+                symbol=sym,
+            )
+            generic.check_no_negative(
+                result, df,
+                document=fpath.name,
+                positive_columns=["px_open", "px_high", "px_low", "px_last",
+                                  "volume", "shares_traded"],
+                symbol=sym,
+            )
 
             if not eps_reported:
                 # detect on first file then suppress for the rest (it is the
@@ -196,7 +217,6 @@ def scan(data_dir: Path) -> ScanResult:
                     eps_reported = True
 
             _check_jumps(result, df, sym, fpath.name)
-            _check_negative_prices(result, df, sym, fpath.name)
             _check_volume_notional(result, df, sym, fpath.name)
             _check_calendar_gap(result, df, sym, fpath.name)
 

@@ -20,9 +20,11 @@ from pathlib import Path
 import pandas as pd
 
 from .common import ScanResult
+from . import generic
 
 
 EXPECTED_FIELDS = ("Open", "High", "Low", "Close", "Vol", "Turnover")
+EXPECTED_FILES = ["daily_prices.csv", "intraday_30min.csv"]
 
 
 def _split_columns(cols: list[str]) -> dict[str, set[str]]:
@@ -157,26 +159,6 @@ def _check_trading_hours_window(result: ScanResult, df: pd.DataFrame):
         )
 
 
-def _check_duplicate_timestamps(result: ScanResult, df: pd.DataFrame, doc: str):
-    if "Datetime" not in df.columns:
-        return
-    dups = df["Datetime"][df["Datetime"].duplicated(keep=False)]
-    if len(dups) > 0:
-        result.add(
-            document=doc,
-            symbol="ALL",
-            date=", ".join(sorted(set(dups.astype(str)))[:5]) + ("..." if dups.nunique() > 5 else ""),
-            category="Cross-Field Inconsistency",
-            severity="warning",
-            description=f"{len(dups)} rows share Datetime values with another row "
-                        f"({dups.nunique()} duplicate keys total). A wide-format file should have "
-                        f"one row per timestamp.",
-            recommended_fix="De-duplicate on read: df = df.drop_duplicates(subset='Datetime'). "
-                            "Investigate the vendor pipeline — duplicates often indicate a botched "
-                            "incremental refresh.",
-        )
-
-
 def _check_tz_offset(result: ScanResult, df: pd.DataFrame, doc: str):
     if "Datetime" not in df.columns:
         return
@@ -196,6 +178,18 @@ def _check_tz_offset(result: ScanResult, df: pd.DataFrame, doc: str):
         )
 
 
+def _generic_validity(result: ScanResult, df: pd.DataFrame, doc: str):
+    """Run generic tier-3 checks across all per-symbol field columns.
+    Wide-format complicates this because each column is `{Symbol}_{Field}`,
+    so we compute the lists once and pass them in."""
+    field_cols = [c for c in df.columns if "_" in c and c != "Datetime"]
+    positive_cols = [c for c in field_cols if c.endswith(("_Open", "_High", "_Low",
+                                                          "_Close", "_Vol", "_Turnover"))]
+    generic.check_numeric_columns(result, df, document=doc, numeric_columns=field_cols)
+    generic.check_no_negative(result, df, document=doc, positive_columns=positive_cols,
+                              severity="critical")
+
+
 def scan(data_dir: Path) -> ScanResult:
     result = ScanResult(market="hkex")
     base = data_dir / "hkex"
@@ -203,20 +197,37 @@ def scan(data_dir: Path) -> ScanResult:
         result.error = f"folder not found: {base}"
         return result
 
-    try:
-        daily = pd.read_csv(base / "daily_prices.csv")
-        intra = pd.read_csv(base / "intraday_30min.csv")
-        result.files_scanned = 2
+    # Tier 1: file existence
+    present = generic.check_files_exist(result, base, EXPECTED_FILES)
+    if not present:
+        return result
 
-        _check_field_completeness(result, daily, "daily_prices.csv")
-        _check_field_completeness(result, intra, "intraday_30min.csv")
-        _check_duplicate_timestamps(result, daily, "daily_prices.csv")
-        _check_duplicate_timestamps(result, intra, "intraday_30min.csv")
-        _check_lunch_break_nulls(result, intra)
-        _check_bar_count(result, intra)
-        _check_trading_hours_window(result, intra)
-        _check_tz_offset(result, daily, "daily_prices.csv")
-        _check_tz_offset(result, intra, "intraday_30min.csv")
+    try:
+        daily = pd.read_csv(base / "daily_prices.csv") if "daily_prices.csv" in present else None
+        intra = pd.read_csv(base / "intraday_30min.csv") if "intraday_30min.csv" in present else None
+        result.files_scanned = sum(x is not None for x in (daily, intra))
+
+        for df, doc in [(daily, "daily_prices.csv"), (intra, "intraday_30min.csv")]:
+            if df is None:
+                continue
+            # Tier 1: schema (Datetime + at least the field columns)
+            generic.check_columns(result, df, document=doc, expected=["Datetime"])
+            # Tier 2: completeness summary (skip on intraday because lunch-break
+            # nulls are documented and a dedicated check covers them)
+            if doc == "daily_prices.csv":
+                generic.check_completeness_summary(result, df, document=doc)
+            # Tier 2: duplicate Datetime keys (replaces the bespoke check)
+            generic.check_no_duplicate_keys(result, df, document=doc, key_columns=["Datetime"])
+            # Tier 3: dtype + non-negative on field columns
+            _generic_validity(result, df, doc)
+            # Market-specific
+            _check_field_completeness(result, df, doc)
+            _check_tz_offset(result, df, doc)
+
+        if intra is not None:
+            _check_lunch_break_nulls(result, intra)
+            _check_bar_count(result, intra)
+            _check_trading_hours_window(result, intra)
     except Exception as e:
         result.error = f"{type(e).__name__}: {e}"
 

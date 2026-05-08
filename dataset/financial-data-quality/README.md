@@ -12,27 +12,50 @@ and column names. Real production data has bugs — typos, off-by-one
 encodings, decimal-point errors, mislabelled columns. This agent finds
 those bugs automatically.
 
-**Each scanner targets one market and runs specific checks:**
+### General checks (run on every market)
 
-| Check | What it actually looks for | Why it matters |
-|---|---|---|
-| OHLC inequality | Rows where the price relationships are impossible — close above high, low above high, etc. | If close > high, the data row is broken. Any analytics built on it will be wrong. |
-| Halt vs partial null | Rows where ALL OHLC fields are null on the same day for the same stock vs. rows where only some fields are null. | All-null = the stock was suspended (legitimate). Partial-null = the vendor's export pipeline dropped data (a bug). |
-| Extreme one-day move | A-share daily change above 20%, NASDAQ above 40%. | China caps daily moves at ±10%, so 20%+ implies post-halt resumption, a rights issue, or a decimal-point error. NASDAQ 40%+ usually means an unadjusted stock split. |
-| Daily ↔ 30-min consistency | The last 30-min bar's close on day D should match the daily-file close[D]. | A-share ships the same prices in two formats. They should agree; if they don't, one feed is corrupt. |
-| Schema (column-dtype consistency) | Every A-share field file must have the same column dtype (str). `daily/turnover.h5` is int64. | `'000333'` becomes `333`. Joins between turnover and other fields silently mis-align. |
-| Sentinel strings in numeric 30-min columns | Any non-numeric string lurking in a column that should be numeric (e.g. `'suspended'`). | Forces dtype to non-numeric; numeric ops raise. |
-| `'--'` string in numeric columns | NASDAQ's eps_diluted and book_val_per_sh contain the literal string `'--'` instead of NaN. | Same problem class — non-numeric dtype breaks `.mean()` and friends. |
-| Field completeness in wide format | Each HKEX symbol must have all six columns (Open/High/Low/Close/Vol/Turnover). | Missing columns silently break per-symbol analytics. |
-| Lunch-break null partition (HKEX) | 12:30 rows are null *by design*. Nulls at any other time are vendor errors. | Tells the user which nulls to drop and which to investigate. |
-| Duplicate timestamps | A wide-format daily file should have one row per Datetime; a per-symbol file should have one row per date. | Found 2 duplicate rows in HKEX `daily_prices.csv` and a duplicate trading day in TSE 9984. |
-| Calendar gap per ticker (NASDAQ) | A gap of more than 4 calendar days between adjacent rows means missing trading days. | TSLA has a 10-day gap (2025-12-12 → 2025-12-22), about 5 missing trading days. |
-| `volume == price × shares` consistency | NASDAQ's description says `volume` is the dollar notional, equal to px_last × shares_traded. We verify it. | If a future export ships share count in the volume column instead, this check fires. |
-| Date format (NYSE / TSE) | NYSE uses MM/DD/YYYY. TSE uses YYYY/MM/DD. NASDAQ uses ISO 8601. | Not corrupt data — but a footgun for cross-market joins. Some systems mis-parse MM/DD/YYYY as DD/MM/YYYY. |
-| Look-ahead bias warning (NYSE) | Reminds the user to filter by `report_date`, not `fiscal_period_end`. | Backtests using filing-period-end pretend the user knew Q3 numbers on Sept 30, even though companies file weeks later. Looks good but isn't real. |
-| Timezone matches DST regime (NYSE) | `tz_offset` should agree with the DST regime of `update_timestamp` (-04:00 inside DST, -05:00 outside). | Q3 has rows in December stamped -04:00 (should be -05:00). Q4 has rows in March 2026 stamped -05:00 (should be -04:00). Off by 1 hour when converted to UTC. |
-| Encoding mismatch (TSE) | The TSE description file is Shift-JIS while the data files are UTF-8. | Tools that auto-detect encoding from one file and reuse it on the other will fail. |
-| Cross-market dual listing | BABA/9988.HK and 601318/2318.HK are dual-listed. Their daily *returns* must correlate (~0.6-0.9). | If the correlation is low or one specific day diverges, a feed is wrong. The 601318/2318.HK pair independently confirms the ashare decimal error on 2025-11-20. |
+These are the same three tiers applied uniformly to every market, so the
+audit is systematic rather than ad-hoc. They live in `scan/generic.py` and
+each market scanner calls them with a small manifest describing what it
+expects. Where a market has a more specific check covering the same
+underlying problem (e.g. NASDAQ's `'--'` string detector), the generic
+check passes `suppress_columns=...` so the same row is never flagged twice.
+
+| Tier | Check | What it looks for | Why it matters |
+|---|---|---|---|
+| 1 (schema) | File presence | Every file the data description promises must exist on disk. | Missing files crash downstream loaders silently if the code uses defaults. |
+| 1 (schema) | Column presence | Each table must have its documented column set. | Silent renames break downstream analytics. |
+| 2 (completeness) | Per-column null rate | Any column with ≥5% nulls. | Surfaces hidden gaps that get masked by `.dropna()`. |
+| 2 (completeness) | Duplicate keys | One row per natural key (e.g. one row per Datetime, one row per (ticker, fiscal_period_end)). | Double-counted rows skew aggregates, joins explode in size. |
+| 3 (validity) | Numeric dtype | Columns documented as numeric must parse as numeric. | Sentinel strings (`'--'`, `'suspended'`) silently force dtype=object and break `.mean()` / `.pct_change()`. |
+| 3 (validity) | Non-negative | Prices, volumes, turnover must be ≥ 0. | Caught NVDA's negative volume / shares_traded — almost certainly a sign-flip in the export pipeline. |
+
+### Market-specific checks
+
+Each market also has bespoke checks tailored to its format quirks and
+vendor description:
+
+| Check | Market | What it looks for | Why it matters |
+|---|---|---|---|
+| OHLC inequality | ashare, tse | close above high, low above high, open above high, close below low, open below low. | If close > high, the row is broken. Any analytics built on it is wrong. |
+| Halt vs partial null | ashare | Rows where ALL OHLC fields are null on the same day vs rows where only some are. | All-null = legitimate trading suspension. Partial-null = vendor export bug. |
+| Extreme one-day move | ashare (>20%), nasdaq (>40%) | Single-day pct change exceeding the threshold. | China caps daily moves at ±10%, so 20%+ implies decimal error or post-halt resumption. NASDAQ 40%+ usually means an unadjusted split. |
+| Daily ↔ 30-min consistency | ashare | Last 30-min bar's close on day D must match daily.close[D]. | A-share ships the same prices in two formats. Disagreement means one feed is corrupt. |
+| Symbol-code dtype | ashare | Every field file must have the same column dtype. `daily/turnover.h5` is int64; the rest are str. | `'000333'` becomes `333`. Joins between turnover and other fields silently mis-align. |
+| Sentinel strings in numeric columns | ashare (30-min), nasdaq | Non-numeric strings lurking in numeric columns (`'suspended'`, `'--'`). | Forces dtype to object; numeric ops raise. |
+| Field completeness in wide format | hkex | Each symbol must have all six fields (Open/High/Low/Close/Vol/Turnover). | Missing columns silently break per-symbol analytics. |
+| Lunch-break null partition | hkex | 12:30 nulls expected; nulls at other times are vendor errors. | Tells the user which nulls to drop and which to investigate. |
+| Bar count per day | hkex | Each trading day should produce the same intraday bar count. | Short days suggest feed dropouts. |
+| Trading-hours window | hkex | Timestamps must fall inside 09:30-16:00. | Timezone or bar-edge convention bugs. |
+| Calendar gap per ticker | nasdaq | A gap of more than 4 calendar days between adjacent rows. | TSLA has a 10-day gap (2025-12-12 → 2025-12-22), about 5 missing trading days. |
+| `volume == price × shares` consistency | nasdaq | Description says volume is dollar notional, equal to px_last × shares_traded. We verify it. | If a future export ships share count in the volume column, this check fires. |
+| Date format note | nasdaq, nyse, tse | NYSE uses MM/DD/YYYY. TSE uses YYYY/MM/DD. NASDAQ uses ISO 8601. | Not corrupt data — but a footgun for cross-market joins. |
+| Look-ahead bias warning | nyse | Reminds the user to filter by `report_date`, not `fiscal_period_end`. | Backtests using filing-period-end pretend the user knew Q3 numbers on Sept 30. |
+| Snapshot coverage | nyse | Each .h5 should carry overlapping history so users can audit restatements. | This dataset's snapshots don't overlap; flagged so the user knows they can't verify point-in-time stability. |
+| `tz_offset` matches DST regime | nyse | -04:00 (EDT) inside DST window; -05:00 (EST) outside. | Q3 has rows in December stamped -04:00 (should be -05:00); Q4 has rows in March 2026 stamped -05:00 (should be -04:00). Off by 1 hour. |
+| Report-date lag | nyse | report_date must be after fiscal_period_end by 0-120 days. | Negative lag means filing predated the period end; >120 days suggests a delinquent filer or vendor error. |
+| Encoding mismatch | tse | Description file is Shift-JIS while the data files are UTF-8. | Tools that auto-detect encoding from one file and reuse it on the other will fail. |
+| Cross-market dual listing | cross | BABA/9988.HK and 601318/2318.HK are dual-listed. Daily *returns* must correlate (~0.6-0.9). | If correlation is low or one specific day diverges, a feed is wrong. The 601318/2318.HK pair independently confirms the ashare decimal error on 2025-11-20. |
 
 ## Framework choice
 
@@ -125,6 +148,7 @@ financial-data-quality/
 └── scan/
     ├── __init__.py
     ├── common.py         Issue/ScanResult dataclasses, encoding fallback helpers
+    ├── generic.py        Tier 1/2/3 checks every market reuses
     ├── ashare.py         China A-Shares scanner
     ├── hkex.py           Hong Kong Exchange scanner
     ├── nasdaq.py         NASDAQ scanner
@@ -136,7 +160,7 @@ financial-data-quality/
 
 ## What the scanner found on this dataset (sample run)
 
-77 files scanned across 6 modules. **22 issues**: 2 critical, 14 warnings,
+77 files scanned across 6 modules. **24 issues**: 4 critical, 14 warnings,
 6 info. See `quality_report.md` in the working directory after running
 `run.py`.
 
@@ -152,6 +176,9 @@ Highlights:
 - **Critical**: A-share `daily/turnover.h5` has int64 column codes while
   every other field file uses str — silently strips leading zeros from
   symbol codes (e.g. `'000333'` → `333`).
+- **Critical**: NVDA on 2025-10-15 has negative `volume` and `shares_traded`.
+  Caught by the generic non-negative tier-3 check — almost certainly a
+  sign-flip in the export pipeline.
 - **Warning**: A-share `30min/volume.h5` contains the literal string
   `'suspended'` mixed into numeric data for symbol 000001.
 - **Warning**: NASDAQ TSLA has roughly 5 missing trading days

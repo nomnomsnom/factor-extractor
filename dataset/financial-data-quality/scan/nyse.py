@@ -25,6 +25,7 @@ from pathlib import Path
 import pandas as pd
 
 from .common import ScanResult
+from . import generic
 
 
 FUNDAMENTAL_FIELDS = (
@@ -236,6 +237,29 @@ def scan(data_dir: Path) -> ScanResult:
 
     for name, df in snaps.items():
         fname = f"{name}.h5"
+        # Tier 1: schema (ticker + the date columns + fundamentals)
+        generic.check_columns(
+            result, df,
+            document=fname,
+            expected=["ticker", "fiscal_period_end", "report_date", "update_timestamp",
+                      "tz_offset"] + list(FUNDAMENTAL_FIELDS),
+        )
+        # Tier 2: completeness (per-column null rates) and duplicate
+        # (ticker, fiscal_period_end) keys — same row should not appear
+        # twice in the same snapshot.
+        generic.check_completeness_summary(result, df, document=fname)
+        generic.check_no_duplicate_keys(
+            result, df,
+            document=fname,
+            key_columns=["ticker", "fiscal_period_end"],
+        )
+        # Tier 3: numeric dtype on every fundamental column.
+        generic.check_numeric_columns(
+            result, df,
+            document=fname,
+            numeric_columns=list(FUNDAMENTAL_FIELDS),
+        )
+
         _check_tz_offset(result, df, fname)
         _check_report_lag(result, df, fname)
 
