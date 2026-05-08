@@ -17,7 +17,7 @@ Checks:
      equal daily.close[D]. Free check, since the data is redundantly stored.
   5. Schema check: every field file must have the same column dtype. We
      observed daily/turnover.h5 has int64 columns while close/high/low/open
-     have str — '000858' silently becomes 858.
+     have str — '000333' silently becomes 333.
   6. Sentinel-string scan on 30min files: any non-numeric string lurking in
      a numeric column (e.g. 'suspended' in 30min/volume.h5).
 """
@@ -172,7 +172,7 @@ def _check_daily_vs_30min(result: ScanResult, daily: dict[str, pd.DataFrame], da
 
 def _check_column_schema(result: ScanResult, dfs: dict[str, pd.DataFrame]):
     """All field files must share the same column dtype. Otherwise leading
-    zeros in symbol codes (e.g. '000858') get silently truncated to ints."""
+    zeros in symbol codes (e.g. '000333') get silently truncated to ints."""
     dtypes = {fld: str(df.columns.dtype) for fld, df in dfs.items()}
     unique_dtypes = set(dtypes.values())
     if len(unique_dtypes) > 1:
@@ -189,7 +189,7 @@ def _check_column_schema(result: ScanResult, dfs: dict[str, pd.DataFrame]):
             description=f"Column-dtype mismatch across daily field files: "
                         f"{dtypes}. Majority is {majority!r}. Files with "
                         f"int64 columns silently strip leading zeros from "
-                        f"symbol codes (e.g. '000858' becomes 858), so "
+                        f"symbol codes (e.g. '000333' becomes 333), so "
                         f"joins between files will mis-align.",
             recommended_fix=f"Re-export the offending file(s) with explicit "
                             f"string symbol codes. Or on read, coerce: "

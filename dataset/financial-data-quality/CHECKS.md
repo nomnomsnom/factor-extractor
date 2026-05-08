@@ -74,7 +74,7 @@ truncated to integers.
 **FOUND in this dataset:**
 - `daily/turnover.h5` has columns as **int64**; every other file has
   columns as **str**.
-- So `'000858'` becomes `858` in turnover but stays `'000858'` everywhere
+- So `'000333'` becomes `333` in turnover but stays `'000333'` everywhere
   else. Joins between turnover and other fields will silently mis-align
   on the 5+ symbols whose codes start with leading zeros.
 - Recommended fix: re-export with explicit string symbol codes, or coerce

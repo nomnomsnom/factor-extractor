@@ -20,7 +20,7 @@ those bugs automatically.
 | Halt vs partial null | Rows where ALL OHLC fields are null on the same day for the same stock vs. rows where only some fields are null. | All-null = the stock was suspended (legitimate). Partial-null = the vendor's export pipeline dropped data (a bug). |
 | Extreme one-day move | A-share daily change above 20%, NASDAQ above 40%. | China caps daily moves at ±10%, so 20%+ implies post-halt resumption, a rights issue, or a decimal-point error. NASDAQ 40%+ usually means an unadjusted stock split. |
 | Daily ↔ 30-min consistency | The last 30-min bar's close on day D should match the daily-file close[D]. | A-share ships the same prices in two formats. They should agree; if they don't, one feed is corrupt. |
-| Schema (column-dtype consistency) | Every A-share field file must have the same column dtype (str). `daily/turnover.h5` is int64. | `'000858'` becomes `858`. Joins between turnover and other fields silently mis-align. |
+| Schema (column-dtype consistency) | Every A-share field file must have the same column dtype (str). `daily/turnover.h5` is int64. | `'000333'` becomes `333`. Joins between turnover and other fields silently mis-align. |
 | Sentinel strings in numeric 30-min columns | Any non-numeric string lurking in a column that should be numeric (e.g. `'suspended'`). | Forces dtype to non-numeric; numeric ops raise. |
 | `'--'` string in numeric columns | NASDAQ's eps_diluted and book_val_per_sh contain the literal string `'--'` instead of NaN. | Same problem class — non-numeric dtype breaks `.mean()` and friends. |
 | Field completeness in wide format | Each HKEX symbol must have all six columns (Open/High/Low/Close/Vol/Turnover). | Missing columns silently break per-symbol analytics. |
@@ -151,7 +151,7 @@ Highlights:
   as the corrupt one.
 - **Critical**: A-share `daily/turnover.h5` has int64 column codes while
   every other field file uses str — silently strips leading zeros from
-  symbol codes (e.g. `'000858'` → `858`).
+  symbol codes (e.g. `'000333'` → `333`).
 - **Warning**: A-share `30min/volume.h5` contains the literal string
   `'suspended'` mixed into numeric data for symbol 000001.
 - **Warning**: NASDAQ TSLA has roughly 5 missing trading days
