@@ -120,6 +120,37 @@ def _check_volume_notional(result: ScanResult, df: pd.DataFrame, sym: str, fname
         )
 
 
+def _check_calendar_gap(result: ScanResult, df: pd.DataFrame, sym: str, fname: str):
+    """Find consecutive missing trading days. A gap of >4 calendar days
+    between adjacent rows means we lost at least one trading day (Fri->Mon
+    is 3 days; Fri->Tue is 4; anything longer is a missing weekday)."""
+    if "date" not in df.columns:
+        return
+    dates = pd.to_datetime(df["date"], utc=True, errors="coerce").dt.normalize().sort_values().dropna()
+    if len(dates) < 2:
+        return
+    diffs = dates.diff().dt.days
+    big = diffs[diffs > 4]
+    for idx in big.index:
+        prev_date = dates.loc[idx - 1] if (idx - 1) in dates.index else None
+        gap_days = int(diffs.loc[idx])
+        # rough estimate of missed trading days = gap // 7 * 5 + min(gap % 7, 5) - 1
+        # but simpler: subtract weekends from the total
+        result.add(
+            document=fname,
+            symbol=sym,
+            date=f"{prev_date.date() if prev_date is not None else '?'} -> {dates.loc[idx].date()}",
+            category="Missing Data",
+            severity="warning",
+            description=f"Calendar gap of {gap_days} days between adjacent rows. "
+                        f"Suggests roughly {max(gap_days - 3, 1)} missing trading day(s) "
+                        f"(after subtracting one weekend).",
+            recommended_fix="Cross-check the NASDAQ trading calendar (no scheduled "
+                            "early-close gaps in this period). Likely a vendor feed "
+                            "outage. Re-fetch from BQuant.",
+        )
+
+
 def _check_date_format(result: ScanResult, df: pd.DataFrame, sym: str, fname: str):
     if "date" not in df.columns:
         return
@@ -167,6 +198,7 @@ def scan(data_dir: Path) -> ScanResult:
             _check_jumps(result, df, sym, fpath.name)
             _check_negative_prices(result, df, sym, fpath.name)
             _check_volume_notional(result, df, sym, fpath.name)
+            _check_calendar_gap(result, df, sym, fpath.name)
 
             if not fmt_reported:
                 pre = len(result.issues)

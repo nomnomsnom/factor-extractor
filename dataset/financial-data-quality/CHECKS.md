@@ -1,4 +1,4 @@
-# What each scanner checks — plain English
+# What each scanner checks 
 
 Every check on every market, with a real example from running this agent
 on the dataset. If a row says "FOUND in this dataset", the actual scan run
@@ -64,6 +64,34 @@ If they disagree, one of the two feeds is wrong.
 - 601318 on 2025-11-20: daily file says 370.08, 30-min file says ~37.
 - This pinpoints which feed is corrupt: the **daily** file is wrong, the
   30-min file is right.
+
+### Check 5 — Schema (column-dtype consistency across field files)
+
+Every field file (open/high/low/close/volume/turnover) should have the
+same column dtype, otherwise leading zeros in symbol codes get silently
+truncated to integers.
+
+**FOUND in this dataset:**
+- `daily/turnover.h5` has columns as **int64**; every other file has
+  columns as **str**.
+- So `'000858'` becomes `858` in turnover but stays `'000858'` everywhere
+  else. Joins between turnover and other fields will silently mis-align
+  on the 5+ symbols whose codes start with leading zeros.
+- Recommended fix: re-export with explicit string symbol codes, or coerce
+  on read with `df.columns = df.columns.astype(str).str.zfill(6)`.
+
+### Check 6 — Sentinel strings in numeric 30-min columns
+
+Any non-numeric string lurking in a column that should be numeric (e.g.
+the literal word `'suspended'`).
+
+**FOUND in this dataset:**
+- `30min/volume.h5` contains the string `'suspended'` in 8 cells of
+  symbol `000001`'s column. Likely placed there to mark halted bars.
+- The column dtype is therefore non-numeric — `df['000001'].mean()` raises.
+- Recommended fix: `df = df.apply(pd.to_numeric, errors='coerce')` on read.
+  Decide whether 'suspended' rows should be NaN or carry a separate
+  halt-indicator column.
 
 ---
 
@@ -168,6 +196,20 @@ Description says dates are ISO 8601 UTC. Verify the `Z` or `+00:00` suffix.
 
 **NOT FOUND.** Dates look like `2025-09-02T00:00:00Z` — correct.
 
+### Check 6 — Calendar gaps per ticker
+
+A gap of more than 4 calendar days between adjacent rows means we lost
+at least one trading day (Fri→Mon is 3 days, Fri→Tue is 4; longer means
+a missing weekday).
+
+**FOUND in this dataset:**
+- TSLA has only 119 rows (every other ticker has 124). One gap of 10
+  calendar days between 2025-12-12 and 2025-12-22 — that's roughly 5
+  missing trading days.
+- Recommended fix: cross-check the NASDAQ trading calendar (no scheduled
+  early-close gaps in this period). Likely a vendor feed outage. Re-fetch
+  from BQuant.
+
 ---
 
 ## NYSE — Quarterly fundamentals (NOT prices)
@@ -213,11 +255,21 @@ $90B in the June snapshot to $92B in the December snapshot).
 - This means we can't detect point-in-time drift even if it existed.
 - Recommended fix: ask FactQuant to emit cumulative snapshots.
 
-### Check 4 — Timezone offset values
+### Check 4 — Timezone offset matches DST regime
 
-`tz_offset` should only contain -04:00 (EDT) or -05:00 (EST).
+`tz_offset` should agree with the DST regime of `update_timestamp`. US
+Daylight Saving Time runs from the second Sunday of March to the first
+Sunday of November. Inside DST: -04:00 (EDT). Outside: -05:00 (EST).
 
-**NOT FOUND.** Only `-04:00` present.
+**FOUND in this dataset:**
+- Q3 snapshot (`2025-09-30.h5`) has rows with `update_timestamp = 12/15/2025`
+  stamped `-04:00`. DST ended 2025-11-02 — should be `-05:00`. Off by 1 hour.
+- Q4 snapshot (`2025-12-31.h5`) has rows with `update_timestamp` in
+  March 2026 (post DST start 2026-03-08) still stamped `-05:00` — should
+  be `-04:00`.
+- Recommended fix: re-derive `tz_offset` from the timestamp, or convert to
+  UTC by parsing with `America/New_York` and letting pandas pick the
+  correct offset automatically.
 
 ### Check 5 — Report-date lag sanity
 
@@ -273,6 +325,16 @@ The dates themselves are valid; flagged for cross-market joining.
 - `2025/09/02` style format flagged.
 - Recommended fix: `pd.to_datetime(col, format='%Y/%m/%d')`.
 
+### Check 6 — Duplicate trading-day rows
+
+A daily file should have exactly one row per trading day.
+
+**FOUND in this dataset:**
+- TSE 9984 (SoftBank) has 118 rows but only 117 unique dates. One date
+  is duplicated (e.g. 2025/12/15 appears twice).
+- Recommended fix: `df.drop_duplicates(subset='日付', keep='last')` on
+  read. Then ask the vendor why their pipeline emitted the duplicate.
+
 ---
 
 ## CROSS-MARKET — checks that span multiple feeds
@@ -291,6 +353,19 @@ wrong prices, or symbol confusion.
 - Correlation = 0.977 at 0-day lag.
 - Both feeds are highly consistent with each other.
 - No action needed.
+
+### Check 2 — 601318 (ashare) ↔ 2318.HK (HKEX) dual-listing correlation
+
+Ping An Insurance is dual-listed on Shanghai (601318) and Hong Kong
+(2318.HK). Same logic as the BABA pair.
+
+**FOUND in this dataset (warning):**
+- The scanner highlights **2025-11-20** as the worst-disagreement day.
+  On that date the ashare close jumps +900% (the corrupted value) while
+  2318.HK is unchanged in HKD.
+- This is **independent confirmation** of the same root cause that the
+  ashare scanner caught via OHLC violation, extreme move, and daily↔30min
+  mismatch — five different mechanisms all pointing at the same cell.
 
 ---
 

@@ -92,21 +92,78 @@ def _check_snapshot_coverage(result: ScanResult, snaps: dict[str, pd.DataFrame])
         )
 
 
+def _us_eastern_offset_for(date: pd.Timestamp) -> str:
+    """Return -04:00 (EDT) if `date` is during US DST, else -05:00 (EST).
+
+    DST in the US: starts second Sunday of March, ends first Sunday of November.
+    For 2025: starts 2025-03-09, ends 2025-11-02.
+    """
+    year = date.year
+    # 2nd Sunday of March
+    march = pd.Timestamp(year=year, month=3, day=1)
+    march_2nd_sun = march + pd.Timedelta(days=(6 - march.weekday()) % 7) + pd.Timedelta(days=7)
+    # 1st Sunday of November
+    nov = pd.Timestamp(year=year, month=11, day=1)
+    nov_1st_sun = nov + pd.Timedelta(days=(6 - nov.weekday()) % 7)
+    in_dst = march_2nd_sun <= date < nov_1st_sun
+    return "-04:00" if in_dst else "-05:00"
+
+
 def _check_tz_offset(result: ScanResult, df: pd.DataFrame, fname: str):
-    if "tz_offset" not in df.columns:
+    """Verify tz_offset matches the DST regime of update_timestamp.
+
+    Per the data description, US/Eastern is -04:00 (EDT) during DST and
+    -05:00 (EST) outside DST. We've observed at least one snapshot where
+    rows updated in mid-December (post-DST) are still stamped -04:00 —
+    a real bug.
+    """
+    if not {"tz_offset", "update_timestamp"}.issubset(df.columns):
         return
-    vals = set(df["tz_offset"].astype(str).unique()) - {"nan", "None"}
-    valid = {"-04:00", "-05:00"}
-    if not vals.issubset(valid):
+    ts = pd.to_datetime(df["update_timestamp"], format="%m/%d/%Y", errors="coerce")
+    actual = df["tz_offset"].astype(str)
+
+    # First: anything outside the legal {-04:00, -05:00} set is its own issue.
+    # We surface that and EXCLUDE those rows from the DST-regime check below
+    # so each row is flagged at most once per scanner run.
+    legal = {"-04:00", "-05:00"}
+    odd_mask = ~actual.isin(legal | {"nan", "None"})
+    odd_vals = sorted(set(actual[odd_mask].unique()))
+    if odd_vals:
         result.add(
             document=fname,
             symbol="ALL",
             date="all",
             category="Format",
             severity="warning",
-            description=f"tz_offset column contains unexpected values {sorted(vals)}. "
+            description=f"tz_offset column contains unexpected values {odd_vals}. "
                         f"US/Eastern should be either -04:00 (EDT) or -05:00 (EST).",
-            recommended_fix="Verify with FactQuant. May indicate a server-side tz misconfiguration.",
+            recommended_fix="Verify with FactQuant.",
+        )
+
+    # DST-regime check, but only on rows where tz_offset IS in the legal set.
+    in_legal = actual.isin(legal) & ts.notna()
+    expected = ts.where(in_legal).apply(
+        lambda t: _us_eastern_offset_for(t) if pd.notnull(t) else None
+    )
+    mismatched = in_legal & (actual != expected)
+    n = int(mismatched.sum())
+    if n > 0:
+        idx0 = mismatched[mismatched].index[0]
+        ts0 = ts.loc[idx0]
+        result.add(
+            document=fname,
+            symbol="ALL",
+            date=str(ts0.date()),
+            category="Format",
+            severity="warning",
+            description=f"{n} row(s) where tz_offset disagrees with the DST regime of "
+                        f"update_timestamp. Example: update_timestamp={ts0.date()} "
+                        f"is stamped {actual.loc[idx0]} but should be {expected.loc[idx0]} "
+                        f"(US DST 2025 ran 03/09 to 11/02). Downstream code that converts to UTC "
+                        f"using tz_offset will land on the wrong absolute time by 1 hour.",
+            recommended_fix="Verify with FactQuant. Either re-derive tz_offset from the timestamp, "
+                            "or convert to UTC by parsing the date with America/New_York and "
+                            "letting pandas pick the correct offset automatically.",
         )
 
 

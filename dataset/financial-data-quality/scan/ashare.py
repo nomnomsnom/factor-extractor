@@ -5,7 +5,7 @@ Format: HDF5, one file per field, naive Asia/Shanghai timestamps, CNY.
 Description quote: "Index: datetime (naive, local time). Columns: symbol codes."
 
 Checks:
-  1. OHLC inequalities (all four): close>high, close<low, open>high, open<low,
+  1. OHLC inequalities (all five): close>high, close<low, open>high, open<low,
      low>high. Sonnet only checked close>high.
   2. Nulls split into HALT (all OHLC fields null on the same row+symbol — a
      legitimate suspension) vs ERROR (some fields null, others not — a
@@ -15,6 +15,11 @@ Checks:
      a decimal-point error.
   4. Daily vs 30min cross-check: the LAST 30min bar's close on day D should
      equal daily.close[D]. Free check, since the data is redundantly stored.
+  5. Schema check: every field file must have the same column dtype. We
+     observed daily/turnover.h5 has int64 columns while close/high/low/open
+     have str — '000858' silently becomes 858.
+  6. Sentinel-string scan on 30min files: any non-numeric string lurking in
+     a numeric column (e.g. 'suspended' in 30min/volume.h5).
 """
 
 from __future__ import annotations
@@ -165,6 +170,82 @@ def _check_daily_vs_30min(result: ScanResult, daily: dict[str, pd.DataFrame], da
         )
 
 
+def _check_column_schema(result: ScanResult, dfs: dict[str, pd.DataFrame]):
+    """All field files must share the same column dtype. Otherwise leading
+    zeros in symbol codes (e.g. '000858') get silently truncated to ints."""
+    dtypes = {fld: str(df.columns.dtype) for fld, df in dfs.items()}
+    unique_dtypes = set(dtypes.values())
+    if len(unique_dtypes) > 1:
+        # which file disagrees with the majority?
+        from collections import Counter
+        majority = Counter(dtypes.values()).most_common(1)[0][0]
+        offenders = [f for f, d in dtypes.items() if d != majority]
+        result.add(
+            document="daily/{" + ",".join(offenders) + "}.h5",
+            symbol="ALL",
+            date="all",
+            category="Type Error",
+            severity="critical",
+            description=f"Column-dtype mismatch across daily field files: "
+                        f"{dtypes}. Majority is {majority!r}. Files with "
+                        f"int64 columns silently strip leading zeros from "
+                        f"symbol codes (e.g. '000858' becomes 858), so "
+                        f"joins between files will mis-align.",
+            recommended_fix=f"Re-export the offending file(s) with explicit "
+                            f"string symbol codes. Or on read, coerce: "
+                            f"df.columns = df.columns.astype(str).str.zfill(6).",
+        )
+
+
+def _check_30min_sentinels(result: ScanResult, data_dir: Path):
+    """Any string value lurking in a numeric 30min column."""
+    base_30min = data_dir / "ashare" / "30min"
+    if not base_30min.exists():
+        return
+    for fld in FIELDS:
+        p = base_30min / f"{fld}.h5"
+        if not p.exists():
+            continue
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            df = pd.read_hdf(p, key="data")
+        result.files_scanned += 1
+        # Identify any cell that fails float() conversion.
+        # We scan column by column so we can locate offenders cheaply.
+        bad_values: dict[str, set[str]] = {}
+        for col in df.columns:
+            s = df[col]
+            if pd.api.types.is_numeric_dtype(s):
+                continue  # nothing to do for clean numeric columns
+            for v in s.dropna().unique():
+                try:
+                    float(v)
+                except (TypeError, ValueError):
+                    bad_values.setdefault(str(col), set()).add(repr(v))
+        if bad_values:
+            sample_col, sample_vals = next(iter(bad_values.items()))
+            n_cells = sum(
+                int((df[col] == val.strip("'\"")).sum())
+                for col, vals in bad_values.items()
+                for val in vals
+            )
+            result.add(
+                document=f"30min/{fld}.h5",
+                symbol=", ".join(sorted(bad_values.keys())[:3])
+                       + ("..." if len(bad_values) > 3 else ""),
+                date="multiple",
+                category="Type Error",
+                severity="warning",
+                description=f"Numeric 30min/{fld} column(s) contain non-numeric "
+                            f"strings, e.g. {sample_col}={list(sample_vals)[0]} "
+                            f"({n_cells} affected cells). pd.to_numeric will "
+                            f"raise unless errors='coerce' is passed.",
+                recommended_fix=f"On read: df = df.apply(pd.to_numeric, errors='coerce'). "
+                                f"Investigate whether 'suspended' rows should be NaN "
+                                f"or carry a separate halt-indicator column.",
+            )
+
+
 def scan(data_dir: Path) -> ScanResult:
     result = ScanResult(market="ashare")
     base = data_dir / "ashare"
@@ -178,10 +259,12 @@ def scan(data_dir: Path) -> ScanResult:
             dfs = _load_daily(base)
         result.files_scanned = len(FIELDS)
 
+        _check_column_schema(result, dfs)
         _check_ohlc_inequalities(result, dfs)
         _check_nulls(result, dfs)
         _check_extreme_moves(result, dfs)
         _check_daily_vs_30min(result, dfs, data_dir)
+        _check_30min_sentinels(result, data_dir)
     except Exception as e:
         result.error = f"{type(e).__name__}: {e}"
 

@@ -159,6 +159,24 @@ def _check_daily(result: ScanResult, base: Path):
                         recommended_fix="Re-fetch this row. Check whether high/low were transposed.",
                     )
 
+        # Duplicate trading-day rows
+        if "date" in df_en.columns:
+            dup_mask = df_en["date"].duplicated(keep=False)
+            if dup_mask.any():
+                dup_dates = sorted(set(df_en.loc[dup_mask, "date"].astype(str)))
+                result.add(
+                    document=f"{sym}/daily.csv",
+                    symbol=sym,
+                    date=", ".join(dup_dates[:3]) + ("..." if len(dup_dates) > 3 else ""),
+                    category="Cross-Field Inconsistency",
+                    severity="warning",
+                    description=f"{int(dup_mask.sum())} rows share a date with another row "
+                                f"({len(dup_dates)} duplicate keys). One row per trading day "
+                                f"is expected.",
+                    recommended_fix="Drop duplicates on read with df.drop_duplicates(subset='日付', keep='last'). "
+                                    "Then ask the vendor why their pipeline emitted the duplicate.",
+                )
+
         # Nulls
         nulls = int(df_en.isnull().sum().sum())
         if nulls > 0:
