@@ -82,6 +82,7 @@ vendor description:
 From `snom/dataset/`:
 
 ```bash
+pip install -r financial-data-quality/requirements.txt
 python financial-data-quality/run.py
 ```
 
@@ -93,6 +94,24 @@ The orchestrator:
    directory (or `--out-dir`).
 
 The scan itself takes a few seconds.
+
+### Report layout
+
+`quality_report.md` is structured to be skim-first, then dig:
+
+1. **Summary** — total counts by severity.
+2. **Issues by category** — crosstab of category × severity so the reviewer
+   can see at a glance whether the dataset is dominated by outliers, missing
+   data, type errors, etc.
+3. **Cascading findings** — issues that share `(symbol, date)`. Two or more
+   independent checks firing on the same row is almost always one root-cause
+   bug cross-validated by multiple detectors. The 601318 (Ping An) decimal
+   error fires under Outlier (close > high), Extreme Move (+900%), and
+   Cross-Market Inconsistency (vs 2318.HK) — surfaced as a single group so
+   the reviewer doesn't mistake one bug for three.
+4. **Per-severity sections** — every issue verbatim, grouped Critical →
+   Warning → Info, each with `symbol`, `date`, `document`, description,
+   recommended fix.
 
 ### Bonus: query data through the unified API
 
@@ -128,7 +147,7 @@ Claude will follow the workflow in `SKILL.md` step-by-step.
 - The dataset folder is named `ai_agent_dataset/` and lives next to (or
   is auto-extracted from) `ai_agent_dataset.zip` in the working directory.
 - A Python 3.11+ environment with `pandas`, `numpy`, `tables` (PyTables
-  for HDF5 reading) is available.
+  for HDF5 reading) is available. See `requirements.txt`.
 - Severity thresholds (40% for NASDAQ splits, 20% for A-share extreme
   moves, 5% for volume/notional disagreement, 0.3/0.5 for cross-listing
   correlation) are reasonable defaults but can be tuned in the per-market
@@ -143,6 +162,7 @@ Claude will follow the workflow in `SKILL.md` step-by-step.
 financial-data-quality/
 ├── SKILL.md              workflow Claude follows when invoked
 ├── README.md             this file
+├── requirements.txt      pip-installable dependencies
 ├── run.py                orchestrator
 ├── load_data.py          bonus unified API
 └── scan/

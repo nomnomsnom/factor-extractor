@@ -1,10 +1,36 @@
 # Financial Data Quality Report
 
-_Generated 2026-05-09T07:53:36_
+_Generated 2026-05-09T08:11:51_
 
 - Total issues: **24** (critical 4 / warning 14 / info 6)
 - Markets: ashare, hkex, nasdaq, nyse, tse, cross_market
 - Files scanned: 77 (ashare=12, hkex=2, nasdaq=20, nyse=3, tse=40, cross_market=0)
+
+## Issues by category
+
+| Category | Critical | Warning | Info | Total |
+|---|---:|---:|---:|---:|
+| Outlier | 3 | 3 | 0 | 6 |
+| Format | 0 | 3 | 2 | 5 |
+| Type Error | 1 | 2 | 0 | 3 |
+| Missing Data | 0 | 1 | 2 | 3 |
+| Cross-Field Inconsistency | 0 | 2 | 0 | 2 |
+| Methodology Warning | 0 | 1 | 1 | 2 |
+| Cross-Market Inconsistency | 0 | 1 | 1 | 2 |
+| Cross-File Inconsistency | 0 | 1 | 0 | 1 |
+
+## Cascading findings
+
+Two or more independent checks fired on the same `(symbol, date)`. Each group below is one root-cause bug cross-validated by multiple detectors — strong evidence the underlying data is broken, not just noise from a single noisy check.
+
+### Group #1 — 601318 on 2025-11-20 (3 issues: 1 critical, 2 warning)
+- *critical* `Outlier` (ashare / daily/close.h5, daily/high.h5): Close exceeds High on 2025-11-20 for 601318: 370.080 vs 37.317 (close > high).
+- *warning* `Outlier` (ashare / daily/close.h5): Single-day move of +900.4% — A-share normal limit is +/-10%.
+- *warning* `Cross-Market Inconsistency` (cross_market / ashare/daily/close.h5 (601318) vs hkex/daily_prices.csv (2318.HK_Close)): LOW dual-listing correlation: 601318 vs 2318.HK daily-return rho = -0.176 at lag 1 day(s). Worst-disagreement day: 2025-11-20 (601318 +900.4% vs 2318.HK +0.8%). Same underlying company; healthy dual listings sit at 0.6-0.9.
+
+### Group #2 — NVDA on 2025-10-15 (2 issues: 2 critical)
+- *critical* `Outlier` (nasdaq / NVDA.csv): 1 negative value(s) in column 'volume' (first: -895328267.7192). This column is documented as non-negative.
+- *critical* `Outlier` (nasdaq / NVDA.csv): 1 negative value(s) in column 'shares_traded' (first: -7091128.0000). This column is documented as non-negative.
 
 ## Critical (4)
 
