@@ -86,6 +86,21 @@ pip install -r financial-data-quality/requirements.txt
 python financial-data-quality/run.py
 ```
 
+To run the unit tests (optional):
+
+```bash
+pip install -r financial-data-quality/requirements-dev.txt
+cd financial-data-quality && pytest tests/ -v
+```
+
+The test suite covers `scan/generic.py` (the tier-1/2/3 helpers shared
+across every market) with deterministic cases plus one property-based
+test using `hypothesis`. The property test asserts an invariant
+(`check_no_negative` fires iff a negative value is present in the
+input) and lets hypothesis generate hundreds of inputs trying to break
+it — much higher bug-finding power per line of test code than
+hand-written examples.
+
 The orchestrator:
 
 1. Extracts `ai_agent_dataset.zip` if the folder isn't already present.
@@ -162,9 +177,13 @@ Claude will follow the workflow in `SKILL.md` step-by-step.
 financial-data-quality/
 ├── SKILL.md              workflow Claude follows when invoked
 ├── README.md             this file
-├── requirements.txt      pip-installable dependencies
+├── requirements.txt      pip-installable dependencies (runtime)
+├── requirements-dev.txt  pip-installable dependencies (testing)
 ├── run.py                orchestrator
 ├── load_data.py          bonus unified API
+├── tests/
+│   ├── conftest.py       sys.path setup so `import scan.*` works
+│   └── test_generic.py   pytest + hypothesis cases for scan/generic.py
 └── scan/
     ├── __init__.py
     ├── common.py         Issue/ScanResult dataclasses, encoding fallback helpers

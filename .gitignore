@@ -7,6 +7,7 @@ __pycache__/
 
 # Private working notes (not for the public repo)
 sample/
+ROADMAP.md
 
 # Dataset assets (large / may be copyrighted assessment material)
 ai_agent_dataset/

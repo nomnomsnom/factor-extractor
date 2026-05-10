@@ -1,0 +1,4 @@
+# Development dependencies (testing). Install with:
+#   pip install -r requirements.txt -r requirements-dev.txt
+pytest>=7.0
+hypothesis>=6.0
