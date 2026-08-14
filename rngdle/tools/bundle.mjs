@@ -55,7 +55,20 @@ const description = html.match(/<meta name="description" content="([^"]*)"/)[1];
 const faviconHref = html.match(/<link rel="icon" href="([^"]*)"\s*>/)[1];
 const favicon = `<link rel="icon" href="${faviconHref}">`;
 
-const fragment = `<style>\n${read('styles.css').trim()}\n</style>\n\n${body}\n\n<script>\n${script}</script>\n`;
+const page = `<style>
+${read('styles.css').trim()}
+</style>
+
+${body}
+
+<script>
+${script}</script>
+`;
+
+// The fragment leads with the title, because embedding hosts scan only the start
+// of the file for one and the stylesheet alone overruns that budget. The
+// standalone build carries its title in <head> instead, so it isn't repeated.
+const fragment = `<title>${title}</title>\n\n${page}`;
 
 const standalone = `<!doctype html>
 <html lang="en">
@@ -67,7 +80,7 @@ const standalone = `<!doctype html>
 ${favicon}
 </head>
 <body>
-${fragment}</body>
+${page}</body>
 </html>
 `;
 
