@@ -912,6 +912,89 @@ const exactly = (c, k) => {
   return out;
 };
 
+/** How many distinct digits occur at least k times. */
+const atLeast = (c, k) => {
+  let out = 0;
+  for (let v = 0; v < 10; v++) if (c.counts[v] >= k) out++;
+  return out;
+};
+
+/** How many runs of adjacent identical digits are exactly k long. */
+const runsOfLength = (c, k) => {
+  let out = 0;
+  for (const r of c.runs) if (r === k) out++;
+  return out;
+};
+
+/** Some run of `a` or more sits immediately beside a run of `b` or more. */
+const adjacentRuns = (c, a, b) => {
+  for (let i = 0; i + 1 < c.runs.length; i++) {
+    const p = c.runs[i], q = c.runs[i + 1];
+    if ((p >= a && q >= b) || (p >= b && q >= a)) return true;
+  }
+  return false;
+};
+
+/**
+ * Two digits that each appear exactly twice, contiguously, sitting back to
+ * back — the `aabb` shape.
+ */
+const adjacentPairBlocks = c => {
+  const starts = [];
+  for (let v = 0; v < 10; v++) {
+    if (c.counts[v] !== 2) continue;
+    for (let i = 0; i + 1 < c.len; i++) {
+      if (c.d[i] === v && c.d[i + 1] === v) { starts.push(i); break; }
+    }
+  }
+  if (starts.length < 2) return false;
+  starts.sort((x, y) => x - y);
+  for (let i = 0; i + 1 < starts.length; i++) if (starts[i] + 2 === starts[i + 1]) return true;
+  return false;
+};
+
+/** Strictly increasing or strictly decreasing across the whole number. */
+const strictlyMonotonic = (c, up) => {
+  if (c.len < 2) return false;
+  for (let i = 1; i < c.len; i++) {
+    if (up ? c.d[i] <= c.d[i - 1] : c.d[i] >= c.d[i - 1]) return false;
+  }
+  return true;
+};
+
+/**
+ * A digit sits at two positions two apart, and that every-other run stops at
+ * two — no third hop before or after it.
+ */
+const isHopscotch = c => {
+  if (c.len < 3 || c.distinct < 2) return false;
+  for (let i = 0; i + 2 < c.len; i++) {
+    if (c.d[i] !== c.d[i + 2]) continue;
+    const carriesOn = i + 4 < c.len && c.d[i + 4] === c.d[i];
+    const cameFrom = i >= 2 && c.d[i - 2] === c.d[i];
+    if (!carriesOn && !cameFrom) return true;
+  }
+  return false;
+};
+
+/** Some substring of `min` or more digits occurs twice without overlapping. */
+const repeatsSubstring = (c, min) => {
+  for (let len = min; len <= c.len >> 1; len++) {
+    for (let i = 0; i + len <= c.len; i++) {
+      if (c.s.indexOf(c.s.slice(i, i + len), i + len) !== -1) return true;
+    }
+  }
+  return false;
+};
+
+/** A two-digit block immediately repeated, e.g. the 2323 inside 923231. */
+const hasAdjacentEcho = c => {
+  for (let i = 0; i + 4 <= c.len; i++) {
+    if (c.s.slice(i, i + 2) === c.s.slice(i + 2, i + 4)) return true;
+  }
+  return false;
+};
+
 /** Longest run of adjacent identical digits. */
 const longestRun = c => Math.max(...c.runs);
 
@@ -928,7 +1011,7 @@ const longestLadder = c => {
 
 /** True when the digits, sorted, form a run of consecutive values. */
 const isScramble = c => {
-  if (c.len < 3 || c.distinct !== c.len) return false;
+  if (c.len < 2 || c.distinct !== c.len) return false;
   const sorted = [...c.d].sort((a, b) => a - b);
   for (let i = 1; i < sorted.length; i++) if (sorted[i] !== sorted[i - 1] + 1) return false;
   return true;
@@ -964,20 +1047,28 @@ const isPeak = (c, up) => {
   return true;
 };
 
-/** Rises to a plateau of equal digits then falls (or the inverse). */
-const isPlateau = (c, up) => {
-  if (c.len < 4) return false;
+/**
+ * Rises to a peak then falls (or the inverse) with flat stretches allowed
+ * anywhere — not just at the top. A superset of the strict peak above, so the
+ * strict version supersedes it inside the terrain family.
+ *
+ * Pinned by the live game: it prices Mesa at 1,568 EP, which back-solves to
+ * 63,762 matching rolls, and only this reading produces that count.
+ */
+const isTerrace = (c, up) => {
+  const n = c.len;
+  if (n < 3) return false;
   let i = 1;
-  while (i < c.len && (up ? c.d[i] > c.d[i - 1] : c.d[i] < c.d[i - 1])) i++;
-  if (i === 1) return false;
-  let j = i;
-  while (j < c.len && c.d[j] === c.d[j - 1]) j++;
-  if (j === i) return false; // no flat top
-  if (j === c.len) return false; // never came back down
-  for (let k = j; k < c.len; k++) {
-    if (up ? c.d[k] >= c.d[k - 1] : c.d[k] <= c.d[k - 1]) return false;
+  while (i < n && (up ? c.d[i] >= c.d[i - 1] : c.d[i] <= c.d[i - 1])) i++;
+  if (i === 1 || i === n) return false; // never turned, or never came back
+  for (let j = i; j < n; j++) {
+    if (up ? c.d[j] > c.d[j - 1] : c.d[j] < c.d[j - 1]) return false;
   }
-  return true;
+  // A flat run alone is not a climb; require at least one real step up.
+  for (let k = 1; k < i; k++) {
+    if (up ? c.d[k] > c.d[k - 1] : c.d[k] < c.d[k - 1]) return true;
+  }
+  return false;
 };
 
 /** Monotonic across the whole number. `strict` forbids equal neighbours. */
@@ -992,25 +1083,6 @@ const monotonic = (c, up, strict) => {
   return strict ? !flat : flat;
 };
 
-/** Alternating two-digit pattern: ababab with a !== b. */
-const isAlternating = c => {
-  if (c.len < 4 || c.distinct !== 2) return false;
-  for (let i = 2; i < c.len; i++) if (c.d[i] !== c.d[i - 2]) return false;
-  return c.d[0] !== c.d[1];
-};
-
-/** The whole number is a block repeated `times` times, e.g. 123123. */
-const isRepeatedBlock = (c, times) => {
-  if (c.len % times !== 0) return false;
-  const size = c.len / times;
-  const block = c.s.slice(0, size);
-  if (block === block[0].repeat(size)) return false; // that's a repdigit, not an echo
-  for (let i = 1; i < times; i++) {
-    if (c.s.slice(i * size, (i + 1) * size) !== block) return false;
-  }
-  return true;
-};
-
 const isPalindrome = s => {
   for (let i = 0, j = s.length - 1; i < j; i++, j--) if (s[i] !== s[j]) return false;
   return true;
@@ -1020,29 +1092,6 @@ const isPalindrome = s => {
 const hasPalindromeOfLength = (c, k) => {
   for (let i = 0; i + k <= c.len; i++) if (isPalindrome(c.s.slice(i, i + k))) return true;
   return false;
-};
-
-/** Count of non-overlapping adjacent doubles, e.g. 114455 -> 3. */
-const doubleRuns = c => c.runs.filter(r => r >= 2).length;
-
-/** Digits readable upside down, and reading as the same number when flipped. */
-const FLIP = { 0: '0', 1: '1', 6: '9', 8: '8', 9: '6' };
-const isStrobogrammatic = c => {
-  let out = '';
-  for (let i = c.len - 1; i >= 0; i--) {
-    const f = FLIP[c.d[i]];
-    if (f === undefined) return false;
-    out += f;
-  }
-  return out === c.s;
-};
-
-/** Reads as a valid DDMMYY date. */
-const isCalendar = c => {
-  if (c.len !== 6) return false;
-  const day = +c.s.slice(0, 2), month = +c.s.slice(2, 4);
-  if (month < 1 || month > 12 || day < 1) return false;
-  return day <= [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
 };
 
 const digitsIn = (c, set) => c.d.every(v => set.has(v));
@@ -1131,67 +1180,58 @@ const BADGES = [
   { id: 'TWO_PAIR', label: 'Two Pair', emoji: '👨‍👩‍👦', fam: 'PAIRS', desc: 'Two digits each appear exactly twice.', test: c => exactly(c, 2) >= 2 },
   { id: 'THREE_PAIR', label: 'Three Pair', emoji: '👨‍👩‍👧‍👦', fam: 'PAIRS', desc: 'Three digits each appear exactly twice.', test: c => exactly(c, 2) >= 3 },
   { id: 'CONTIGUOUS_PAIR', label: 'Adjacent Pair', emoji: '🤝', fam: 'PAIRS', desc: 'Two identical digits sit side by side.', test: c => longestRun(c) >= 2 },
-  { id: 'CONTIGUOUS_TWO_PAIR', label: 'Adjacent Two Pair', emoji: '🧑‍🤝‍🧑', fam: 'PAIRS', desc: 'Two separate side-by-side doubles.', test: c => doubleRuns(c) >= 2 },
-  { id: 'CONTIGUOUS_THREE_PAIR', label: 'Adjacent Three Pair', emoji: '🫂', fam: 'PAIRS', desc: 'Three separate side-by-side doubles.', test: c => doubleRuns(c) >= 3 },
+  { id: 'CONTIGUOUS_TWO_PAIR', label: 'Adjacent Two Pair', emoji: '🧑‍🤝‍🧑', fam: 'PAIRS', desc: 'Contains two adjacent contiguous pairs.', test: c => adjacentPairBlocks(c) },
+  { id: 'CONTIGUOUS_THREE_PAIR', label: 'Adjacent Three Pair', emoji: '🫂', fam: 'PAIRS', desc: 'Contains three adjacent contiguous pairs.', test: c => exactly(c, 2) === 3 && runsOfLength(c, 2) === 3 },
   { id: 'TRIPS', label: 'Three of a Kind', emoji: '🎯', fam: 'OF_A_KIND', desc: 'Some digit appears exactly three times.', test: c => exactly(c, 3) > 0 },
-  { id: 'QUADS', label: 'Four of a Kind', emoji: '🍀', fam: 'OF_A_KIND', desc: 'Some digit appears exactly four times.', test: c => exactly(c, 4) > 0 },
+  { id: 'QUADS', label: 'Four of a Kind', emoji: '🍀', fam: 'OF_A_KIND', desc: 'Contains four identical digits.', test: c => c.maxCount >= 4 },
   { id: 'FIVE_OF_A_KIND', label: 'Five of a Kind', emoji: '🖐️', fam: 'OF_A_KIND', desc: 'Some digit appears exactly five times.', test: c => exactly(c, 5) > 0 },
   { id: 'SIX_OF_A_KIND', label: 'Six of a Kind', emoji: '🌟', fam: 'OF_A_KIND', desc: 'Some digit appears six times.', test: c => exactly(c, 6) > 0 },
   { id: 'CONTIGUOUS_TRIPS', label: 'Triple Run', emoji: '🧱', fam: 'CONTIGUOUS_RUN', desc: 'Three identical digits in a row.', test: c => longestRun(c) >= 3 },
   { id: 'CONTIGUOUS_QUADS', label: 'Quad Run', emoji: '🏗️', fam: 'CONTIGUOUS_RUN', desc: 'Four identical digits in a row.', test: c => longestRun(c) >= 4 },
   { id: 'CONTIGUOUS_FIVES', label: 'Quint Run', emoji: '🗼', fam: 'CONTIGUOUS_RUN', desc: 'Five identical digits in a row.', test: c => longestRun(c) >= 5 },
   { id: 'CONTIGUOUS_SIXES', label: 'Monolith', emoji: '🗿', fam: 'CONTIGUOUS_RUN', desc: 'Six identical digits in a row.', test: c => longestRun(c) >= 6 },
-  { id: 'BOAT', label: 'Full House', emoji: '🏠', fam: 'BOAT', desc: 'A three of a kind and a pair.', test: c => exactly(c, 3) > 0 && exactly(c, 2) > 0 },
-  { id: 'CONTIGUOUS_BOAT', label: 'Packed House', emoji: '🏘️', fam: 'BOAT', desc: 'A triple run and a double run, both contiguous.', test: c => c.runs.filter(r => r >= 3).length > 0 && c.runs.filter(r => r === 2).length > 0 },
+  { id: 'BOAT', label: 'Full House', emoji: '🏠', fam: 'BOAT', desc: 'Contains a set of three and a set of two.', test: c => atLeast(c, 3) > 0 && atLeast(c, 2) >= 2 },
+  { id: 'CONTIGUOUS_BOAT', label: 'Packed House', emoji: '🏘️', fam: 'BOAT', desc: 'Contains a contiguous set of three adjacent to a contiguous set of two.', test: c => adjacentRuns(c, 3, 2) },
+  { id: 'SNAKE_EYES', label: 'Snake Eyes', emoji: '🎲', fam: null, desc: 'Contains a single pair of ones and no other pairs.', test: c => {
+      if (c.counts[1] !== 2) return false;
+      for (let v = 0; v < 10; v++) if (v !== 1 && c.counts[v] >= 2) return false;
+      return true;
+    } },
   { id: 'RAINBOW', label: 'Rainbow', emoji: '🌈', fam: null, desc: 'Every digit is different.', test: c => c.distinct === c.len && c.len >= 4 },
-  { id: 'DUALITY', label: 'Duality', emoji: '☯️', fam: 'DUALITY', desc: 'Built from exactly two distinct digits.', test: c => c.distinct === 2 && c.len >= 4 },
-  { id: 'FIREFLY', label: 'Firefly', emoji: '🪰', fam: 'DUALITY', desc: 'Two digits alternating perfectly.', test: c => isAlternating(c) },
+  { id: 'DUALITY', label: 'Duality', emoji: '☯️', fam: 'DUALITY', desc: 'Uses exactly two different digits.', test: c => c.distinct === 2 },
+  { id: 'FIREFLY', label: 'Firefly', emoji: '🪰', fam: 'DUALITY', desc: 'One unique digit among identical others.', test: c => c.len >= 4 && c.distinct === 2 && exactly(c, 1) === 1 },
 
   // --- Straights and ladders ---------------------------------------------
   { id: 'SEQUENCE_3', label: 'Sequence', emoji: '🪜', fam: 'PROGRESSION', desc: 'Three consecutive digits in a row, up or down.', test: c => longestLadder(c) >= 3 },
   { id: 'SEQUENCE_4', label: 'Long Sequence', emoji: '🧗', fam: 'PROGRESSION', desc: 'Four consecutive digits in a row.', test: c => longestLadder(c) >= 4 },
   { id: 'STRAIGHT', label: 'Straight', emoji: '➡️', fam: 'PROGRESSION', desc: 'Five consecutive digits in a row.', test: c => longestLadder(c) >= 5 },
   { id: 'SEQUENCE_6', label: 'Perfect Straight', emoji: '🚀', fam: 'PROGRESSION', desc: 'All six digits consecutive.', test: c => c.len === 6 && longestLadder(c) === 6 },
-  { id: 'SCRAMBLE', label: 'Scramble', emoji: '🔀', fam: 'PROGRESSION', desc: 'The digits are a shuffled run of consecutive values.', test: c => isScramble(c) },
+  { id: 'SCRAMBLE', label: 'Scramble', emoji: '🔀', fam: 'PROGRESSION', desc: 'All digits form a consecutive sequence when sorted.', test: c => isScramble(c) },
   { id: 'ARITHMETIC', label: 'Arithmetic', emoji: '➕', fam: 'PROGRESSION', desc: 'Digits step by a constant amount.', test: c => isArithmetic(c) },
   { id: 'GEOMETRIC', label: 'Geometric', emoji: '✖️', fam: 'PROGRESSION', desc: 'Each digit is a fixed multiple of the last.', test: c => isGeometric(c) },
-  { id: 'ASCENSION', label: 'Ascension', emoji: '📈', fam: 'MONOTONIC', desc: 'Digits strictly increase.', test: c => monotonic(c, true, true) },
-  { id: 'DECAY', label: 'Decay', emoji: '📉', fam: 'MONOTONIC', desc: 'Digits strictly decrease.', test: c => monotonic(c, false, true) },
+  { id: 'ASCENSION', label: 'Ascension', emoji: '📈', fam: 'MONOTONIC', desc: 'Every digit is strictly larger than the previous.', test: c => strictlyMonotonic(c, true) },
+  { id: 'DECAY', label: 'Decay', emoji: '📉', fam: 'MONOTONIC', desc: 'Every digit is strictly smaller than the previous.', test: c => strictlyMonotonic(c, false) },
   { id: 'STEPS', label: 'Steps', emoji: '🪜', fam: 'MONOTONIC', desc: 'Digits never decrease, but repeat somewhere.', test: c => monotonic(c, true, false) },
   { id: 'SLOPES', label: 'Slopes', emoji: '⛷️', fam: 'MONOTONIC', desc: 'Digits never increase, but repeat somewhere.', test: c => monotonic(c, false, false) },
 
   // --- Terrain ------------------------------------------------------------
   { id: 'MOUNTAIN', label: 'Mountain', emoji: '⛰️', fam: 'PEAK', desc: 'Rises to one peak, then falls.', test: c => isPeak(c, true) },
   { id: 'VALLEY', label: 'Valley', emoji: '🏞️', fam: 'PEAK', desc: 'Falls to one low point, then rises.', test: c => isPeak(c, false) },
-  { id: 'MESA', label: 'Mesa', emoji: '🏜️', fam: 'PEAK', desc: 'Rises to a flat top, then falls.', test: c => isPlateau(c, true) },
-  { id: 'CANYON', label: 'Canyon', emoji: '🪨', fam: 'PEAK', desc: 'Falls to a flat floor, then rises.', test: c => isPlateau(c, false) },
-  { id: 'HOPSCOTCH', label: 'Hopscotch', emoji: '🦘', fam: 'HOPSCOTCH', desc: 'Digits alternate up, down, up, down.', test: c => {
-      if (c.len < 4) return false;
-      for (let i = 1; i < c.len; i++) {
-        const rising = c.d[i] > c.d[i - 1], falling = c.d[i] < c.d[i - 1];
-        if (!rising && !falling) return false;
-        if (i > 1 && rising === (c.d[i - 1] > c.d[i - 2])) return false;
-      }
-      return true;
-    } },
+  { id: 'MESA', label: 'Mesa', emoji: '🏜️', fam: 'PEAK', desc: 'Digits rise to a peak, then fall (flat stretches allowed).', test: c => isTerrace(c, true) },
+  { id: 'CANYON', label: 'Canyon', emoji: '🪨', fam: 'PEAK', desc: 'Digits fall to a low point, then rise (flat stretches allowed).', test: c => isTerrace(c, false) },
+  { id: 'HOPSCOTCH', label: 'Hopscotch', emoji: '🦘', fam: 'HOPSCOTCH', desc: 'A digit appears at every other position (2 times).', test: c => isHopscotch(c) },
 
   // --- Symmetry -----------------------------------------------------------
   { id: 'PALINDROME', label: 'Palindrome', emoji: '🪞', fam: 'PALINDROME', desc: 'Reads the same backwards.', test: c => isPalindrome(c.s) },
   { id: 'POCKET_MIRROR', label: 'Pocket Mirror', emoji: '🔍', fam: 'PALINDROME', desc: 'Contains a three-digit palindrome.', test: c => hasPalindromeOfLength(c, 3) },
-  { id: 'BOOKENDS', label: 'Bookends', emoji: '📚', fam: 'BOOKENDS', desc: 'Starts and ends on the same digit.', test: c => c.len >= 3 && c.d[0] === c.d[c.len - 1] },
-  { id: 'PAIRED_BOOKENDS', label: 'Paired Bookends', emoji: '🗄️', fam: 'BOOKENDS', desc: 'Opens and closes with the same two digits.', test: c => c.len >= 5 && c.s.slice(0, 2) === c.s.slice(-2) },
-  { id: 'ORIENTATION', label: 'Orientation', emoji: '🔄', fam: 'ORIENTATION', desc: 'Every digit is readable upside down.', test: c => digitsIn(c, new Set([0, 1, 6, 8, 9])) },
-  { id: 'ORIENTATION_EXACT', label: 'Strobogrammatic', emoji: '🙃', fam: 'ORIENTATION', desc: 'Reads as the same number upside down.', test: c => isStrobogrammatic(c) },
-  { id: 'RHYME', label: 'Rhyme', emoji: '🎵', fam: 'REPEAT', desc: 'A block of digits repeated twice, e.g. 348348.', test: c => isRepeatedBlock(c, 2) },
-  { id: 'MINI_ECHO', label: 'Echo', emoji: '📣', fam: 'REPEAT', desc: 'A block of digits repeated three times, e.g. 232323.', test: c => isRepeatedBlock(c, 3) },
-  { id: 'EQUILIBRIUM', label: 'Equilibrium', emoji: '⚖️', fam: 'EQUILIBRIUM', desc: 'Both halves have the same digit sum.', test: c => {
-      if (c.len % 2 !== 0) return false;
-      const h = c.len / 2;
-      let a = 0, b = 0;
-      for (let i = 0; i < h; i++) { a += c.d[i]; b += c.d[i + h]; }
-      return a === b;
-    } },
-  { id: 'SANDWICH', label: 'Sandwich', emoji: '🥪', fam: 'EQUILIBRIUM', desc: 'Symmetric outer digits around a different core.', test: c => c.len >= 5 && c.d[0] === c.d[c.len - 1] && c.d[1] === c.d[c.len - 2] && c.d[0] !== c.d[1] },
+  { id: 'BOOKENDS', label: 'Bookends', emoji: '📚', fam: 'BOOKENDS', desc: 'The first two digits match the last two.', test: c => c.len >= 4 && c.s.slice(0, 2) === c.s.slice(-2) },
+  { id: 'PAIRED_BOOKENDS', label: 'Paired Bookends', emoji: '🗄️', fam: 'BOOKENDS', desc: 'Starts with a pair and ends with a different pair.', test: c => c.len >= 4 && c.d[0] === c.d[1] && c.d[c.len - 2] === c.d[c.len - 1] && c.d[0] !== c.d[c.len - 1] },
+  { id: 'ORIENTATION', label: 'Orientation', emoji: '🔄', fam: 'ORIENTATION', desc: 'Contains "101" (intro course number).', test: c => c.s.includes('101') },
+  { id: 'ORIENTATION_EXACT', label: 'Exact Orientation', emoji: '🙃', fam: 'ORIENTATION', desc: 'Exactly "101".', test: c => c.n === 101 },
+  { id: 'RHYME', label: 'Rhyme', emoji: '🎵', fam: 'REPEAT', desc: 'Contains the same 2+ digit substring twice.', test: c => repeatsSubstring(c, 2) },
+  { id: 'MINI_ECHO', label: 'Echo', emoji: '📣', fam: 'REPEAT', desc: 'Contains an adjacent 2-digit repeat.', test: c => hasAdjacentEcho(c) },
+  { id: 'EQUILIBRIUM', label: 'Equilibrium', emoji: '🧘', fam: 'EQUILIBRIUM', desc: 'The first and last digits are identical.', test: c => c.len >= 2 && c.d[0] === c.d[c.len - 1] },
+  { id: 'SANDWICH', label: 'Sandwich', emoji: '🥪', fam: 'EQUILIBRIUM', desc: 'First and last digits match, with at least one different digit between them.', test: c => c.len >= 3 && c.d[0] === c.d[c.len - 1] && c.d.slice(1, -1).some(v => v !== c.d[0]) },
 
   // --- Zeros --------------------------------------------------------------
   { id: 'DEEP_VOID', label: 'Void', emoji: '🕳️', fam: 'VOID_DEPTH', desc: 'Two zeros in a row.', test: c => c.s.includes('00') },
@@ -1232,7 +1272,7 @@ const BADGES = [
   { id: 'FACTORIAL', label: 'Factorial', emoji: '❗', fam: null, desc: 'A factorial.', test: c => FACTORIAL.has(c.n) },
   { id: 'PERFECT_NUMBER', label: 'Perfect Number', emoji: '🏅', fam: null, desc: 'Equal to the sum of its proper divisors.', test: c => PERFECT.has(c.n) },
   { id: 'REPDIGIT', label: 'Repdigit', emoji: '🧿', fam: null, desc: 'The same digit all the way through.', test: c => REPDIGIT.has(c.n) && c.len >= 2 },
-  { id: 'SPY', label: 'Spy', emoji: '🕵️', fam: null, desc: 'Digit sum equals digit product.', test: c => c.len >= 2 && c.sum === c.prod },
+  { id: 'SPY', label: 'Spy', emoji: '🕵️', fam: null, desc: 'The sum of its digits equals the product of its digits.', test: c => c.sum === c.prod && c.n !== 1 && c.n !== 2 },
   { id: 'EQUATION', label: 'Equation', emoji: '🟰', fam: null, desc: 'The last digit is the sum of all the others.', test: c => c.len >= 3 && c.sum - c.d[c.len - 1] === c.d[c.len - 1] },
   { id: 'HARSHAD', label: 'Harshad', emoji: '🧮', fam: null, desc: 'Divisible by its own digit sum.', test: c => c.n > 0 && c.n % c.sum === 0 },
 
@@ -1243,12 +1283,12 @@ const BADGES = [
   { id: 'BINARY', label: 'Binary', emoji: '🤖', fam: null, desc: 'Written with only 0 and 1.', test: c => c.len >= 3 && digitsIn(c, new Set([0, 1])) },
   { id: 'LOWLANDS', label: 'Lowlands', emoji: '🐜', fam: null, desc: 'Every digit is 3 or less.', test: c => c.len >= 4 && c.d.every(v => v <= 3) },
   { id: 'HIGHLANDS', label: 'Highlands', emoji: '🦅', fam: null, desc: 'Every digit is 6 or more.', test: c => c.len >= 4 && c.d.every(v => v >= 6) },
-  { id: 'HEAVY', label: 'Heavy', emoji: '🏋️', fam: 'WEIGHT', desc: 'Digits sum to 40 or more.', test: c => c.sum >= 40 },
+  { id: 'HEAVY', label: 'Heavy', emoji: '🏋️', fam: 'WEIGHT', desc: 'The sum of its digits exceeds 45.', test: c => c.sum > 45 },
   { id: 'FEATHERWEIGHT', label: 'Featherweight', emoji: '🪶', fam: 'WEIGHT', desc: 'Six digits summing to 6 or less.', test: c => c.len === 6 && c.sum <= 6 },
-  { id: 'CALENDAR', label: 'Calendar', emoji: '📅', fam: 'CALENDAR', desc: 'Reads as a valid DDMMYY date.', test: c => isCalendar(c) },
+  { id: 'CALENDAR', label: 'Calendar', emoji: '📅', fam: 'CALENDAR', desc: 'Contains "365" (days in a year).', test: c => c.s.includes('365') },
   // A six-digit roll can never start with a leading zero, so 02/02 can only
   // show up mid-number rather than as the leading DDMM.
-  { id: 'GROUNDHOG_DAY', label: 'Groundhog Day', emoji: '🦫', fam: 'CALENDAR', desc: 'Contains 0202 — the 2nd of February, again.', test: c => c.s.includes('0202') },
+  { id: 'GROUNDHOG_DAY', label: 'Groundhog Day', emoji: '🦫', fam: 'CALENDAR', desc: 'Exactly "365365".', test: c => c.n === 365365 },
 
   // --- Baseline -----------------------------------------------------------
   { id: 'EVEN', label: 'Even', emoji: '⚖️', fam: 'PARITY', desc: 'An even number.', test: c => c.n % 2 === 0 },
@@ -1364,47 +1404,48 @@ const STATS = {
   TWO_PAIR: [223803, 447],
   THREE_PAIR: [9720, 10288],
   CONTIGUOUS_PAIR: [402130, 249],
-  CONTIGUOUS_TWO_PAIR: [47142, 2121],
-  CONTIGUOUS_THREE_PAIR: [729, 137174],
+  CONTIGUOUS_TWO_PAIR: [16281, 6142],
+  CONTIGUOUS_THREE_PAIR: [648, 154321],
   TRIPS: [138033, 724],
-  QUADS: [11349, 8811],
+  QUADS: [11854, 8436],
   FIVE_OF_A_KIND: [495, 202020],
   SIX_OF_A_KIND: [10, 10000010],
   CONTIGUOUS_TRIPS: [35920, 2784],
   CONTIGUOUS_QUADS: [2701, 37023],
   CONTIGUOUS_FIVES: [181, 552487],
   CONTIGUOUS_SIXES: [10, 10000010],
-  BOAT: [39690, 2520],
-  CONTIGUOUS_BOAT: [4698, 21286],
+  BOAT: [41715, 2397],
+  CONTIGUOUS_BOAT: [3321, 30111],
+  SNAKE_EYES: [47139, 2121],
   RAINBOW: [167832, 596],
-  DUALITY: [4294, 23288],
-  FIREFLY: [243, 411523],
+  DUALITY: [4618, 21654],
+  FIREFLY: [1216, 82237],
   SEQUENCE_3: [58287, 1716],
   SEQUENCE_4: [3860, 25907],
   STRAIGHT: [220, 454546],
   SEQUENCE_6: [9, 11111122],
-  SCRAMBLE: [4384, 22810],
+  SCRAMBLE: [4401, 22722],
   ARITHMETIC: [80, 1250001],
   GEOMETRIC: [4, 25000025],
-  ASCENSION: [420, 238095],
-  DECAY: [792, 126263],
+  ASCENSION: [456, 219298],
+  DECAY: [837, 119474],
   STEPS: [4530, 22075],
   SLOPES: [7147, 13992],
   MOUNTAIN: [16992, 5885],
   VALLEY: [23817, 4199],
-  MESA: [8058, 12410],
-  CANYON: [10503, 9521],
-  HOPSCOTCH: [136425, 733],
+  MESA: [63762, 1568],
+  CANYON: [84432, 1184],
+  HOPSCOTCH: [320193, 312],
   PALINDROME: [1999, 50025],
   POCKET_MIRROR: [335701, 298],
-  BOOKENDS: [99990, 1000],
-  PAIRED_BOOKENDS: [9900, 10101],
-  ORIENTATION: [15626, 6400],
-  ORIENTATION_EXACT: [199, 502513],
-  RHYME: [972, 102881],
-  MINI_ECHO: [81, 1234569],
-  EQUILIBRIUM: [51036, 1959],
-  SANDWICH: [8910, 11223],
+  BOOKENDS: [9990, 10010],
+  PAIRED_BOOKENDS: [8991, 11122],
+  ORIENTATION: [3979, 25132],
+  ORIENTATION_EXACT: [1, 100000100],
+  RHYME: [53407, 1872],
+  MINI_ECHO: [27001, 3704],
+  EQUILIBRIUM: [99999, 1000],
+  SANDWICH: [99954, 1000],
   DEEP_VOID: [35920, 2784],
   DEEP_VOID_THREE: [2701, 37023],
   DEEP_VOID_FOUR: [181, 552487],
@@ -1439,7 +1480,7 @@ const STATS = {
   FACTORIAL: [9, 11111122],
   PERFECT_NUMBER: [4, 25000025],
   REPDIGIT: [45, 2222224],
-  SPY: [89, 1123597],
+  SPY: [97, 1030929],
   EQUATION: [1992, 50201],
   HARSHAD: [95428, 1048],
   ALL_EVEN: [15600, 6410],
@@ -1448,10 +1489,10 @@ const STATS = {
   BINARY: [61, 1639346],
   LOWLANDS: [4033, 24795],
   HIGHLANDS: [5376, 18601],
-  HEAVY: [37500, 2667],
+  HEAVY: [3003, 33300],
   FEATHERWEIGHT: [462, 216450],
-  CALENDAR: [25800, 3876],
-  GROUNDHOG_DAY: [189, 529101],
+  CALENDAR: [3999, 25006],
+  GROUNDHOG_DAY: [1, 100000100],
   EVEN: [500001, 200],
   ODD: [500000, 200],
   ONE_DIGIT: [10, 10000010],
@@ -1464,10 +1505,10 @@ const STATS = {
 
 /** Card rarity cut points as [name, minimum total EP], best tier first. */
 const CARD_TIERS = [
-  ['Mythic', 122968],
-  ['Anomaly', 28098],
-  ['Epic', 16106],
-  ['Rare', 5676],
+  ['Mythic', 115848],
+  ['Anomaly', 29086],
+  ['Epic', 16319],
+  ['Rare', 5440],
   ['Uncommon', 2584],
   ['Common', 560],
 ];
