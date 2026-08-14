@@ -35,6 +35,13 @@ targets are 44px+ and nothing scrolls sideways at 390px.
 `dist/embed.html` is the same page as a bare fragment (style + markup + script),
 for hosts that supply their own `<head>`.
 
+**On iOS, send a link rather than the file.** Tapping an `.html` file in the Files
+app opens it in Quick Look, which renders the markup but never runs JavaScript, so
+the page appears but nothing responds. Chat and email previews behave the same way.
+This is not something the page can fix — verified working in WebKit (Safari's own
+engine) both from `file://` and over HTTP, desktop and iPhone profile, with no
+console errors. Host it instead.
+
 ### A public link
 
 `.github/workflows/rngdle-pages.yml` tests, bundles and publishes the game to
