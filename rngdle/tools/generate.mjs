@@ -21,15 +21,34 @@ import { BADGES, context, ROLL_MIN, ROLL_MAX, ROLL_SPACE } from '../defs.js';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'badges.gen.js');
 
-// Card rarity cut points, as the share of rolls that should land at or above
-// each tier. A "Mythic" card is the best 1 in 100,000 rolls.
+// Card rarity, as the share of all rolls landing at or above each tier.
+//
+// These are rngdle.com's own tier shares, recovered from its published
+// EP -> percentile table: Mythic is the top 1% of rolls, Anomaly the next 4%,
+// Epic the next 5%, Rare the next 15%, Uncommon the next 25%, then Common down
+// to the bottom 0.9%, which is Trash.
+//
+// The live game states these as fixed EP cutoffs (2098 / 5761 / 9644 / 23077 /
+// 35744 / 164953), but those are just where the percentiles land for its
+// 230-badge set. This build has 169 badges and therefore a lower EP scale, so
+// reusing those numbers verbatim would dump 42% of rolls into Trash against the
+// real game's 0.9%. Matching the game means matching the shares and deriving
+// our own cutoffs — which is what the live values are themselves derived from.
 const CARD_TIERS = [
-  ['Mythic', 1 / 100000],
-  ['Anomaly', 1 / 10000],
-  ['Epic', 1 / 1000],
-  ['Rare', 1 / 100],
-  ['Uncommon', 1 / 10],
+  ['Mythic', 0.01],
+  ['Anomaly', 0.05],
+  ['Epic', 0.10],
+  ['Rare', 0.25],
+  ['Uncommon', 0.50],
 ];
+
+// Trash is the one tier that cannot be a percentile here. The real game puts
+// ~0.9% of rolls in it, but our floor is a single spike: 431 EP — one parity
+// badge, one length badge, one pair — is the worst possible roll and 2.8% of
+// the space lands exactly on it. No cut can split a tie. So Trash is defined as
+// the floor itself: you scored the minimum the game can award. That keeps the
+// name honest, and Common takes the rest of the bottom half.
+const TRASH_IS_THE_FLOOR = true;
 
 const t0 = Date.now();
 
@@ -81,6 +100,13 @@ for (let n = ROLL_MIN; n <= ROLL_MAX; n++) {
 const sorted = Float64Array.from(totals).sort();
 const quantile = share => sorted[Math.min(sorted.length - 1, Math.floor((1 - share) * sorted.length))];
 const cardTiers = CARD_TIERS.map(([name, share]) => [name, quantile(share)]);
+
+if (TRASH_IS_THE_FLOOR) {
+  // Common starts at the first total above the minimum, so only floor rolls are Trash.
+  const floor = sorted[0];
+  const aboveFloor = sorted.find(v => v > floor);
+  cardTiers.push(['Common', aboveFloor]);
+}
 
 // --- Emit -------------------------------------------------------------------
 const rows = BADGES.map((b, i) =>

@@ -180,9 +180,10 @@ export const STATS = {
 
 /** Card rarity cut points as [name, minimum total EP], best tier first. */
 export const CARD_TIERS = [
-  ['Mythic', 107849988],
-  ['Anomaly', 11352361],
-  ['Epic', 992268],
-  ['Rare', 122968],
-  ['Uncommon', 16106],
+  ['Mythic', 122968],
+  ['Anomaly', 28098],
+  ['Epic', 16106],
+  ['Rare', 5676],
+  ['Uncommon', 2584],
+  ['Common', 560],
 ];

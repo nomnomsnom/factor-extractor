@@ -119,7 +119,9 @@ function oneLiner(result) {
   const scored = result.badges.filter(b => b.scored);
   const top = scored[0];
   if (!top) return 'A number with nothing to say.';
-  if (result.rarity === 'Common') return `Mostly quiet. Your best find: ${top.label.toLowerCase()}.`;
+  if (result.rarity === 'Trash' || result.rarity === 'Common') {
+    return `Mostly quiet. Your best find: ${top.label.toLowerCase()}.`;
+  }
   const rest = scored.length - 1;
   return `${top.label} — ${oddsLabel(top.chance)}.` +
     (rest > 0 ? ` Plus ${rest} more badge${rest === 1 ? '' : 's'}.` : '');
@@ -422,15 +424,41 @@ function renderHistory() {
   }
   const frag = document.createDocumentFragment();
   state.top.forEach((h, i) => {
-    const el = document.createElement('div');
-    el.className = `row r-${h.rarity}`;
-    el.innerHTML = `
+    const item = document.createElement('div');
+    item.className = 'hitem';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `row r-${h.rarity}`;
+    button.setAttribute('aria-expanded', 'false');
+    button.innerHTML = `
       <span>
         <span class="roll">${fmt(h.n)}</span>
         <span class="day">#${i + 1}</span>
       </span>
-      <span class="num">${fmt(h.ep)} EP<span class="odds">${h.rarity}</span></span>`;
-    frag.append(el);
+      <span class="num">${fmt(h.ep)} EP<span class="odds">${h.rarity}</span><span class="chev" aria-hidden="true">▾</span></span>`;
+
+    const detail = document.createElement('div');
+    detail.className = 'row-detail';
+    detail.hidden = true;
+
+    // Built on first open: scoring 50 rolls up front would be wasted work for
+    // a list most people only poke at.
+    button.addEventListener('click', () => {
+      const open = button.getAttribute('aria-expanded') === 'true';
+      if (!open && !detail.childElementCount) {
+        const result = analyze(h.n);
+        const grid = document.createElement('div');
+        grid.className = 'badges';
+        grid.append(...result.badges.map(badgeCard));
+        detail.append(grid);
+      }
+      button.setAttribute('aria-expanded', String(!open));
+      detail.hidden = open;
+    });
+
+    item.append(button, detail);
+    frag.append(item);
   });
   host.replaceChildren(frag);
 }

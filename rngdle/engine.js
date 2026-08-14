@@ -19,8 +19,9 @@ const BADGE_TIERS = [
 ];
 
 /** Card tiers, worst to best, for ranking comparisons. */
-export const RARITY_ORDER = ['Common', 'Uncommon', 'Rare', 'Epic', 'Anomaly', 'Mythic'];
+export const RARITY_ORDER = ['Trash', 'Common', 'Uncommon', 'Rare', 'Epic', 'Anomaly', 'Mythic'];
 
+/** Badges have no Trash tier — the floor is Common, as in the live game. */
 export function badgeRarity(ep) {
   for (const [name, cut] of BADGE_TIERS) if (ep >= cut) return name;
   return 'Common';
@@ -28,7 +29,7 @@ export function badgeRarity(ep) {
 
 export function cardRarity(totalEP) {
   for (const [name, cut] of CARD_TIERS) if (totalEP >= cut) return name;
-  return 'Common';
+  return 'Trash';
 }
 
 /** The minimum total EP that reaches a given card tier. */

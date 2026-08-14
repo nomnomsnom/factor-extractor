@@ -99,10 +99,42 @@ live EP value is almost certainly detecting the same thing the real game detects
   your single highest-EP badge pays out. Rolling `69` earns both *Nice* and
   *Exact Nice*, but only the rarer one scores — the other is shown greyed out,
   since the rarer badge already implies it.
-- **Card rarity** (Common → Mythic) is a percentile cut on the real distribution
-  of total EP, computed by scoring all 1,000,001 rolls. *Mythic* is literally the
-  ten best rolls in the game; *Epic* is the top 0.1%. So the label means something
-  measurable rather than something chosen.
+- **Card rarity** (Trash → Mythic) matches rngdle.com's own tier distribution,
+  described below.
+
+## Card rarity
+
+The live game ranks each roll on a seven-tier scale and states the tiers as fixed
+EP cutoffs: `2098 / 5761 / 9644 / 23077 / 35744 / 164953`. Those numbers are not
+the design — they are where the *real* design lands for its 230-badge set. Running
+them through the game's published EP→percentile table recovers what they actually
+encode:
+
+| Tier | Share of rolls | Here |
+|---|---|---|
+| Mythic | 1% | 1.00% |
+| Anomaly | 4% | 4.00% |
+| Epic | 5% | 5.02% |
+| Rare | 15% | 15.00% |
+| Uncommon | 25% | 25.48% |
+| Common | 49.1% | 46.73% |
+| Trash | 0.9% | 2.77% |
+
+So the tiers are percentiles. Copying the live cutoffs verbatim would be the wrong
+kind of faithful: this build has 169 badges rather than 230, so its EP scale is
+lower, and those numbers would drop **42.6%** of rolls into Trash against the real
+game's 0.9%. Matching the game means matching the shares and deriving our own
+cutoffs — exactly what the live numbers are themselves derived from.
+
+Trash is the one tier that cannot be a percentile here. Our floor is a single
+spike: 431 EP — one parity badge, one length badge, one pair — is the worst
+possible roll, and 2.8% of the space lands exactly on it. No cut can split a tie,
+so Trash is defined as the floor itself: you scored the minimum the game can
+award. That keeps the name honest and costs Common a couple of points.
+
+The palette is rngdle.com's too, per tier: a saturated edge colour for borders and
+glows, and a lighter fill for text, since the saturated values are unreadable on
+this ground.
 
 ## Auto-roll
 
@@ -140,7 +172,8 @@ seconds so a crashed tab doesn't cost the session.
 | `engine.js` | Scoring: `analyze(n)` for detail, `scan(n, out)` for the hot path. Pure, no I/O. |
 | `app.js` | UI, auto-roll loop, collection tracking, localStorage. Decides nothing about scoring. |
 | `tools/bundle.mjs` | Inlines everything into a single self-contained HTML file in `dist/`. |
-| `test/engine.test.mjs` | 26 tests, including the live-game EP oracle and scan/analyze parity. |
+| `test/engine.test.mjs` | Scoring rules: the live-game EP oracle, scan/analyze parity, tier distribution. |
+| `test/defaults.test.mjs` | The page's own default settings, read from the real `index.html`. |
 
 ```
 node tools/generate.mjs          # regenerate badges.gen.js (~11s)
@@ -164,7 +197,7 @@ crisp definition here or left out rather than guessed at.
 The original is a once-a-day game. This one has no cooldown and adds auto-roll,
 which turns it from a daily curiosity into a collection hunt — so the daily lock,
 the UTC reset and the streak counter are gone, replaced by badges-found progress
-and a best-rolls board.
+and a best-rolls board, where any roll opens to show the badges it earned.
 
 There is no server, so no global leaderboard. Your rolls, lifetime EP, best rolls
 and collection live in `localStorage` on this device only, and nothing is

@@ -147,10 +147,64 @@ test('rarer rolls are worth more than plain ones', () => {
   assert.ok(analyze(777777).totalEP > analyze(777771).totalEP, 'six sevens beat five');
   assert.ok(analyze(123456).totalEP > analyze(123458).totalEP, 'a full straight beats a near miss');
 
-  // Card tiers are percentile cuts on the real distribution, so Mythic is
-  // literally the ten best rolls in the space — an exact hit lands just below.
-  assert.equal(analyze(69).rarity, 'Anomaly');
+  assert.equal(analyze(69).rarity, 'Mythic', 'an exact meme hit tops the table');
   assert.equal(analyze(777777).rarity, 'Mythic', 'six sevens stack enough families to top out');
+});
+
+test('card tiers reproduce rngdle.com\'s rarity distribution', () => {
+  // The live game's tiers are Mythic 1% / Anomaly 4% / Epic 5% / Rare 15% /
+  // Uncommon 25% / Common ~49% / Trash ~0.9%, recovered from its published
+  // EP->percentile table. It states them as fixed EP cutoffs, but those are
+  // specific to its 230-badge set; what actually defines a tier is its share.
+  // This sweeps the whole roll space and checks our shares match the game's.
+  const TARGET = { Mythic: 1, Anomaly: 4, Epic: 5, Rare: 15, Uncommon: 25 };
+
+  const seen = Object.fromEntries(RARITY_ORDER.map(r => [r, 0]));
+  const buf = hitBuffer();
+  let floor = Infinity, floorCount = 0, nextUp = Infinity;
+  const totals = new Float64Array(ROLL_SPACE);
+  for (let n = 0; n <= ROLL_MAX; n++) {
+    const ep = scan(n, buf);
+    totals[n] = ep;
+    seen[cardRarity(ep)]++;
+    if (ep < floor) floor = ep;
+  }
+  for (const ep of totals) {
+    if (ep === floor) floorCount++;
+    else if (ep < nextUp) nextUp = ep; // the next total a roll can actually reach
+  }
+  const share = tier => (seen[tier] / ROLL_SPACE) * 100;
+
+  for (const [tier, want] of Object.entries(TARGET)) {
+    // Total EP is lumpy — badges come in discrete jumps — so a quantile cut
+    // cannot land on a share to the decimal. Half a point is close enough that
+    // the tier means the same thing it does in the real game.
+    assert.ok(Math.abs(share(tier) - want) < 0.5,
+      `${tier}: ${share(tier).toFixed(2)}% of rolls, want ~${want}%`);
+  }
+
+  // The real game's bottom half is Common + Trash (49.1% + 0.9%). Per-tier
+  // rounding accumulates here — a tie sitting on the Uncommon cut pushes that
+  // tier to 25.5%, and the bottom half absorbs the difference — so this gets a
+  // wider tolerance than the individual tiers rather than a tighter one.
+  assert.ok(Math.abs(share('Common') + share('Trash') - 50) < 1,
+    `bottom half is ${(share('Common') + share('Trash')).toFixed(2)}%, want ~50%`);
+
+  // Trash cannot be a percentile here: the floor is one big tie, so it is
+  // defined as the floor itself rather than an arbitrary cut through it.
+  assert.equal(seen.Trash, floorCount,
+    'Trash should be exactly the rolls scoring the minimum possible EP');
+  assert.equal(cardRarity(floor), 'Trash');
+  assert.notEqual(cardRarity(nextUp), 'Trash',
+    `the next reachable total (${nextUp}) should already be Common`);
+});
+
+test('every tier is reachable and Trash is the floor', () => {
+  assert.equal(cardRarity(0), 'Trash');
+  const buf = hitBuffer();
+  const seen = new Set();
+  for (let n = 0; n <= ROLL_MAX; n += 101) seen.add(cardRarity(scan(n, buf)));
+  for (const tier of RARITY_ORDER) assert.ok(seen.has(tier), `${tier} never occurs`);
 });
 
 test('rarity tiers are ordered and total EP is never negative', () => {
@@ -197,7 +251,7 @@ test('every roll earns at least one badge', () => {
 test('share text carries the score without leaking the badge list', () => {
   const text = shareText(analyze(69), { rolls: 1234, found: 40, total: BADGE_COUNT });
   assert.match(text, /^RNGdle/);
-  assert.match(text, /69 — Anomaly/);
+  assert.match(text, /69 — Mythic/);
   assert.match(text, /1,234 rolls/);
   assert.match(text, new RegExp(`40/${BADGE_COUNT} badges`));
   assert.ok(!text.includes('Exact Nice'), 'badge names stay unspoiled');
@@ -245,7 +299,8 @@ test('badge index tables line up with the catalogue', () => {
 });
 
 test('rarity ordering is usable as a stop condition', () => {
-  assert.deepEqual(RARITY_ORDER, ['Common', 'Uncommon', 'Rare', 'Epic', 'Anomaly', 'Mythic']);
+  assert.deepEqual(RARITY_ORDER,
+    ['Trash', 'Common', 'Uncommon', 'Rare', 'Epic', 'Anomaly', 'Mythic']);
   for (let i = 1; i < RARITY_ORDER.length; i++) {
     assert.ok(rarityFloor(RARITY_ORDER[i]) > rarityFloor(RARITY_ORDER[i - 1]),
       `${RARITY_ORDER[i]} floor should exceed ${RARITY_ORDER[i - 1]}`);
