@@ -341,6 +341,16 @@ kbd {
   margin-bottom: 4px;
 }
 
+/* The stage's own grid sits below the controls, so it needs the rule that used
+   to separate it from the number. `:empty` keeps that rule from showing up
+   before the first roll, or after a reset. */
+.stage-badges {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.stage-badges:empty { display: none; }
+
 .badge {
   display: flex;
   gap: 10px;

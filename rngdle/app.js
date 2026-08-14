@@ -532,6 +532,7 @@ function eraseData() {
   $('result').hidden = true;
   $('prompt').hidden = false;
   $('share-btn').hidden = true;
+  $('badge-list').replaceChildren(); // lives outside #result now, so it needs clearing
   $('auto-live').hidden = true;
   $('auto-found').hidden = true;
   $('stage').className = 'stage';
@@ -550,7 +551,10 @@ function eraseData() {
 $('roll-btn').addEventListener('click', rollOnce);
 $('auto-btn').addEventListener('click', toggleAuto);
 $('share-btn').addEventListener('click', share);
-$('reset-btn').addEventListener('click', eraseData);
+// One on the stage, one at the foot of the Best tab — same action either way.
+for (const btn of document.querySelectorAll('[data-reset]')) {
+  btn.addEventListener('click', eraseData);
+}
 $('badge-search').addEventListener('input', renderCatalogue);
 
 for (const chip of document.querySelectorAll('.chip')) {

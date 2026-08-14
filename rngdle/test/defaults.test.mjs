@@ -67,6 +67,36 @@ test('every stop option the page offers is one the app understands', () => {
   }
 });
 
+test('the Roll button comes before the badge grid', () => {
+  // A good roll earns a dozen-plus badges. With the grid above the controls you
+  // have to scroll past your own result to roll again, which is backwards.
+  const roll = html.indexOf('id="roll-btn"');
+  const grid = html.indexOf('id="badge-list"');
+  assert.ok(roll > 0 && grid > 0, 'expected both the roll button and the badge grid');
+  assert.ok(roll < grid, 'the roll button should sit above the badges, not below them');
+});
+
+test('the badge grid collapses while empty', () => {
+  // It sits outside #result now, so `hidden` on the result no longer covers it;
+  // without this rule the stage shows a divider above nothing on a first visit.
+  const css = readFileSync(join(ROOT, 'styles.css'), 'utf8');
+  assert.match(html, /id="badge-list"[^>]*>\s*<\/div>/,
+    'the grid must ship with no whitespace inside it for :empty to match');
+  assert.match(css, /\.stage-badges:empty\s*\{[^}]*display:\s*none/);
+});
+
+test('a reset control is reachable from the play screen', () => {
+  const controls = html.match(/<div class="controls">([\s\S]*?)<\/div>/);
+  assert.ok(controls, 'no controls row in index.html');
+  assert.match(controls[1], /data-reset/,
+    'the play screen should offer a reset without digging through tabs');
+
+  // app.js binds every [data-reset]; an id-based binding would miss the second.
+  const app = readFileSync(join(ROOT, 'app.js'), 'utf8');
+  assert.match(app, /querySelectorAll\('\[data-reset\]'\)/);
+  assert.ok(html.match(/data-reset/g).length >= 2, 'expected the Best-tab reset too');
+});
+
 test('every id app.js reaches for exists in the page', () => {
   // A renamed element would throw on the first frame of a run.
   const app = readFileSync(join(ROOT, 'app.js'), 'utf8');

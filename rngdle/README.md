@@ -206,17 +206,22 @@ can never begin with the leading zero of `02/02`.
 
 ## Differences from the original
 
-This is a clean-room build from public descriptions of the game, not a port. The
-scoring machinery and the shape of the badge catalogue match, but the badge list
-here is its own thing: 169 badges against the original's ~230, with definitions
-written from scratch. Badges the original defines ambiguously were either given a
-crisp definition here or left out rather than guessed at.
+This is a clean-room build, not a port: every predicate was written from scratch
+against public descriptions of the game, then checked against the live game's own
+prices. All 230 badges are here and all 230 are priced identically — so a roll
+scores the same number in both.
 
 The original is a once-a-day game. This one has no cooldown and adds auto-roll,
 which turns it from a daily curiosity into a collection hunt — so the daily lock,
 the UTC reset and the streak counter are gone, replaced by badges-found progress
-and a best-rolls board, where any roll opens to show the badges it earned.
+and two roll boards, Recent and Best, where any roll opens to show the badges it
+earned.
+
+The layout puts Roll above the badge grid rather than below it. A good roll earns
+a dozen-plus badges, and with the grid first you end up scrolling past your own
+result to roll again.
 
 There is no server, so no global leaderboard. Your rolls, lifetime EP, best rolls
 and collection live in `localStorage` on this device only, and nothing is
-transmitted anywhere.
+transmitted anywhere. **Reset** — on the stage, and again at the foot of the Best
+tab — clears all of it after a confirm.

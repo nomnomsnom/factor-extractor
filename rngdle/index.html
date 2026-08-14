@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RNGdle</title>
-<meta name="description" content="Roll a random number from 0 to 1,000,000 and find out what it's hiding. 169 badges to collect. Roll by hand or turn on auto-roll and hunt.">
+<meta name="description" content="Roll a random number from 0 to 1,000,000 and find out what it's hiding. 230 badges to collect. Roll by hand or turn on auto-roll and hunt.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎲</text></svg>">
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -37,7 +37,7 @@
     <div class="stage" id="stage">
       <div class="prompt" id="prompt">
         <p class="prompt-line">Nothing rolled yet.</p>
-        <p class="prompt-note">0 – 1,000,000 · 169 badges hiding in the digits</p>
+        <p class="prompt-note">0 – 1,000,000 · 230 badges hiding in the digits</p>
       </div>
 
       <div class="result" id="result" hidden>
@@ -50,13 +50,15 @@
           <span class="ep"><strong id="ep">0</strong> EP</span>
         </div>
         <p class="oneliner" id="oneliner"></p>
-        <div class="badges" id="badge-list"></div>
       </div>
 
+      <!-- Above the badge grid on purpose: the grid can run to a dozen cards,
+           and the Roll button should never be something you scroll to find. -->
       <div class="controls">
         <button class="roll-btn" id="roll-btn">Roll</button>
         <button class="btn auto" id="auto-btn" aria-pressed="false">Auto-roll</button>
         <button class="btn ghost" id="share-btn" hidden>Share</button>
+        <button class="btn ghost danger" data-reset>Reset</button>
       </div>
 
       <div class="auto-panel" id="auto-panel">
@@ -106,6 +108,10 @@
       </div>
 
       <p class="hint">Press <kbd>Space</kbd> to roll · <kbd>A</kbd> to toggle auto-roll</p>
+
+      <!-- Collapses itself while empty (`:empty` in the stylesheet), so the
+           stage has no dangling rule above nothing before the first roll. -->
+      <div class="badges stage-badges" id="badge-list"></div>
     </div>
   </main>
 
@@ -150,7 +156,7 @@
       <p>Your 50 highest-scoring rolls ever. Everything is stored in this browser only.</p>
     </div>
     <div class="history" id="history"></div>
-    <button class="btn ghost danger" id="reset-btn">Erase my data</button>
+    <button class="btn ghost danger" data-reset>Erase my data</button>
   </section>
 
   <footer class="foot">
