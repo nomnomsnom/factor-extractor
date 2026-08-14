@@ -141,15 +141,20 @@ export function analyze(n, out = hitBuffer()) {
 
 /** A uniformly random roll, using the platform CSPRNG when one is available. */
 export function roll() {
-  const crypto = globalThis.crypto;
-  if (crypto?.getRandomValues) {
-    // Rejection sampling keeps the distribution flat across ROLL_SPACE.
-    const limit = Math.floor(0x100000000 / ROLL_SPACE) * ROLL_SPACE;
-    const buf = new Uint32Array(1);
-    let v;
-    do { crypto.getRandomValues(buf); v = buf[0]; } while (v >= limit);
-    return ROLL_MIN + (v % ROLL_SPACE);
-  }
+  // Some browsers expose crypto but refuse it outside a secure context, and a
+  // throw here would take the whole game down. Math.random is a fine fallback
+  // for a toy: fall back rather than fail.
+  try {
+    const crypto = globalThis.crypto;
+    if (crypto?.getRandomValues) {
+      // Rejection sampling keeps the distribution flat across ROLL_SPACE.
+      const limit = Math.floor(0x100000000 / ROLL_SPACE) * ROLL_SPACE;
+      const buf = new Uint32Array(1);
+      let v;
+      do { crypto.getRandomValues(buf); v = buf[0]; } while (v >= limit);
+      return ROLL_MIN + (v % ROLL_SPACE);
+    }
+  } catch { /* fall through to Math.random */ }
   return ROLL_MIN + Math.floor(Math.random() * ROLL_SPACE);
 }
 

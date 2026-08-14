@@ -153,6 +153,35 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<noscript>
+  <div class="fatal">
+    <strong>This page needs JavaScript.</strong>
+    <span>The whole game runs in your browser — there is no server. If you are
+    viewing this inside a chat, email or file-preview window, scripts are
+    usually blocked there: save the file and open it in a real browser.</span>
+  </div>
+</noscript>
+
+<div class="fatal" id="fatal" hidden>
+  <strong>Something broke while starting the game.</strong>
+  <span id="fatal-msg"></span>
+  <span>If you opened this from a preview window, try saving the file and
+  opening it in a browser instead.</span>
+</div>
+
+<!-- Registers before the game loads, so a failure surfaces as a message rather
+     than a page that silently does nothing when you tap it. Classic script:
+     it must run ahead of the deferred module below. -->
+<script>
+  window.addEventListener('error', function (e) {
+    var box = document.getElementById('fatal');
+    var msg = document.getElementById('fatal-msg');
+    if (!box || box.hidden === false) return;
+    box.hidden = false;
+    if (msg) msg.textContent = (e && e.message) ? e.message : 'Unknown error.';
+  });
+</script>
+
 <script type="module" src="app.js"></script>
 </body>
 </html>

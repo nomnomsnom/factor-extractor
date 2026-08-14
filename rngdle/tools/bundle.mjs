@@ -44,8 +44,10 @@ const script = MODULES.map(name => flatten(read(name), name)).join('\n');
 
 // Reuse the real page markup so the bundle can never drift from the served app.
 const html = read('index.html');
+// Strip only the module tag — the inline error guard has to survive into the
+// bundle, and it must still sit ahead of the inlined game script.
 const body = html.match(/<body>([\s\S]*)<\/body>/)[1]
-  .replace(/\s*<script[\s\S]*?<\/script>/g, '')
+  .replace(/\s*<script type="module"[\s\S]*?<\/script>/g, '')
   .trim();
 const title = html.match(/<title>([^<]*)<\/title>/)[1];
 const description = html.match(/<meta name="description" content="([^"]*)"/)[1];
