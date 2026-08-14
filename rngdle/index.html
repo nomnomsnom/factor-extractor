@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RNGdle</title>
+<meta name="description" content="Roll a random number from 0 to 1,000,000 and find out what it's hiding. 169 badges to collect. Roll by hand or turn on auto-roll and hunt.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎲</text></svg>">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="shell">
+
+  <header class="top">
+    <div class="brand">
+      <h1>RNG<span>dle</span></h1>
+      <p class="tag">Nothing to guess. Roll a number and find out what it's hiding.</p>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab is-on" data-view="play" role="tab" aria-selected="true">Play</button>
+      <button class="tab" data-view="badges" role="tab" aria-selected="false">Badges</button>
+      <button class="tab" data-view="best" role="tab" aria-selected="false">Best</button>
+    </nav>
+  </header>
+
+  <section class="scoreboard" aria-label="Your stats">
+    <div class="stat"><span class="k" id="stat-rolls">0</span><span class="v">rolls</span></div>
+    <div class="stat"><span class="k" id="stat-lifetime">0</span><span class="v">lifetime EP</span></div>
+    <div class="stat"><span class="k" id="stat-best">—</span><span class="v">best roll</span></div>
+    <div class="stat"><span class="k" id="stat-found">0/0</span><span class="v">badges found</span></div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <main class="view is-on" id="view-play">
+
+    <div class="stage" id="stage">
+      <div class="prompt" id="prompt">
+        <p class="prompt-line">Nothing rolled yet.</p>
+        <p class="prompt-note">0 – 1,000,000 · 169 badges hiding in the digits</p>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <div class="numberwrap">
+          <output class="number" id="number" aria-live="polite">0</output>
+        </div>
+        <div class="verdict">
+          <span class="pill" id="rarity">Common</span>
+          <span class="ep"><strong id="ep">0</strong> EP</span>
+        </div>
+        <p class="oneliner" id="oneliner"></p>
+        <div class="badges" id="badge-list"></div>
+      </div>
+
+      <div class="controls">
+        <button class="roll-btn" id="roll-btn">Roll</button>
+        <button class="btn auto" id="auto-btn" aria-pressed="false">Auto-roll</button>
+        <button class="btn ghost" id="share-btn" hidden>Share</button>
+      </div>
+
+      <div class="auto-panel" id="auto-panel">
+        <div class="auto-live" id="auto-live" hidden>
+          <span class="auto-dot" id="auto-dot" aria-hidden="true"></span>
+          <span id="auto-status">Rolling…</span>
+          <span class="auto-sep">·</span>
+          <span><strong id="auto-count">0</strong> <span id="auto-count-word">rolls</span> this run</span>
+          <span class="auto-sep">·</span>
+          <span>best <strong id="auto-best">0</strong> EP</span>
+        </div>
+        <div class="auto-opts">
+          <label>
+            <span>Speed</span>
+            <select id="speed-select">
+              <option value="slow">Slow</option>
+              <option value="fast" selected>Fast</option>
+              <option value="turbo">Turbo</option>
+            </select>
+          </label>
+          <label>
+            <span>Stop at</span>
+            <!-- "Never" is the default on purpose: with an empty collection
+                 every badge is new, so "New badge" would end every run on its
+                 first roll and auto-roll would look broken. -->
+            <select id="stop-select">
+              <option value="none" selected>Never</option>
+              <option value="new">New badge</option>
+              <option value="Rare">Rare card</option>
+              <option value="Epic">Epic card</option>
+              <option value="Anomaly">Anomaly card</option>
+              <option value="Mythic">Mythic card</option>
+            </select>
+          </label>
+          <label>
+            <span>Roll limit</span>
+            <select id="limit-select">
+              <option value="0">No limit</option>
+              <option value="100">100</option>
+              <option value="1000" selected>1,000</option>
+              <option value="100000">100,000</option>
+              <option value="1000000">1,000,000</option>
+            </select>
+          </label>
+        </div>
+        <p class="auto-found" id="auto-found" hidden></p>
+      </div>
+
+      <p class="hint">Press <kbd>Space</kbd> to roll · <kbd>A</kbd> to toggle auto-roll</p>
+    </div>
+  </main>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section class="view" id="view-badges">
+    <div class="badges-head">
+      <h2>Every badge</h2>
+      <p>
+        A badge's EP is not a design decision — it is derived from exactly how often
+        the badge can be earned across all 1,000,001 possible rolls. Rarer is worth more,
+        by construction. Within a family only your best badge pays out.
+      </p>
+      <div class="progress" aria-label="Collection progress">
+        <div class="progress-bar"><span id="progress-fill"></span></div>
+        <span class="progress-label" id="progress-label">0 of 0 found</span>
+      </div>
+      <label class="search">
+        <input type="search" id="badge-search" placeholder="Search badges…" aria-label="Search badges">
+      </label>
+      <div class="chips" id="rarity-chips" role="group" aria-label="Filter by rarity">
+        <button class="chip is-on" data-filter="all">All</button>
+        <button class="chip" data-filter="missing">Missing</button>
+        <button class="chip" data-filter="found">Found</button>
+      </div>
+    </div>
+    <div class="catalogue" id="catalogue"></div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section class="view" id="view-best">
+    <div class="badges-head">
+      <h2>Your best rolls</h2>
+      <p>Everything is stored in this browser only. Nothing leaves your device.</p>
+    </div>
+    <div class="history" id="history"></div>
+    <button class="btn ghost danger" id="reset-btn">Erase my data</button>
+  </section>
+
+  <footer class="foot">
+    <p>
+      A self-contained remake, built from public descriptions of the game.
+      EP values are derived from first principles — see the README.
+    </p>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<noscript>
+  <div class="fatal">
+    <strong>This page needs JavaScript.</strong>
+    <span>The whole game runs in your browser — there is no server. If you are
+    viewing this inside a chat, email or file-preview window, scripts are
+    usually blocked there: save the file and open it in a real browser.</span>
+  </div>
+</noscript>
+
+<div class="fatal" id="fatal" hidden>
+  <strong>Something broke while starting the game.</strong>
+  <span id="fatal-msg"></span>
+  <span>If you opened this from a preview window, try saving the file and
+  opening it in a browser instead.</span>
+</div>
+
+<!-- Registers before the game loads, so a failure surfaces as a message rather
+     than a page that silently does nothing when you tap it. Classic script:
+     it must run ahead of the deferred module below. -->
+<script>
+  window.addEventListener('error', function (e) {
+    var box = document.getElementById('fatal');
+    var msg = document.getElementById('fatal-msg');
+    if (!box || box.hidden === false) return;
+    box.hidden = false;
+    if (msg) msg.textContent = (e && e.message) ? e.message : 'Unknown error.';
+  });
+</script>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
