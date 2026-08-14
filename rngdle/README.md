@@ -17,8 +17,28 @@ all 169 badges.
 python3 -m http.server 8000    # then open http://localhost:8000/rngdle/
 ```
 
-It needs a server rather than `file://` because the code is ES modules. There is
-no build step and no dependencies — the only runtime requirement is a browser.
+The source needs a server rather than `file://` because it is ES modules. There
+are no dependencies — the only runtime requirement is a browser.
+
+## Running it on a phone, or sending it to someone
+
+```
+node tools/bundle.mjs          # writes dist/rngdle.html
+```
+
+That inlines the CSS, the four modules and the generated EP table into one
+~80 KB HTML file with **no imports, no network requests and no server**. Open it
+straight off the filesystem, mail it, drop it in a chat, or put it on any static
+host. It works offline once loaded, and the layout is built for phones — tap
+targets are 44px+ and nothing scrolls sideways at 390px.
+
+`dist/embed.html` is the same page as a bare fragment (style + markup + script),
+for hosts that supply their own `<head>`.
+
+To publish it properly, any static host will do — GitHub Pages, Netlify, Cloudflare
+Pages — since there is no backend to run. Everything is per-device: there is no
+server, so no shared leaderboard. Two people opening the same link get their own
+independent collections.
 
 ## The interesting part: EP is derived, not invented
 
@@ -107,6 +127,7 @@ seconds so a crashed tab doesn't cost the session.
 | `badges.gen.js` | Generated output: hit counts, EP, card tiers. Do not edit by hand. |
 | `engine.js` | Scoring: `analyze(n)` for detail, `scan(n, out)` for the hot path. Pure, no I/O. |
 | `app.js` | UI, auto-roll loop, collection tracking, localStorage. Decides nothing about scoring. |
+| `tools/bundle.mjs` | Inlines everything into a single self-contained HTML file in `dist/`. |
 | `test/engine.test.mjs` | 26 tests, including the live-game EP oracle and scan/analyze parity. |
 
 ```

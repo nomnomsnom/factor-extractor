@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "A daily one-roll number game: roll 0-1,000,000 and find out what your number is hiding.",
+  "description": "Roll 0-1,000,000 and find out what your number is hiding. 169 badges to collect, with auto-roll.",
   "scripts": {
     "test": "node --test \"test/**/*.test.mjs\"",
     "generate": "node tools/generate.mjs",
-    "serve": "python3 -m http.server 8000"
+    "serve": "python3 -m http.server 8000",
+    "bundle": "node tools/bundle.mjs"
   }
 }

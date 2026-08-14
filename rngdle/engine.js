@@ -8,8 +8,8 @@
 // analyze() is implemented on top of scan(), so the two can never disagree.
 // Pure and side-effect free — the UI layer owns all persistence.
 
-import { BADGES, FAMILY_NAMES, context, ROLL_MIN, ROLL_MAX } from './defs.js';
-import { STATS, CARD_TIERS, ROLL_SPACE } from './badges.gen.js';
+import { BADGES, FAMILY_NAMES, context, ROLL_MIN, ROLL_MAX, ROLL_SPACE } from './defs.js';
+import { STATS, CARD_TIERS } from './badges.gen.js';
 
 export { ROLL_MIN, ROLL_MAX, ROLL_SPACE, FAMILY_NAMES };
 

@@ -5,8 +5,6 @@
 //
 //     node tools/generate.mjs
 
-export const ROLL_SPACE = 1000001;
-
 /** badge id -> [number of rolls that earn it, EP it is worth]. */
 export const STATS = {
   NICE_EXACT: [1, 100000100],
