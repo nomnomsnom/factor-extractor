@@ -88,6 +88,18 @@ for (let n = ROLL_MIN; n <= ROLL_MAX; n++) {
 
 const cardTiers = CARD_TIERS;
 
+// --- Percentile table -------------------------------------------------------
+// The live game shows "TOP 43%" beside the rarity. Reproducing that needs the
+// whole EP distribution, which is far too big to ship, so emit thresholds at
+// every 0.1%: TAIL[i] is the EP a roll must reach to sit in the top i/10 percent.
+// Non-increasing in i, so the page can binary-search it.
+const sorted = Float64Array.from(totals).sort();
+const tail = [];
+for (let i = 0; i <= 1000; i++) {
+  const idx = Math.min(sorted.length - 1, Math.max(0, Math.floor((1 - i / 1000) * sorted.length)));
+  tail.push(sorted[idx]);
+}
+
 // --- Emit -------------------------------------------------------------------
 const rows = BADGES.map((b, i) =>
   `  ${b.id}: [${counts[i]}, ${ep[i]}],`).join('\n');
@@ -110,6 +122,12 @@ ${rows}
 export const CARD_TIERS = [
 ${tierRows}
 ];
+
+/**
+ * TAIL[i] is the total EP needed to land in the top i/10 percent of all rolls.
+ * Non-increasing, so topPercent() can binary-search it.
+ */
+export const TAIL = [${tail.join(',')}];
 `);
 
 const secs = ((Date.now() - t0) / 1000).toFixed(1);

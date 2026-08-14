@@ -9,7 +9,7 @@
 // Pure and side-effect free — the UI layer owns all persistence.
 
 import { BADGES, FAMILY_NAMES, context, ROLL_MIN, ROLL_MAX, ROLL_SPACE } from './defs.js';
-import { STATS, CARD_TIERS } from './badges.gen.js';
+import { STATS, CARD_TIERS, TAIL } from './badges.gen.js';
 
 export { ROLL_MIN, ROLL_MAX, ROLL_SPACE, FAMILY_NAMES };
 
@@ -36,6 +36,28 @@ export function cardRarity(totalEP) {
 export function rarityFloor(name) {
   const hit = CARD_TIERS.find(([tier]) => tier === name);
   return hit ? hit[1] : 0;
+}
+
+/**
+ * What share of all rolls this one beats or ties, as the live game reports it:
+ * "top 43%". Returns a percentage, finer-grained below 1% where the interesting
+ * rolls live. TAIL is non-increasing, so this is a binary search.
+ */
+export function topPercent(totalEP) {
+  let lo = 0, hi = TAIL.length - 1, best = hi;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (TAIL[mid] <= totalEP) { best = mid; hi = mid - 1; } else lo = mid + 1;
+  }
+  return best / 10;
+}
+
+/** "TOP 43%", or finer for the rare end where whole percents lose the detail. */
+export function topPercentLabel(totalEP) {
+  const pct = topPercent(totalEP);
+  if (pct < 0.1) return 'TOP 0.1%';
+  if (pct < 10) return `TOP ${pct % 1 === 0 ? pct : pct.toFixed(1)}%`;
+  return `TOP ${Math.round(pct)}%`;
 }
 
 // ---------------------------------------------------------------------------

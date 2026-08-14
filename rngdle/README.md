@@ -118,8 +118,8 @@ The end-to-end check is a real roll. rngdle.com scored **265311** at **6,434 EP,
 Uncommon, 14 badges**. So does this:
 
 ```
-roll 265311 -> 6,434 EP | Uncommon | 14 badges
-rngdle.com  ->  6,434 EP | Uncommon | 14 badges
+roll 265311 -> 6,434 EP | Uncommon | TOP 43% | 14 badges
+rngdle.com  ->  6,434 EP | Uncommon | TOP 43% | 14 badges
 ```
 
 ## How scoring works
@@ -130,7 +130,10 @@ rngdle.com  ->  6,434 EP | Uncommon | 14 badges
   *Exact Nice*, but only the rarer one scores — the other is shown greyed out,
   since the rarer badge already implies it.
 - **Card rarity** (Trash → Mythic) matches rngdle.com's own tier distribution,
-  described below.
+  described below, shown alongside the percentile the live game reports
+  ("TOP 43%"). That needs the whole EP distribution, which is far too big to
+  ship, so `badges.gen.js` carries thresholds at every 0.1% and the page binary-
+  searches them.
 
 ## Card rarity
 

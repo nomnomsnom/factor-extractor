@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {
   analyze, scan, roll, hitBuffer, badgeRarity, cardRarity, rarityFloor,
   CATALOGUE, BADGE_IDS, BADGE_COUNT, RARITY_ORDER, shareText,
+  topPercent, topPercentLabel,
   ROLL_MIN, ROLL_MAX, ROLL_SPACE,
 } from '../engine.js';
 import { STATS } from '../badges.gen.js';
@@ -346,4 +347,51 @@ test('every shared badge is priced exactly as rngdle.com prices it', () => {
     .filter(b => b.ep !== byId.get(b.id).ep)
     .map(b => `${b.id}: ours ${b.ep}, theirs ${byId.get(b.id).ep} ("${byId.get(b.id).desc}")`);
   assert.deepEqual(wrong, [], `${wrong.length} badge(s) mispriced against the live game`);
+});
+
+test('the top-percent readout matches the live game', () => {
+  // rngdle.com showed roll 265311 as "UNCOMMON · TOP 43% · 6,434 EP".
+  const r = analyze(265311);
+  assert.equal(r.totalEP, 6434);
+  assert.equal(r.rarity, 'Uncommon');
+  assert.equal(topPercentLabel(r.totalEP), 'TOP 43%');
+});
+
+test('top-percent is monotonic and bounded', () => {
+  const buf = hitBuffer();
+  let prev = Infinity;
+  for (const ep of [0, 2098, 5761, 9644, 23077, 35744, 164953, 1e8]) {
+    const pct = topPercent(ep);
+    assert.ok(pct >= 0 && pct <= 100, `${ep} -> ${pct}`);
+    assert.ok(pct <= prev, 'more EP can never mean a worse percentile');
+    prev = pct;
+  }
+  // A tier floor should sit near the share that tier's cutoff implies.
+  assert.ok(topPercent(164953) <= 1.5, 'the Mythic cutoff is about the top 1%');
+  assert.ok(Math.abs(topPercent(5761) - 50) < 2, 'the Uncommon cutoff is about the median');
+
+  // And it must agree with an actual sweep, not just the table.
+  let atLeast = 0;
+  for (let n = 0; n <= ROLL_MAX; n += 37) if (scan(n, buf) >= 9644) atLeast++;
+  const measured = (atLeast / Math.ceil((ROLL_MAX + 1) / 37)) * 100;
+  assert.ok(Math.abs(topPercent(9644) - measured) < 1.5,
+    `table says top ${topPercent(9644)}%, sweep says ${measured.toFixed(2)}%`);
+});
+
+test('every badge has a real emoji, not a mangled escape', () => {
+  // A generator script once wrote literal "\\U0001f34d" escapes into the source.
+  // JavaScript does not understand \\U, so 54 badges rendered as the text
+  // "U0001f34d" instead of an icon, and nothing else caught it.
+  for (const b of CATALOGUE) {
+    assert.ok(b.emoji, `${b.id} has no emoji`);
+    assert.ok(/[^\x00-\x7F]/.test(b.emoji), `${b.id} emoji is plain ASCII: ${JSON.stringify(b.emoji)}`);
+    assert.ok(!/U[0-9a-fA-F]{8}/.test(b.emoji), `${b.id} emoji looks like a broken escape`);
+  }
+});
+
+test('every badge has a label and a description', () => {
+  for (const b of CATALOGUE) {
+    assert.ok(b.label && b.label.trim(), `${b.id} has no label`);
+    assert.ok(b.desc && b.desc.trim(), `${b.id} has no description`);
+  }
 });

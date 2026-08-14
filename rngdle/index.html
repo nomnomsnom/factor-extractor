@@ -19,6 +19,7 @@
     <nav class="tabs" role="tablist">
       <button class="tab is-on" data-view="play" role="tab" aria-selected="true">Play</button>
       <button class="tab" data-view="badges" role="tab" aria-selected="false">Badges</button>
+      <button class="tab" data-view="recent" role="tab" aria-selected="false">Recent</button>
       <button class="tab" data-view="best" role="tab" aria-selected="false">Best</button>
     </nav>
   </header>
@@ -45,6 +46,7 @@
         </div>
         <div class="verdict">
           <span class="pill" id="rarity">Common</span>
+          <span class="pct" id="pct"></span>
           <span class="ep"><strong id="ep">0</strong> EP</span>
         </div>
         <p class="oneliner" id="oneliner"></p>
@@ -133,10 +135,19 @@
   </section>
 
   <!-- ------------------------------------------------------------------ -->
+  <section class="view" id="view-recent">
+    <div class="badges-head">
+      <h2>Recent rolls</h2>
+      <p>Your last 100 rolls, newest first. Tap any of them to see what it earned.</p>
+    </div>
+    <div class="history" id="recent"></div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
   <section class="view" id="view-best">
     <div class="badges-head">
       <h2>Your best rolls</h2>
-      <p>Everything is stored in this browser only. Nothing leaves your device.</p>
+      <p>Your 50 highest-scoring rolls ever. Everything is stored in this browser only.</p>
     </div>
     <div class="history" id="history"></div>
     <button class="btn ghost danger" id="reset-btn">Erase my data</button>

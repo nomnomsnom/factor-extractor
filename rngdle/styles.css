@@ -303,6 +303,14 @@ kbd {
   border: 1px solid currentColor;
 }
 
+.pct {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
 .ep { color: var(--ink-dim); font-size: 15px; }
 .ep strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 
@@ -533,6 +541,7 @@ button.row[aria-expanded="true"] .chev { transform: rotate(180deg); }
 
 @media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
 .history .day { color: var(--ink-faint); font-size: 12px; }
+.history .when { color: var(--ink-faint); font-size: 11.5px; }
 .history .roll { font-family: var(--mono); font-size: 16px; font-weight: 700; }
 .empty { color: var(--ink-faint); font-size: 14px; padding: 8px 0 18px; }
 

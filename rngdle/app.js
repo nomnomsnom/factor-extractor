@@ -2,12 +2,13 @@
 // All game rules live in engine.js — nothing here decides what a roll is worth.
 
 import {
-  analyze, scan, roll, hitBuffer, cardRarity, shareText,
+  analyze, scan, roll, hitBuffer, cardRarity, shareText, topPercentLabel,
   CATALOGUE, BADGE_IDS, BADGE_COUNT, RARITY_ORDER, ROLL_MAX,
 } from './engine.js';
 
 const STORE_KEY = 'rngdle.v2';
 const TOP_N = 50;
+const RECENT_N = 100;
 
 const $ = id => document.getElementById(id);
 const fmt = n => Math.round(n).toLocaleString('en-US');
@@ -22,6 +23,7 @@ const blankState = () => ({
   best: null,   // { n, ep, rarity }
   found: [],    // badge ids ever earned
   top: [],      // best rolls, newest sort applied lazily
+  recent: [],   // the last RECENT_N rolls, oldest first
 });
 
 function load() {
@@ -81,6 +83,10 @@ function record(n, ep, rarity) {
     state.top.push({ n, ep, rarity });
     if (state.top.length > TOP_N * 2) trimTop();
   }
+  // A rolling window of the last RECENT_N. Trimmed in batches rather than every
+  // roll, because unshift/shift per roll would be far too slow under turbo.
+  state.recent.push({ n, ep, rarity });
+  if (state.recent.length > RECENT_N * 2) state.recent = state.recent.slice(-RECENT_N);
 }
 
 // ---------------------------------------------------------------------------
@@ -148,6 +154,7 @@ function renderResult(result, newIndexes = null) {
 function setNumber(n, ep, rarity) {
   $('number').textContent = fmt(n);
   $('ep').textContent = fmt(ep);
+  $('pct').textContent = topPercentLabel(ep);
   const pill = $('rarity');
   pill.textContent = rarity;
   pill.className = `pill r-${rarity}`;
@@ -200,6 +207,7 @@ function rollOnce() {
     renderScoreboard();
     renderCatalogue();
     renderHistory();
+    renderRecent();
     if (fresh.length) toast(`New badge: ${CATALOGUE.find(b => b.index === fresh[0]).label}`);
   });
 }
@@ -336,6 +344,7 @@ function stopAuto() {
   renderScoreboard();
   renderCatalogue();
   renderHistory();
+  renderRecent();
 }
 
 /** A run ended on its own: show the roll that ended it, in full. */
@@ -414,16 +423,19 @@ function renderCatalogue() {
   host.replaceChildren(frag);
 }
 
-function renderHistory() {
-  trimTop();
-  const host = $('history');
-  if (!state.top.length) {
+/**
+ * Render a list of rolls as expandable rows. Each row opens to show the badges
+ * that roll earned, built on first open rather than scoring the whole list up
+ * front.
+ */
+function renderRollList(host, entries, emptyText, rank) {
+  if (!entries.length) {
     host.replaceChildren();
-    host.innerHTML = '<p class="empty">No rolls yet. Roll something.</p>';
+    host.innerHTML = `<p class="empty">${emptyText}</p>`;
     return;
   }
   const frag = document.createDocumentFragment();
-  state.top.forEach((h, i) => {
+  entries.forEach((h, i) => {
     const item = document.createElement('div');
     item.className = 'hitem';
 
@@ -434,23 +446,20 @@ function renderHistory() {
     button.innerHTML = `
       <span>
         <span class="roll">${fmt(h.n)}</span>
-        <span class="day">#${i + 1}</span>
+        <span class="day">${rank ? `#${i + 1}` : h.rarity}</span>
       </span>
-      <span class="num">${fmt(h.ep)} EP<span class="odds">${h.rarity}</span><span class="chev" aria-hidden="true">▾</span></span>`;
+      <span class="num">${fmt(h.ep)} EP<span class="odds">${rank ? h.rarity : topPercentLabel(h.ep)}</span><span class="chev" aria-hidden="true">▾</span></span>`;
 
     const detail = document.createElement('div');
     detail.className = 'row-detail';
     detail.hidden = true;
 
-    // Built on first open: scoring 50 rolls up front would be wasted work for
-    // a list most people only poke at.
     button.addEventListener('click', () => {
       const open = button.getAttribute('aria-expanded') === 'true';
       if (!open && !detail.childElementCount) {
-        const result = analyze(h.n);
         const grid = document.createElement('div');
         grid.className = 'badges';
-        grid.append(...result.badges.map(badgeCard));
+        grid.append(...analyze(h.n).badges.map(badgeCard));
         detail.append(grid);
       }
       button.setAttribute('aria-expanded', String(!open));
@@ -461,6 +470,17 @@ function renderHistory() {
     frag.append(item);
   });
   host.replaceChildren(frag);
+}
+
+function renderHistory() {
+  trimTop();
+  renderRollList($('history'), state.top, 'No rolls yet. Roll something.', true);
+}
+
+function renderRecent() {
+  // Stored oldest-first so appending is cheap; shown newest-first.
+  const newestFirst = state.recent.slice(-RECENT_N).reverse();
+  renderRollList($('recent'), newestFirst, 'No rolls yet. Roll something.', false);
 }
 
 // ---------------------------------------------------------------------------
@@ -518,6 +538,7 @@ function eraseData() {
   renderScoreboard();
   renderCatalogue();
   renderHistory();
+  renderRecent();
   switchView('play');
   toast('Data erased');
 }
@@ -561,6 +582,7 @@ addEventListener('visibilitychange', () => { if (document.hidden) saveNow(); });
 renderScoreboard();
 renderCatalogue();
 renderHistory();
+renderRecent();
 
 // Open on the player's best roll so the page never starts empty for a returner.
 if (state.best) {
