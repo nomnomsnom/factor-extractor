@@ -292,6 +292,7 @@ function autoFrame(ts) {
 /** Per-frame paint: counters plus the headline, but never the badge grid. */
 function paintAuto() {
   $('auto-count').textContent = fmt(auto.count);
+  $('auto-count-word').textContent = auto.count === 1 ? 'roll' : 'rolls';
   $('auto-best').textContent = fmt(auto.bestEP);
   $('prompt').hidden = true;
   $('result').hidden = false;

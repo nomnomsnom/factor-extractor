@@ -62,7 +62,7 @@
           <span class="auto-dot" id="auto-dot" aria-hidden="true"></span>
           <span id="auto-status">Rolling…</span>
           <span class="auto-sep">·</span>
-          <span><strong id="auto-count">0</strong> rolls this run</span>
+          <span><strong id="auto-count">0</strong> <span id="auto-count-word">rolls</span> this run</span>
           <span class="auto-sep">·</span>
           <span>best <strong id="auto-best">0</strong> EP</span>
         </div>
@@ -77,9 +77,12 @@
           </label>
           <label>
             <span>Stop at</span>
+            <!-- "Never" is the default on purpose: with an empty collection
+                 every badge is new, so "New badge" would end every run on its
+                 first roll and auto-roll would look broken. -->
             <select id="stop-select">
-              <option value="none">Never</option>
-              <option value="new" selected>New badge</option>
+              <option value="none" selected>Never</option>
+              <option value="new">New badge</option>
               <option value="Rare">Rare card</option>
               <option value="Epic">Epic card</option>
               <option value="Anomaly">Anomaly card</option>
