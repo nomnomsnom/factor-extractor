@@ -1,0 +1,70 @@
+name: Deploy RNGdle to GitHub Pages
+
+# Publishes rngdle/ as a public static site at
+# https://nomnomsnom.github.io/factor-extractor/
+#
+# One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
+# Until that is switched on, this workflow deploys nothing.
+#
+# GitHub restricts Pages deployments to the default branch, so this runs on
+# main. Use the "Run workflow" button (workflow_dispatch) to republish without
+# pushing a commit.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'rngdle/**'
+      - '.github/workflows/rngdle-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; a queued run supersedes an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Don't publish a broken game: the suite covers the scoring rules and the
+      # page's own default settings.
+      - name: Test
+        working-directory: rngdle
+        run: node --test "test/**/*.test.mjs"
+
+      # Inlines CSS, the four ES modules and the generated EP table into one
+      # self-contained HTML file with no imports and no network requests.
+      - name: Bundle
+        working-directory: rngdle
+        run: node tools/bundle.mjs
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp rngdle/dist/rngdle.html _site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

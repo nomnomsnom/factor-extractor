@@ -35,10 +35,22 @@ targets are 44px+ and nothing scrolls sideways at 390px.
 `dist/embed.html` is the same page as a bare fragment (style + markup + script),
 for hosts that supply their own `<head>`.
 
-To publish it properly, any static host will do — GitHub Pages, Netlify, Cloudflare
-Pages — since there is no backend to run. Everything is per-device: there is no
-server, so no shared leaderboard. Two people opening the same link get their own
-independent collections.
+### A public link
+
+`.github/workflows/rngdle-pages.yml` tests, bundles and publishes the game to
+GitHub Pages at **https://nomnomsnom.github.io/factor-extractor/**. It needs one
+switch flipped by hand, once: **Settings → Pages → Source: GitHub Actions**. Until
+then the workflow deploys nothing.
+
+It runs on pushes to `main` that touch `rngdle/`, because GitHub only allows Pages
+deployments from the default branch. There is a **Run workflow** button for
+republishing without a commit.
+
+Any other static host works too — Netlify, Cloudflare Pages, or anything that
+serves a file — since there is no backend.
+
+Everything is per-device: there is no server, so no shared leaderboard. Two people
+opening the same link get their own independent collections.
 
 ## The interesting part: EP is derived, not invented
 
