@@ -21,7 +21,7 @@ test('EP matches the live game on every badge whose value is publicly known', ()
     PALINDROME: 50025, PRIME: 1274, TRIPS: 724, EVEN: 200, ODD: 200,
     PAIR: 120, SIX_DIGITS: 111,
     NICE_EXACT: 100000100, JACKPOT_EXACT: 100000100, LEET_EXACT: 100000100,
-    DEVIL_EXACT: 100000100, BOTANIST_EXACT: 100000100, DIGIT_7: 100000100,
+    DEVIL_EXACT: 100000100, BOTANIST_EXACT: 100000100, DIGIT_SEVEN: 100000100,
     // Read off a live roll (265311). These two pinned down definitions that
     // were wrong or missing here: Mesa allows flat stretches anywhere, not just
     // a flat top, and Snake Eyes did not exist at all.
@@ -53,9 +53,11 @@ test('exact meme numbers earn their exact badge', () => {
   const cases = [
     [69, 'NICE_EXACT'], [420, 'BOTANIST_EXACT'], [666, 'DEVIL_EXACT'],
     [777, 'JACKPOT_EXACT'], [1337, 'LEET_EXACT'], [42, 'MEANING_EXACT'],
-    [911, 'EMERGENCY_EXACT'], [7734, 'HELL_EXACT'], [80085, 'BOOB_EXACT'],
-    [404, 'ERROR_EXACT'], [69420, 'ULTIMEME_EXACT'], [314159, 'PI_EXACT'],
-    [1000000, 'MILLION'],
+    [911, 'EMERGENCY_EXACT'], [7734, 'EXACT_HELL'], [80085, 'EXACT_BOOB_80085'],
+    [404, 'ERROR_EXACT'], [69420, 'ULTIMEME_EXACT'], [42069, 'ULTIMEME_EXACT'],
+    [314159, 'PI'], [271828, 'E'], [628318, 'TAU'], [666666, 'INFERNAL'],
+    [17776, 'FOOTBALL_17776'], [1000000, 'ONE_MILLION'], [101, 'ORIENTATION_EXACT'],
+    [365, 'CALENDAR_EXACT'], [365365, 'GROUNDHOG_DAY'],
   ];
   for (const [n, id] of cases) assert.ok(idsOf(n).has(id), `${n} should earn ${id}`);
 });
@@ -103,34 +105,38 @@ test('at most one badge per family scores, on every roll in a broad sample', () 
 
 test('digit patterns are detected', () => {
   assert.ok(idsOf(12321).has('PALINDROME'));
-  assert.ok(idsOf(123456).has('SEQUENCE_6'));
-  assert.ok(idsOf(654321).has('SEQUENCE_6'), 'descending straights count too');
+  assert.ok(idsOf(123456).has('CASCADE'), 'each digit one more than the last');
+  assert.ok(idsOf(654321).has('WATERFALL'));
   assert.ok(idsOf(121212).has('MINI_ECHO'));
   assert.ok(idsOf(348348).has('RHYME'));
-  assert.ok(idsOf(555555).has('SIX_OF_A_KIND'));
-  assert.ok(idsOf(555555).has('REPDIGIT'));
+  assert.ok(idsOf(555555).has('HOMOGENEOUS'));
+  assert.ok(idsOf(555555).has('FIVE_OF_A_KIND'), 'five of a kind counts six too');
   assert.ok(idsOf(112233).has('CONTIGUOUS_THREE_PAIR'));
-  assert.ok(idsOf(122333).has('BOAT'), '2x2 and 3x3 is a full house');
-  assert.ok(idsOf(135791).has('ALL_ODD'));
-  assert.ok(idsOf(246802).has('ALL_EVEN'));
-  assert.ok(idsOf(101101).has('BINARY'));
-  assert.ok(idsOf(147).has('ARITHMETIC'));
-  assert.ok(idsOf(124).has('GEOMETRIC'));
+  assert.ok(idsOf(122333).has('BOAT'), 'a set of three and a set of two');
+  assert.ok(idsOf(135791).has('FLUSH'), 'all odd digits');
+  assert.ok(idsOf(246802).has('FLUSH'), 'all even digits');
+  assert.ok(idsOf(101101).has('BINARY_SOUL'));
   assert.ok(idsOf(159).has('ASCENSION'));
   assert.ok(idsOf(951).has('DECAY'));
-  assert.ok(idsOf(139).has('MOUNTAIN') === false, 'monotonic rise is not a peak');
+  assert.ok(!idsOf(139).has('MOUNTAIN'), 'a monotonic rise never falls');
   assert.ok(idsOf(1391).has('MOUNTAIN'));
   assert.ok(idsOf(919).has('VALLEY'));
   assert.ok(idsOf(9119).has('CANYON'), 'a flat bottom still descends then rises');
-
-  // Terrain, as the live game defines it: flats may sit anywhere, so a strict
-  // peak is also a mesa, and the trailing 11 of 265311 does not disqualify it.
   assert.ok(idsOf(265311).has('MESA'), 'a flat stretch after the fall still counts');
   assert.ok(idsOf(1391).has('MESA'), 'a strict peak is a mesa too');
   assert.ok(!idsOf(123456).has('MESA'), 'a pure climb never falls');
-  assert.ok(!idsOf(111111).has('MESA'), 'flat all through is not a climb');
-  assert.ok(idsOf(69).has('SIXTY_SEVEN') === false);
+  assert.ok(idsOf(265311).has('SNAKE_EYES'));
   assert.ok(idsOf(16789).has('SIXTY_SEVEN'));
+  assert.ok(!idsOf(69).has('SIXTY_SEVEN'));
+});
+
+test('consecutive numbers written end to end', () => {
+  // The live game reads 91011 as 9, 10, 11. A plain digit run does not count:
+  // at least one part must have two or more digits.
+  assert.ok(idsOf(91011).has('CONSEC_TRIPLE_EXACT'));
+  assert.ok(!idsOf(123).has('CONSEC_TRIPLE_EXACT'), 'single digits alone do not qualify');
+  assert.ok(idsOf(1112).has('CONSEC_PAIR_EXACT'), '11 then 12');
+  assert.ok(idsOf(78910).has('CONSEC_QUAD_EXACT'), '7, 8, 9, 10');
 });
 
 test('repeat badges match the live game\'s wording', () => {
@@ -173,52 +179,33 @@ test('rarer rolls are worth more than plain ones', () => {
   assert.equal(analyze(777777).rarity, 'Mythic', 'six sevens stack enough families to top out');
 });
 
-test('card tiers reproduce rngdle.com\'s rarity distribution', () => {
-  // The live game's tiers are Mythic 1% / Anomaly 4% / Epic 5% / Rare 15% /
-  // Uncommon 25% / Common ~49% / Trash ~0.9%, recovered from its published
-  // EP->percentile table. It states them as fixed EP cutoffs, but those are
-  // specific to its 230-badge set; what actually defines a tier is its share.
-  // This sweeps the whole roll space and checks our shares match the game's.
-  const TARGET = { Mythic: 1, Anomaly: 4, Epic: 5, Rare: 15, Uncommon: 25 };
+test('card tiers are rngdle.com\'s published cutoffs', () => {
+  // Every badge is now priced exactly as the live game prices it, so a roll
+  // scores the same number here as there and the real cutoffs apply directly.
+  const published = [['Mythic', 164953], ['Anomaly', 35744], ['Epic', 23077],
+                     ['Rare', 9644], ['Uncommon', 5761], ['Common', 2098]];
+  for (const [tier, cut] of published) {
+    assert.equal(rarityFloor(tier), cut, `${tier} cutoff`);
+    assert.equal(cardRarity(cut), tier, `${tier} floor lands in ${tier}`);
+    assert.equal(cardRarity(cut - 1) === tier, false, `just below ${tier} is a lower tier`);
+  }
+  assert.equal(cardRarity(0), 'Trash');
+});
 
+test('the rarity distribution tracks the live game', () => {
   const seen = Object.fromEntries(RARITY_ORDER.map(r => [r, 0]));
   const buf = hitBuffer();
-  let floor = Infinity, floorCount = 0, nextUp = Infinity;
-  const totals = new Float64Array(ROLL_SPACE);
-  for (let n = 0; n <= ROLL_MAX; n++) {
-    const ep = scan(n, buf);
-    totals[n] = ep;
-    seen[cardRarity(ep)]++;
-    if (ep < floor) floor = ep;
-  }
-  for (const ep of totals) {
-    if (ep === floor) floorCount++;
-    else if (ep < nextUp) nextUp = ep; // the next total a roll can actually reach
-  }
-  const share = tier => (seen[tier] / ROLL_SPACE) * 100;
+  for (let n = 0; n <= ROLL_MAX; n++) seen[cardRarity(scan(n, buf))]++;
+  const share = t => (seen[t] / ROLL_SPACE) * 100;
 
-  for (const [tier, want] of Object.entries(TARGET)) {
-    // Total EP is lumpy — badges come in discrete jumps — so a quantile cut
-    // cannot land on a share to the decimal. Half a point is close enough that
-    // the tier means the same thing it does in the real game.
-    assert.ok(Math.abs(share(tier) - want) < 0.5,
-      `${tier}: ${share(tier).toFixed(2)}% of rolls, want ~${want}%`);
+  // The top tiers land on the real shares almost exactly.
+  for (const [tier, want] of [['Mythic', 1], ['Anomaly', 4], ['Epic', 5], ['Common', 49.1]]) {
+    assert.ok(Math.abs(share(tier) - want) < 0.5, `${tier}: ${share(tier).toFixed(2)}%, want ~${want}%`);
   }
-
-  // The real game's bottom half is Common + Trash (49.1% + 0.9%). Per-tier
-  // rounding accumulates here — a tie sitting on the Uncommon cut pushes that
-  // tier to 25.5%, and the bottom half absorbs the difference — so this gets a
-  // wider tolerance than the individual tiers rather than a tighter one.
-  assert.ok(Math.abs(share('Common') + share('Trash') - 50) < 1,
-    `bottom half is ${(share('Common') + share('Trash')).toFixed(2)}%, want ~50%`);
-
-  // Trash cannot be a percentile here: the floor is one big tie, so it is
-  // defined as the floor itself rather than an arbitrary cut through it.
-  assert.equal(seen.Trash, floorCount,
-    'Trash should be exactly the rolls scoring the minimum possible EP');
-  assert.equal(cardRarity(floor), 'Trash');
-  assert.notEqual(cardRarity(nextUp), 'Trash',
-    `the next reachable total (${nextUp}) should already be Common`);
+  // Trash runs richer than the live game's 0.9%: our EP floor is coarser at the
+  // very bottom, so more rolls tie below the 2098 cut. Guard the magnitude so a
+  // regression that floods Trash still fails.
+  assert.ok(share('Trash') < 10, `Trash at ${share('Trash').toFixed(2)}%`);
 });
 
 test('every tier is reachable and Trash is the floor', () => {

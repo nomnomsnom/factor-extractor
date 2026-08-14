@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Roll 0-1,000,000 and find out what your number is hiding. 169 badges to collect, with auto-roll.",
+  "description": "Roll 0-1,000,000 and find out what your number is hiding. All 230 of rngdle.com's badges, priced identically.",
   "scripts": {
     "test": "node --test \"test/**/*.test.mjs\"",
     "generate": "node tools/generate.mjs",

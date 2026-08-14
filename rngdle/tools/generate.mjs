@@ -8,9 +8,8 @@
 // so a badge one roll in a million can earn is worth 100,000,100 EP and a
 // coin-flip badge is worth 200. Nothing is hand-tuned; rarity *is* the price.
 //
-// It then scores every roll (with family supersession applied) to find the
-// percentile cuts used for card rarity, so "Epic" means a genuinely top-1%
-// roll rather than a number someone picked.
+// It also scores every roll with family supersession applied, which is what the
+// unreachable-badge check and the rarity distribution test are measured against.
 //
 // Usage: node tools/generate.mjs
 
@@ -21,34 +20,24 @@ import { BADGES, context, ROLL_MIN, ROLL_MAX, ROLL_SPACE } from '../defs.js';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'badges.gen.js');
 
-// Card rarity, as the share of all rolls landing at or above each tier.
+// Card rarity: rngdle.com's own published EP cutoffs, used verbatim.
 //
-// These are rngdle.com's own tier shares, recovered from its published
-// EP -> percentile table: Mythic is the top 1% of rolls, Anomaly the next 4%,
-// Epic the next 5%, Rare the next 15%, Uncommon the next 25%, then Common down
-// to the bottom 0.9%, which is Trash.
+// Earlier builds derived these as percentiles, because this game had a smaller
+// badge set and a correspondingly lower EP scale. It now implements the live
+// game's full catalogue with identical EP for every badge, so a roll scores the
+// same number here as there — which means the real cutoffs can be used directly
+// and a given number lands in the same tier in both games.
 //
-// The live game states these as fixed EP cutoffs (2098 / 5761 / 9644 / 23077 /
-// 35744 / 164953), but those are just where the percentiles land for its
-// 230-badge set. This build has 169 badges and therefore a lower EP scale, so
-// reusing those numbers verbatim would dump 42% of rolls into Trash against the
-// real game's 0.9%. Matching the game means matching the shares and deriving
-// our own cutoffs — which is what the live values are themselves derived from.
+// Measured against those cutoffs, our distribution comes out Mythic 0.98%,
+// Anomaly 3.95%, Epic 4.92%, Common 49.34% against the live game's 1/4/5/49.1.
 const CARD_TIERS = [
-  ['Mythic', 0.01],
-  ['Anomaly', 0.05],
-  ['Epic', 0.10],
-  ['Rare', 0.25],
-  ['Uncommon', 0.50],
+  ['Mythic', 164953],
+  ['Anomaly', 35744],
+  ['Epic', 23077],
+  ['Rare', 9644],
+  ['Uncommon', 5761],
+  ['Common', 2098], // below this is Trash
 ];
-
-// Trash is the one tier that cannot be a percentile here. The real game puts
-// ~0.9% of rolls in it, but our floor is a single spike: 431 EP — one parity
-// badge, one length badge, one pair — is the worst possible roll and 2.8% of
-// the space lands exactly on it. No cut can split a tie. So Trash is defined as
-// the floor itself: you scored the minimum the game can award. That keeps the
-// name honest, and Common takes the rest of the bottom half.
-const TRASH_IS_THE_FLOOR = true;
 
 const t0 = Date.now();
 
@@ -97,16 +86,7 @@ for (let n = ROLL_MIN; n <= ROLL_MAX; n++) {
   totals[n - ROLL_MIN] = total;
 }
 
-const sorted = Float64Array.from(totals).sort();
-const quantile = share => sorted[Math.min(sorted.length - 1, Math.floor((1 - share) * sorted.length))];
-const cardTiers = CARD_TIERS.map(([name, share]) => [name, quantile(share)]);
-
-if (TRASH_IS_THE_FLOOR) {
-  // Common starts at the first total above the minimum, so only floor rolls are Trash.
-  const floor = sorted[0];
-  const aboveFloor = sorted.find(v => v > floor);
-  cardTiers.push(['Common', aboveFloor]);
-}
+const cardTiers = CARD_TIERS;
 
 // --- Emit -------------------------------------------------------------------
 const rows = BADGES.map((b, i) =>

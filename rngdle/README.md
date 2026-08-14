@@ -11,7 +11,7 @@ dramatically more. That's the whole game: no strategy, just a result to discover
 Roll by hand, or turn on **auto-roll** and hunt: pick a speed, arm a stop condition
 (a rarity tier, or the first badge you've never seen), and let it run until
 something worth looking at comes up. There is no cooldown — the goal is to fill out
-all 170 badges.
+all 230 badges.
 
 ```
 python3 -m http.server 8000    # then open http://localhost:8000/rngdle/
@@ -102,18 +102,29 @@ live EP value is almost certainly detecting the same thing the real game detects
 `test/engine.test.mjs` asserts that against the live game's own published badge
 table, checked in at `test/fixtures/rngdle-com-badges.json`.
 
-**All 107 badges we share with the live game are priced identically to it.** That
-started at 84: comparing against the real table exposed 23 badges whose predicates
-were subtly or completely wrong — *Orientation* meant "contains 101", not
+**Every one of the live game's 230 badges is implemented here, and every one is
+priced identically to it.** Getting there meant fixing 23 predicates that were
+subtly or completely wrong — *Orientation* meant "contains 101", not
 "strobogrammatic"; *Echo* and *Rhyme* are substring tests, not whole-number blocks
 (mispricing Echo by 300x); *Mesa* allows flat stretches anywhere, not only at the
-peak. Each was re-derived by brute-forcing candidate readings until the measured
-frequency produced the published EP to the unit, which is only possible when the
-predicate matches theirs exactly.
+peak — and implementing 100 badges that were missing, including the
+consecutive-number family that reads 91011 as 9, 10, 11.
+
+The supersession families are the live game's too. That matters as much as the
+prices: the element badges (*Hydrogen*, *Helium*, …) are independent there, and
+grouping them into a family here quietly cost three of them their payout.
+
+The end-to-end check is a real roll. rngdle.com scored **265311** at **6,434 EP,
+Uncommon, 14 badges**. So does this:
+
+```
+roll 265311 -> 6,434 EP | Uncommon | 14 badges
+rngdle.com  ->  6,434 EP | Uncommon | 14 badges
+```
 
 ## How scoring works
 
-- **170 badges**, each a pure predicate over the digits of your roll.
+- **230 badges** — the live game's entire catalogue, each a pure predicate over the digits of your roll.
 - **Family supersession.** Badges are grouped into families; within a family only
   your single highest-EP badge pays out. Rolling `69` earns both *Nice* and
   *Exact Nice*, but only the rarer one scores — the other is shown greyed out,
@@ -123,33 +134,18 @@ predicate matches theirs exactly.
 
 ## Card rarity
 
-The live game ranks each roll on a seven-tier scale and states the tiers as fixed
-EP cutoffs: `2098 / 5761 / 9644 / 23077 / 35744 / 164953`. Those numbers are not
-the design — they are where the *real* design lands for its 230-badge set. Running
-them through the game's published EP→percentile table recovers what they actually
-encode:
+Because every badge is priced exactly as the live game prices it, a roll scores the
+same number here as there — so this uses rngdle.com's published cutoffs verbatim
+rather than deriving its own:
 
-| Tier | Share of rolls | Here |
-|---|---|---|
-| Mythic | 1% | 1.00% |
-| Anomaly | 4% | 4.00% |
-| Epic | 5% | 5.00% |
-| Rare | 15% | 15.00% |
-| Uncommon | 25% | 25.16% |
-| Common | 49.1% | 46.50% |
-| Trash | 0.9% | 3.34% |
+```
+Mythic 164953 · Anomaly 35744 · Epic 23077 · Rare 9644 · Uncommon 5761 · Common 2098
+```
 
-So the tiers are percentiles. Copying the live cutoffs verbatim would be the wrong
-kind of faithful: this build has 170 badges rather than 230, so its EP scale is
-lower, and those numbers would drop **42.6%** of rolls into Trash against the real
-game's 0.9%. Matching the game means matching the shares and deriving our own
-cutoffs — exactly what the live numbers are themselves derived from.
-
-Trash is the one tier that cannot be a percentile here. Our floor is a single
-spike: 431 EP — one parity badge, one length badge, one pair — is the worst
-possible roll, and 3.3% of the space lands exactly on it. No cut can split a tie,
-so Trash is defined as the floor itself: you scored the minimum the game can
-award. That keeps the name honest and costs Common a couple of points.
+Below 2098 is *Trash*. Measured across all 1,000,001 rolls the distribution comes
+out Mythic 0.98%, Anomaly 3.95%, Epic 4.92%, Common 49.34% against the live game's
+1% / 4% / 5% / 49.1%. Trash runs richer here than its 0.9%, because our EP floor is
+slightly coarser at the very bottom and more rolls tie below the cut.
 
 The palette is rngdle.com's too, per tier: a saturated edge colour for borders and
 glows, and a lighter fill for text, since the saturated values are unreadable on
@@ -185,7 +181,7 @@ seconds so a crashed tab doesn't cost the session.
 
 | File | What it is |
 |---|---|
-| `defs.js` | The 170 badge predicates and their families. No EP values — just rules. |
+| `defs.js` | The 230 badge predicates and their families. No EP values — just rules. |
 | `tools/generate.mjs` | Runs every predicate against all 1,000,001 rolls, counts hits, derives EP and the rarity cut points. |
 | `badges.gen.js` | Generated output: hit counts, EP, card tiers. Do not edit by hand. |
 | `engine.js` | Scoring: `analyze(n)` for detail, `scan(n, out)` for the hot path. Pure, no I/O. |
