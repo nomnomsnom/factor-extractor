@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RNGdle</title>
-<meta name="description" content="Roll a random number from 0 to 1,000,000 and find out what it's hiding. 169 badges to collect. Roll by hand or turn on auto-roll and hunt.">
+<meta name="description" content="Roll a random number from 0 to 1,000,000 and find out what it's hiding. 230 badges to collect. Roll by hand or turn on auto-roll and hunt.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎲</text></svg>">
 </head>
 <body>
@@ -352,6 +352,16 @@ kbd {
   margin-bottom: 4px;
 }
 
+/* The stage's own grid sits below the controls, so it needs the rule that used
+   to separate it from the number. `:empty` keeps that rule from showing up
+   before the first roll, or after a reset. */
+.stage-badges {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.stage-badges:empty { display: none; }
+
 .badge {
   display: flex;
   gap: 10px;
@@ -639,7 +649,7 @@ button.row[aria-expanded="true"] .chev { transform: rotate(180deg); }
     <div class="stage" id="stage">
       <div class="prompt" id="prompt">
         <p class="prompt-line">Nothing rolled yet.</p>
-        <p class="prompt-note">0 – 1,000,000 · 169 badges hiding in the digits</p>
+        <p class="prompt-note">0 – 1,000,000 · 230 badges hiding in the digits</p>
       </div>
 
       <div class="result" id="result" hidden>
@@ -652,13 +662,15 @@ button.row[aria-expanded="true"] .chev { transform: rotate(180deg); }
           <span class="ep"><strong id="ep">0</strong> EP</span>
         </div>
         <p class="oneliner" id="oneliner"></p>
-        <div class="badges" id="badge-list"></div>
       </div>
 
+      <!-- Above the badge grid on purpose: the grid can run to a dozen cards,
+           and the Roll button should never be something you scroll to find. -->
       <div class="controls">
         <button class="roll-btn" id="roll-btn">Roll</button>
         <button class="btn auto" id="auto-btn" aria-pressed="false">Auto-roll</button>
         <button class="btn ghost" id="share-btn" hidden>Share</button>
+        <button class="btn ghost danger" data-reset>Reset</button>
       </div>
 
       <div class="auto-panel" id="auto-panel">
@@ -708,6 +720,10 @@ button.row[aria-expanded="true"] .chev { transform: rotate(180deg); }
       </div>
 
       <p class="hint">Press <kbd>Space</kbd> to roll · <kbd>A</kbd> to toggle auto-roll</p>
+
+      <!-- Collapses itself while empty (`:empty` in the stylesheet), so the
+           stage has no dangling rule above nothing before the first roll. -->
+      <div class="badges stage-badges" id="badge-list"></div>
     </div>
   </main>
 
@@ -752,7 +768,7 @@ button.row[aria-expanded="true"] .chev { transform: rotate(180deg); }
       <p>Your 50 highest-scoring rolls ever. Everything is stored in this browser only.</p>
     </div>
     <div class="history" id="history"></div>
-    <button class="btn ghost danger" id="reset-btn">Erase my data</button>
+    <button class="btn ghost danger" data-reset>Erase my data</button>
   </section>
 
   <footer class="foot">
@@ -2584,6 +2600,7 @@ function eraseData() {
   $('result').hidden = true;
   $('prompt').hidden = false;
   $('share-btn').hidden = true;
+  $('badge-list').replaceChildren(); // lives outside #result now, so it needs clearing
   $('auto-live').hidden = true;
   $('auto-found').hidden = true;
   $('stage').className = 'stage';
@@ -2602,7 +2619,10 @@ function eraseData() {
 $('roll-btn').addEventListener('click', rollOnce);
 $('auto-btn').addEventListener('click', toggleAuto);
 $('share-btn').addEventListener('click', share);
-$('reset-btn').addEventListener('click', eraseData);
+// One on the stage, one at the foot of the Best tab — same action either way.
+for (const btn of document.querySelectorAll('[data-reset]')) {
+  btn.addEventListener('click', eraseData);
+}
 $('badge-search').addEventListener('input', renderCatalogue);
 
 for (const chip of document.querySelectorAll('.chip')) {
