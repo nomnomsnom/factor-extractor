@@ -3,11 +3,15 @@
 A playable remake of [RNGdle](https://www.rngdle.com/), the daily game where you
 don't guess anything.
 
-You get **one roll per UTC day**, somewhere in `0 … 1,000,000`. The game scans
-your number for patterns — primes, palindromes, repeated digits, meme numbers,
-straights, terrain shapes — and awards a badge for each one it finds. Every badge
-is worth some EP. Rarer badges are worth dramatically more. That's the whole game:
-no strategy, no second attempt, just a result to discover.
+Roll a number in `0 … 1,000,000`. The game scans it for patterns — primes,
+palindromes, repeated digits, meme numbers, straights, terrain shapes — and awards
+a badge for each one it finds. Every badge is worth some EP. Rarer badges are worth
+dramatically more. That's the whole game: no strategy, just a result to discover.
+
+Roll by hand, or turn on **auto-roll** and hunt: pick a speed, arm a stop condition
+(a rarity tier, or the first badge you've never seen), and let it run until
+something worth looking at comes up. There is no cooldown — the goal is to fill out
+all 169 badges.
 
 ```
 python3 -m http.server 8000    # then open http://localhost:8000/rngdle/
@@ -68,6 +72,32 @@ live EP value is almost certainly detecting the same thing the real game detects
   ten best rolls in the game; *Epic* is the top 0.1%. So the label means something
   measurable rather than something chosen.
 
+## Auto-roll
+
+Auto-roll runs on `requestAnimationFrame` rather than a timer, so it never queues
+work faster than the browser can paint. Three speeds:
+
+| Speed | Behaviour |
+|---|---|
+| Slow | One roll every ~120ms, so you can watch each one land. |
+| Fast | 25 rolls per frame. |
+| Turbo | Rolls until it has spent a 10ms frame budget, then yields. |
+
+Turbo is budgeted rather than a fixed batch size so it scales to the machine it's
+on instead of locking up a slow one — on this dev box it sustains roughly 60k
+rolls/sec while the page stays interactive.
+
+Getting there needed a second entry point into the engine. `analyze(n)` allocates
+an object per earned badge and sorts them, which is fine a few times a second and
+hopeless a few thousand times a second. `scan(n, out)` computes the same total EP
+into a caller-owned hit buffer with no per-badge allocation. `analyze()` is
+implemented on top of `scan()`, so the fast path and the detailed path cannot drift
+apart — and the tests assert they agree.
+
+Speed, stop condition and roll limit are re-read every frame, so changing any of
+them mid-run takes effect immediately. Long runs checkpoint to storage every few
+seconds so a crashed tab doesn't cost the session.
+
 ## Layout
 
 | File | What it is |
@@ -75,9 +105,9 @@ live EP value is almost certainly detecting the same thing the real game detects
 | `defs.js` | The 169 badge predicates and their families. No EP values — just rules. |
 | `tools/generate.mjs` | Runs every predicate against all 1,000,001 rolls, counts hits, derives EP and the rarity cut points. |
 | `badges.gen.js` | Generated output: hit counts, EP, card tiers. Do not edit by hand. |
-| `engine.js` | Scoring: `analyze(n)` → badges, total EP, rarity. Pure, no I/O. |
-| `app.js` | UI, daily lock, streaks, localStorage. Decides nothing about scoring. |
-| `test/engine.test.mjs` | 19 tests, including the live-game EP oracle. |
+| `engine.js` | Scoring: `analyze(n)` for detail, `scan(n, out)` for the hot path. Pure, no I/O. |
+| `app.js` | UI, auto-roll loop, collection tracking, localStorage. Decides nothing about scoring. |
+| `test/engine.test.mjs` | 26 tests, including the live-game EP oracle and scan/analyze parity. |
 
 ```
 node tools/generate.mjs          # regenerate badges.gen.js (~11s)
@@ -98,7 +128,11 @@ here is its own thing: 169 badges against the original's ~230, with definitions
 written from scratch. Badges the original defines ambiguously were either given a
 crisp definition here or left out rather than guessed at.
 
-There is no server, so no global leaderboard. Your streak, lifetime EP, and roll
-history live in `localStorage` on this device only, and nothing is transmitted
-anywhere. A **Practice roll** button gives you unlimited off-the-record rolls —
-they never touch your stats.
+The original is a once-a-day game. This one has no cooldown and adds auto-roll,
+which turns it from a daily curiosity into a collection hunt — so the daily lock,
+the UTC reset and the streak counter are gone, replaced by badges-found progress
+and a best-rolls board.
+
+There is no server, so no global leaderboard. Your rolls, lifetime EP, best rolls
+and collection live in `localStorage` on this device only, and nothing is
+transmitted anywhere.

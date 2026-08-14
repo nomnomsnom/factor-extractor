@@ -3,8 +3,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  analyze, roll, badgeRarity, cardRarity, CATALOGUE, shareText,
-  dayKey, isNextDay, msUntilReset, ROLL_MIN, ROLL_MAX, ROLL_SPACE,
+  analyze, scan, roll, hitBuffer, badgeRarity, cardRarity, rarityFloor,
+  CATALOGUE, BADGE_IDS, BADGE_COUNT, RARITY_ORDER, shareText,
+  ROLL_MIN, ROLL_MAX, ROLL_SPACE,
 } from '../engine.js';
 import { STATS } from '../badges.gen.js';
 
@@ -67,6 +68,21 @@ test('family supersession pays only the best member', () => {
   // Nothing outside the scored set contributes.
   const expected = r.badges.filter(b => b.scored).reduce((s, b) => s + b.ep, 0);
   assert.equal(r.totalEP, expected);
+
+  // A superseded badge names the badge that took its payout, so the UI can say
+  // "covered by Exact Nice" rather than the useless "covered by Nice".
+  assert.equal(nice.coveredBy, 'Exact Nice');
+  assert.equal(exact.coveredBy, undefined);
+});
+
+test('every superseded badge names its winner, on a broad sample', () => {
+  for (let n = 0; n <= ROLL_MAX; n += 8117) {
+    for (const b of analyze(n).badges) {
+      if (b.scored) continue;
+      assert.ok(b.coveredBy, `roll ${n}: ${b.id} superseded with no winner named`);
+      assert.notEqual(b.coveredBy, b.label, `roll ${n}: ${b.id} covered by itself`);
+    }
+  }
 });
 
 test('at most one badge per family scores, on every roll in a broad sample', () => {
@@ -178,23 +194,71 @@ test('every roll earns at least one badge', () => {
   }
 });
 
-test('UTC day bookkeeping', () => {
-  assert.equal(dayKey(new Date('2026-08-14T23:59:59Z')), '2026-08-14');
-  assert.equal(dayKey(new Date('2026-08-15T00:00:00Z')), '2026-08-15');
-  assert.ok(isNextDay('2026-08-14', '2026-08-15'));
-  assert.ok(isNextDay('2026-02-28', '2026-03-01'), 'non-leap year rolls over');
-  assert.ok(!isNextDay('2026-08-14', '2026-08-16'));
-  assert.ok(!isNextDay(null, '2026-08-15'));
-
-  const ms = msUntilReset(new Date('2026-08-14T23:00:00Z'));
-  assert.equal(ms, 60 * 60 * 1000);
+test('share text carries the score without leaking the badge list', () => {
+  const text = shareText(analyze(69), { rolls: 1234, found: 40, total: BADGE_COUNT });
+  assert.match(text, /^RNGdle/);
+  assert.match(text, /69 — Anomaly/);
+  assert.match(text, /1,234 rolls/);
+  assert.match(text, new RegExp(`40/${BADGE_COUNT} badges`));
+  assert.ok(!text.includes('Exact Nice'), 'badge names stay unspoiled');
 });
 
-test('share text carries the score without leaking the badge list', () => {
-  const r = analyze(69);
-  const text = shareText(r, '2026-08-14', 3);
-  assert.match(text, /^RNGdle 2026-08-14/);
-  assert.match(text, /69 — Anomaly/);
-  assert.match(text, /3 day streak/);
-  assert.ok(!text.includes('Exact Nice'), 'badge names stay unspoiled');
+// --- the auto-roll fast path -----------------------------------------------
+
+test('scan agrees with analyze on total EP across the space', () => {
+  const buf = hitBuffer();
+  for (let n = 0; n <= ROLL_MAX; n += 6421) {
+    assert.equal(scan(n, buf), analyze(n).totalEP, `roll ${n}`);
+  }
+});
+
+test('scan reports exactly the badges analyze reports', () => {
+  const buf = hitBuffer();
+  for (const n of [0, 69, 777777, 123456, 428193, 1000000]) {
+    scan(n, buf);
+    const fromScan = new Set(BADGE_IDS.filter((_, i) => buf[i]));
+    const fromAnalyze = new Set(analyze(n).badges.map(b => b.id));
+    assert.deepEqual(fromScan, fromAnalyze, `roll ${n}`);
+  }
+});
+
+test('scan clears stale hits when a buffer is reused', () => {
+  // The whole point of the buffer is reuse; a leftover 1 would corrupt the
+  // caller's collection tracking on every subsequent roll.
+  const buf = hitBuffer();
+  scan(777777, buf);
+  assert.ok(buf.some(v => v === 1));
+  scan(428193, buf);
+  const leftover = BADGE_IDS.filter((_, i) => buf[i]);
+  assert.deepEqual(new Set(leftover), new Set(analyze(428193).badges.map(b => b.id)));
+});
+
+test('analyze does not depend on the buffer it is handed', () => {
+  const dirty = hitBuffer().fill(1);
+  assert.equal(analyze(69, dirty).totalEP, analyze(69).totalEP);
+});
+
+test('badge index tables line up with the catalogue', () => {
+  assert.equal(BADGE_IDS.length, BADGE_COUNT);
+  assert.equal(CATALOGUE.length, BADGE_COUNT);
+  for (const b of CATALOGUE) assert.equal(BADGE_IDS[b.index], b.id, `${b.id} index`);
+});
+
+test('rarity ordering is usable as a stop condition', () => {
+  assert.deepEqual(RARITY_ORDER, ['Common', 'Uncommon', 'Rare', 'Epic', 'Anomaly', 'Mythic']);
+  for (let i = 1; i < RARITY_ORDER.length; i++) {
+    assert.ok(rarityFloor(RARITY_ORDER[i]) > rarityFloor(RARITY_ORDER[i - 1]),
+      `${RARITY_ORDER[i]} floor should exceed ${RARITY_ORDER[i - 1]}`);
+  }
+  // A roll at a tier's floor must actually report that tier.
+  for (const name of RARITY_ORDER.slice(1)) {
+    assert.equal(cardRarity(rarityFloor(name)), name, `${name} floor`);
+  }
+});
+
+test('scan rejects rolls outside the space', () => {
+  const buf = hitBuffer();
+  for (const bad of [-1, ROLL_MAX + 1, 1.5, NaN]) {
+    assert.throws(() => scan(bad, buf), RangeError, `${bad}`);
+  }
 });
