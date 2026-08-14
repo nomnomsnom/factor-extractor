@@ -1,14 +1,10 @@
 name: Deploy RNGdle to GitHub Pages
 
-# Publishes rngdle/ as a public static site at
-# https://nomnomsnom.github.io/factor-extractor/
+# Keeps https://nomnomsnom.github.io/factor-extractor/ current.
 #
-# One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
-# Until that is switched on, this workflow deploys nothing.
-#
-# GitHub restricts Pages deployments to the default branch, so this runs on
-# main. Use the "Run workflow" button (workflow_dispatch) to republish without
-# pushing a commit.
+# Publishes by committing the built page to the `gh-pages` branch rather than
+# using the Actions Pages source: pushing that branch auto-enables Pages, while
+# the Actions source has to be switched on by hand in repo settings.
 
 on:
   push:
@@ -19,52 +15,51 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Never let two deploys race; a queued run supersedes an in-flight one.
+# Never let two publishes race; a queued run supersedes an in-flight one.
 concurrency:
-  group: pages
+  group: rngdle-pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # Don't publish a broken game: the suite covers the scoring rules and the
-      # page's own default settings.
+      # Don't publish a broken game: the suite covers the scoring rules, parity
+      # with rngdle.com's own badge table, and the page's default settings.
       - name: Test
         working-directory: rngdle
         run: node --test "test/**/*.test.mjs"
 
-      # Inlines CSS, the four ES modules and the generated EP table into one
-      # self-contained HTML file with no imports and no network requests.
+      # Inlines CSS, the ES modules and the generated EP table into one
+      # self-contained page with no imports and no network requests.
       - name: Bundle
         working-directory: rngdle
         run: node tools/bundle.mjs
 
-      - name: Assemble site
+      - name: Publish to gh-pages
         run: |
-          mkdir -p _site
-          cp rngdle/dist/rngdle.html _site/index.html
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages
+          git worktree add ../site origin/gh-pages
+          cp rngdle/dist/rngdle.html ../site/index.html
+          touch ../site/.nojekyll
+          cd ../site
+          git add -A
+          if git diff --cached --quiet; then
+            echo "site is already up to date"
+            exit 0
+          fi
+          git commit -m "Publish RNGdle from ${GITHUB_SHA:0:7}"
+          git push origin HEAD:gh-pages

@@ -11,7 +11,7 @@ dramatically more. That's the whole game: no strategy, just a result to discover
 Roll by hand, or turn on **auto-roll** and hunt: pick a speed, arm a stop condition
 (a rarity tier, or the first badge you've never seen), and let it run until
 something worth looking at comes up. There is no cooldown — the goal is to fill out
-all 169 badges.
+all 170 badges.
 
 ```
 python3 -m http.server 8000    # then open http://localhost:8000/rngdle/
@@ -44,14 +44,16 @@ console errors. Host it instead.
 
 ### A public link
 
-`.github/workflows/rngdle-pages.yml` tests, bundles and publishes the game to
-GitHub Pages at **https://nomnomsnom.github.io/factor-extractor/**. It needs one
-switch flipped by hand, once: **Settings → Pages → Source: GitHub Actions**. Until
-then the workflow deploys nothing.
+The game is live at **https://nomnomsnom.github.io/factor-extractor/**, served
+from the `gh-pages` branch, which holds nothing but the built page and a
+`.nojekyll` marker.
 
-It runs on pushes to `main` that touch `rngdle/`, because GitHub only allows Pages
-deployments from the default branch. There is a **Run workflow** button for
-republishing without a commit.
+`.github/workflows/rngdle-pages.yml` keeps it current: on any push to `main` that
+touches `rngdle/`, it runs the tests, rebuilds the bundle and commits the result to
+`gh-pages`. It publishes via that branch rather than the Actions Pages source
+because a branch push auto-enables Pages, while the Actions source has to be turned
+on by hand in repo settings. There is a **Run workflow** button for republishing
+without a commit.
 
 Any other static host works too — Netlify, Cloudflare Pages, or anything that
 serves a file — since there is no backend.
@@ -97,11 +99,21 @@ twice", not exactly twice.
 The practical benefit is that the formula doubles as a test oracle. Since the
 predicates here were written independently, any predicate that reproduces a known
 live EP value is almost certainly detecting the same thing the real game detects.
-`test/engine.test.mjs` asserts that on all 13 badges whose real values are known.
+`test/engine.test.mjs` asserts that against the live game's own published badge
+table, checked in at `test/fixtures/rngdle-com-badges.json`.
+
+**All 107 badges we share with the live game are priced identically to it.** That
+started at 84: comparing against the real table exposed 23 badges whose predicates
+were subtly or completely wrong — *Orientation* meant "contains 101", not
+"strobogrammatic"; *Echo* and *Rhyme* are substring tests, not whole-number blocks
+(mispricing Echo by 300x); *Mesa* allows flat stretches anywhere, not only at the
+peak. Each was re-derived by brute-forcing candidate readings until the measured
+frequency produced the published EP to the unit, which is only possible when the
+predicate matches theirs exactly.
 
 ## How scoring works
 
-- **169 badges**, each a pure predicate over the digits of your roll.
+- **170 badges**, each a pure predicate over the digits of your roll.
 - **Family supersession.** Badges are grouped into families; within a family only
   your single highest-EP badge pays out. Rolling `69` earns both *Nice* and
   *Exact Nice*, but only the rarer one scores — the other is shown greyed out,
@@ -121,21 +133,21 @@ encode:
 |---|---|---|
 | Mythic | 1% | 1.00% |
 | Anomaly | 4% | 4.00% |
-| Epic | 5% | 5.02% |
+| Epic | 5% | 5.00% |
 | Rare | 15% | 15.00% |
-| Uncommon | 25% | 25.48% |
-| Common | 49.1% | 46.73% |
-| Trash | 0.9% | 2.77% |
+| Uncommon | 25% | 25.16% |
+| Common | 49.1% | 46.50% |
+| Trash | 0.9% | 3.34% |
 
 So the tiers are percentiles. Copying the live cutoffs verbatim would be the wrong
-kind of faithful: this build has 169 badges rather than 230, so its EP scale is
+kind of faithful: this build has 170 badges rather than 230, so its EP scale is
 lower, and those numbers would drop **42.6%** of rolls into Trash against the real
 game's 0.9%. Matching the game means matching the shares and deriving our own
 cutoffs — exactly what the live numbers are themselves derived from.
 
 Trash is the one tier that cannot be a percentile here. Our floor is a single
 spike: 431 EP — one parity badge, one length badge, one pair — is the worst
-possible roll, and 2.8% of the space lands exactly on it. No cut can split a tie,
+possible roll, and 3.3% of the space lands exactly on it. No cut can split a tie,
 so Trash is defined as the floor itself: you scored the minimum the game can
 award. That keeps the name honest and costs Common a couple of points.
 
@@ -173,7 +185,7 @@ seconds so a crashed tab doesn't cost the session.
 
 | File | What it is |
 |---|---|
-| `defs.js` | The 169 badge predicates and their families. No EP values — just rules. |
+| `defs.js` | The 170 badge predicates and their families. No EP values — just rules. |
 | `tools/generate.mjs` | Runs every predicate against all 1,000,001 rolls, counts hits, derives EP and the rarity cut points. |
 | `badges.gen.js` | Generated output: hit counts, EP, card tiers. Do not edit by hand. |
 | `engine.js` | Scoring: `analyze(n)` for detail, `scan(n, out)` for the hot path. Pure, no I/O. |

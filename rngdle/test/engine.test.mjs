@@ -8,6 +8,7 @@ import {
   ROLL_MIN, ROLL_MAX, ROLL_SPACE,
 } from '../engine.js';
 import { STATS } from '../badges.gen.js';
+import { readFileSync } from 'node:fs';
 
 const idsOf = n => new Set(analyze(n).badges.map(b => b.id));
 const scoredIdsOf = n => new Set(analyze(n).badges.filter(b => b.scored).map(b => b.id));
@@ -21,6 +22,10 @@ test('EP matches the live game on every badge whose value is publicly known', ()
     PAIR: 120, SIX_DIGITS: 111,
     NICE_EXACT: 100000100, JACKPOT_EXACT: 100000100, LEET_EXACT: 100000100,
     DEVIL_EXACT: 100000100, BOTANIST_EXACT: 100000100, DIGIT_7: 100000100,
+    // Read off a live roll (265311). These two pinned down definitions that
+    // were wrong or missing here: Mesa allows flat stretches anywhere, not just
+    // a flat top, and Snake Eyes did not exist at all.
+    SNAKE_EYES: 2121, MESA: 1568,
   };
   for (const [id, ep] of Object.entries(oracle)) {
     assert.equal(STATS[id]?.[1], ep, `${id} EP`);
@@ -116,21 +121,38 @@ test('digit patterns are detected', () => {
   assert.ok(idsOf(139).has('MOUNTAIN') === false, 'monotonic rise is not a peak');
   assert.ok(idsOf(1391).has('MOUNTAIN'));
   assert.ok(idsOf(919).has('VALLEY'));
-  assert.ok(idsOf(9119).has('CANYON'), 'a flat bottom is a canyon, not a valley');
-  assert.ok(!idsOf(9119).has('VALLEY'));
+  assert.ok(idsOf(9119).has('CANYON'), 'a flat bottom still descends then rises');
+
+  // Terrain, as the live game defines it: flats may sit anywhere, so a strict
+  // peak is also a mesa, and the trailing 11 of 265311 does not disqualify it.
+  assert.ok(idsOf(265311).has('MESA'), 'a flat stretch after the fall still counts');
+  assert.ok(idsOf(1391).has('MESA'), 'a strict peak is a mesa too');
+  assert.ok(!idsOf(123456).has('MESA'), 'a pure climb never falls');
+  assert.ok(!idsOf(111111).has('MESA'), 'flat all through is not a climb');
   assert.ok(idsOf(69).has('SIXTY_SEVEN') === false);
   assert.ok(idsOf(16789).has('SIXTY_SEVEN'));
 });
 
-test('a repdigit is not counted as an echo', () => {
-  // 222222 is six of a kind, not "22" repeated three times.
-  assert.ok(!idsOf(222222).has('MINI_ECHO'));
-  assert.ok(!idsOf(222222).has('RHYME'));
+test('repeat badges match the live game\'s wording', () => {
+  // Echo is "contains an adjacent 2-digit repeat" and Rhyme is "contains the
+  // same 2+ digit substring twice" — both are about substrings, so a repdigit
+  // qualifies. An earlier build read them as whole-number blocks and mispriced
+  // Echo by a factor of 300.
+  assert.ok(idsOf(222222).has('MINI_ECHO'), '2222 is an adjacent 2-digit repeat');
+  assert.ok(idsOf(222222).has('RHYME'));
+  assert.ok(idsOf(923231).has('MINI_ECHO'), 'the echo need not start the number');
+  assert.ok(idsOf(348348).has('RHYME'));
+  assert.ok(!idsOf(123456).has('RHYME'), 'no substring occurs twice');
 });
 
-test('strobogrammatic numbers read the same upside down', () => {
-  for (const n of [69, 88, 96, 1691, 6889]) assert.ok(idsOf(n).has('ORIENTATION_EXACT'), `${n}`);
-  for (const n of [67, 123, 8081]) assert.ok(!idsOf(n).has('ORIENTATION_EXACT'), `${n}`);
+test('Orientation is the course number, not a rotation', () => {
+  // This one was pure invention here: it used to mean "strobogrammatic". The
+  // live game means the string "101".
+  assert.ok(idsOf(101).has('ORIENTATION_EXACT'));
+  assert.ok(idsOf(101).has('ORIENTATION'));
+  assert.ok(idsOf(410123).has('ORIENTATION'));
+  assert.ok(!idsOf(410123).has('ORIENTATION_EXACT'));
+  assert.ok(!idsOf(69).has('ORIENTATION'));
 });
 
 test('0 and 1 count as perfect powers of every exponent', () => {
@@ -316,4 +338,25 @@ test('scan rejects rolls outside the space', () => {
   for (const bad of [-1, ROLL_MAX + 1, 1.5, NaN]) {
     assert.throws(() => scan(bad, buf), RangeError, `${bad}`);
   }
+});
+
+// --- parity with the live game ----------------------------------------------
+
+test('every shared badge is priced exactly as rngdle.com prices it', () => {
+  // fixtures/rngdle-com-badges.json is the live game's own published table
+  // (id, label, description, EP) for all 203 of its badges. Any badge we
+  // implement under a shared id must agree on EP to the unit — and since EP is
+  // derived here purely from measured frequency, agreement means the predicate
+  // detects exactly what theirs detects.
+  const real = JSON.parse(
+    readFileSync(new URL('./fixtures/rngdle-com-badges.json', import.meta.url), 'utf8'));
+  const byId = new Map(real.map(b => [b.id, b]));
+
+  const shared = CATALOGUE.filter(b => byId.has(b.id));
+  assert.ok(shared.length > 100, `expected a large overlap, got ${shared.length}`);
+
+  const wrong = shared
+    .filter(b => b.ep !== byId.get(b.id).ep)
+    .map(b => `${b.id}: ours ${b.ep}, theirs ${byId.get(b.id).ep} ("${byId.get(b.id).desc}")`);
+  assert.deepEqual(wrong, [], `${wrong.length} badge(s) mispriced against the live game`);
 });
