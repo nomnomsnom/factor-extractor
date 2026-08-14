@@ -1,0 +1,2216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RNGdle</title>
+<meta name="description" content="Roll a random number from 0 to 1,000,000 and find out what it's hiding. 169 badges to collect. Roll by hand or turn on auto-roll and hunt.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎲</text></svg>">
+</head>
+<body>
+<style>
+/* RNGdle — dark, single-column, no dependencies. */
+
+:root {
+  --bg: #0b0d13;
+  --bg-soft: #12151f;
+  --panel: #171b28;
+  --line: #252b3d;
+  --ink: #e8ebf5;
+  --ink-dim: #98a0bb;
+  --ink-faint: #6a7290;
+  --accent: #7c5cff;
+  --accent-soft: rgba(124, 92, 255, .16);
+
+  /* rngdle.com's rarity palette. Each tier has a saturated edge colour used for
+     borders and glows, and a lighter fill used for text — the saturated values
+     are too dark to read against this ground. */
+  --trash: #C8A87C;     --trash-edge: #7C5A2E;
+  --common: #D1D5DB;    --common-edge: #6B7280;
+  --uncommon: #6EE7B7;  --uncommon-edge: #059669;
+  --rare: #93C5FD;      --rare-edge: #2563EB;
+  --epic: #C4B5FD;      --epic-edge: #7C3AED;
+  --anomaly: #FDBA74;   --anomaly-edge: #EA580C;
+  --mythic: #F9A8D4;    --mythic-edge: #DB2777;
+
+  --radius: 14px;
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+/* An author `display` rule outranks the UA style for [hidden], which silently
+   defeats every `el.hidden = true` in app.js. Make the attribute win. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1000px 600px at 50% -10%, #1b1f33 0%, transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+/* --- header ---------------------------------------------------------- */
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+h1 span { color: var(--accent); }
+
+.tag {
+  margin: 4px 0 0;
+  color: var(--ink-dim);
+  font-size: 14px;
+  max-width: 42ch;
+}
+
+.tabs { display: flex; gap: 4px; }
+
+.tab {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-dim);
+  font: inherit;
+  font-size: 14px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.tab:hover { color: var(--ink); background: var(--bg-soft); }
+.tab.is-on {
+  color: var(--ink);
+  background: var(--accent-soft);
+  border-color: rgba(124, 92, 255, .38);
+}
+
+/* --- scoreboard ------------------------------------------------------- */
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.stat {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 10px;
+  text-align: center;
+}
+.stat .k {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.stat .v {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--ink-faint);
+}
+
+/* --- views ------------------------------------------------------------ */
+
+.view { display: none; }
+.view.is-on { display: block; }
+
+/* --- roll stage ------------------------------------------------------- */
+
+.stage {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 30px 24px 24px;
+  text-align: center;
+  transition: border-color .3s ease, box-shadow .3s ease;
+}
+
+/* A rare card should announce itself before you read the number. Glow values
+   are rngdle.com's own per-tier glows. */
+.stage.glow-Uncommon { border-color: var(--uncommon-edge); box-shadow: 0 0 40px rgba(5, 150, 105, .22); }
+.stage.glow-Rare     { border-color: var(--rare-edge);     box-shadow: 0 0 48px rgba(37, 99, 235, .28); }
+.stage.glow-Epic     { border-color: var(--epic-edge);     box-shadow: 0 0 56px rgba(124, 58, 237, .32); }
+.stage.glow-Anomaly  { border-color: var(--anomaly-edge);  box-shadow: 0 0 64px rgba(234, 88, 12, .34); }
+.stage.glow-Mythic   { border-color: var(--mythic-edge);   box-shadow: 0 0 76px rgba(219, 39, 119, .38); }
+
+.prompt-line { margin: 0 0 6px; color: var(--ink-dim); }
+
+.roll-btn {
+  font: inherit;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: #fff;
+  background: linear-gradient(180deg, #8b6dff, #6b45f5);
+  border: 0;
+  border-radius: 999px;
+  padding: 16px 54px;
+  cursor: pointer;
+  box-shadow: 0 8px 26px rgba(108, 70, 245, .38);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.roll-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 32px rgba(108, 70, 245, .46); }
+.roll-btn:active { transform: translateY(1px); }
+.roll-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.prompt-note {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+/* --- controls & auto-roll --------------------------------------------- */
+
+.controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.btn.auto.is-on {
+  background: rgba(255, 93, 177, .16);
+  border-color: rgba(255, 93, 177, .5);
+  color: #ffb8dc;
+}
+
+.auto-panel {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+.auto-live {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+.auto-live strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+.auto-sep { color: var(--line); }
+
+.auto-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--mythic);
+  box-shadow: 0 0 8px var(--mythic);
+  animation: pulse 1.1s ease-in-out infinite;
+}
+@keyframes pulse { 50% { opacity: .25; } }
+
+.auto-opts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+.auto-opts label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink-faint);
+}
+.auto-opts select {
+  font: inherit;
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--ink);
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.auto-opts select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.auto-found {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--uncommon);
+}
+
+.hint {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+kbd {
+  font: inherit;
+  font-size: 11px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+/* --- result ----------------------------------------------------------- */
+
+.numberwrap { padding: 4px 0 10px; }
+
+.number {
+  display: block;
+  font-family: var(--mono);
+  font-size: clamp(40px, 12vw, 74px);
+  font-weight: 700;
+  letter-spacing: .01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.number.is-rolling { color: var(--ink-dim); }
+
+.verdict {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.pill {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 5px 13px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+
+.ep { color: var(--ink-dim); font-size: 15px; }
+.ep strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.oneliner {
+  margin: 10px auto 22px;
+  max-width: 46ch;
+  color: var(--ink-dim);
+  font-size: 14px;
+}
+
+/* rarity colours, shared by pills, badge cards and list rows */
+.r-Trash    { color: var(--trash); }
+.r-Common   { color: var(--common); }
+.r-Uncommon { color: var(--uncommon); }
+.r-Rare     { color: var(--rare); }
+.r-Epic     { color: var(--epic); }
+.r-Anomaly  { color: var(--anomaly); }
+.r-Mythic   { color: var(--mythic); }
+
+/* --- badge cards ------------------------------------------------------ */
+
+.badges {
+  display: grid;
+  /* Wide enough that most badge names sit on one line rather than wrapping. */
+  grid-template-columns: repeat(auto-fill, minmax(182px, 1fr));
+  gap: 8px;
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+.badge {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-left: 3px solid currentColor;
+  border-radius: 10px;
+  padding: 9px 11px;
+  animation: pop .32s cubic-bezier(.2, .9, .3, 1.4) backwards;
+}
+.badge.is-muted { opacity: .42; }
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(6px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .badge { animation: none; }
+  .roll-btn { transition: none; }
+}
+
+.badge .glyph { font-size: 18px; line-height: 1.3; }
+.badge .body { min-width: 0; }
+.badge .name {
+  display: block;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-wrap: balance;
+  overflow-wrap: anywhere; /* long single-word names must break, not overflow */
+}
+.badge .meta {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.badge.is-new {
+  border-color: var(--uncommon);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, .3), 0 0 22px rgba(52, 211, 153, .16);
+}
+.badge .new {
+  font-style: normal;
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--bg);
+  background: var(--uncommon);
+  border-radius: 4px;
+  padding: 1px 4px;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+
+/* --- buttons ----------------------------------------------------------- */
+
+.btn {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--accent-soft);
+  border: 1px solid rgba(124, 92, 255, .4);
+  border-radius: 999px;
+  padding: 9px 20px;
+  cursor: pointer;
+}
+.btn:hover { background: rgba(124, 92, 255, .26); }
+.btn.ghost { background: transparent; border-color: var(--line); color: var(--ink-dim); }
+.btn.ghost:hover { color: var(--ink); border-color: var(--ink-faint); }
+.btn.danger:hover { color: #ff8080; border-color: #ff8080; }
+
+/* --- catalogue & history ---------------------------------------------- */
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 16px;
+}
+.progress-bar {
+  flex: 1;
+  height: 7px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--uncommon), var(--accent));
+  transition: width .4s ease;
+}
+.progress-label {
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.chips { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.chip {
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+}
+.chip:hover { color: var(--ink); }
+.chip.is-on {
+  color: var(--ink);
+  background: var(--accent-soft);
+  border-color: rgba(124, 92, 255, .42);
+}
+
+.row.is-locked { opacity: .5; }
+.row.is-locked .name { color: var(--ink-dim); }
+
+.badges-head h2 { margin: 4px 0 6px; font-size: 21px; }
+.badges-head p { margin: 0 0 14px; color: var(--ink-dim); font-size: 14px; max-width: 62ch; }
+
+.search input {
+  width: 100%;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 13px;
+  margin-bottom: 16px;
+}
+.search input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.catalogue { display: grid; gap: 6px; }
+
+.row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-left: 3px solid currentColor;
+  border-radius: 10px;
+  padding: 10px 13px;
+}
+.row .glyph { font-size: 17px; }
+.row .name { color: var(--ink); font-weight: 600; font-size: 14px; }
+.row .desc { color: var(--ink-dim); font-size: 12.5px; }
+.row .fam { color: var(--ink-faint); font-size: 11.5px; }
+.row .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.row .odds { display: block; font-size: 11.5px; color: var(--ink-faint); }
+
+.history { display: grid; gap: 6px; margin-bottom: 18px; }
+.hitem { display: grid; gap: 6px; }
+.history .row { grid-template-columns: minmax(0, 1fr) auto; }
+
+/* Best-roll rows open to reveal what the roll actually earned. */
+button.row {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+button.row:hover { border-color: currentColor; }
+button.row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.chev {
+  display: inline-block;
+  margin-left: 9px;
+  color: var(--ink-faint);
+  transition: transform .18s ease;
+}
+button.row[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+.row-detail {
+  padding: 2px 0 6px 10px;
+  border-left: 2px solid var(--line);
+  margin-left: 4px;
+}
+.row-detail .badges { margin-bottom: 0; }
+
+@media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+.history .day { color: var(--ink-faint); font-size: 12px; }
+.history .roll { font-family: var(--mono); font-size: 16px; font-weight: 700; }
+.empty { color: var(--ink-faint); font-size: 14px; padding: 8px 0 18px; }
+
+/* --- misc -------------------------------------------------------------- */
+
+.foot {
+  margin-top: 34px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-faint);
+  font-size: 12px;
+  text-align: center;
+}
+.foot p { margin: 0; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%) translateY(14px);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.toast.is-on { opacity: 1; transform: translateX(-50%); }
+
+/* Shown when scripts are blocked or the game fails to start, so the page
+   explains itself instead of just not responding. */
+.fatal {
+  display: grid;
+  gap: 6px;
+  max-width: 760px;
+  margin: 20px auto;
+  padding: 16px 18px;
+  background: var(--bg-soft);
+  border: 1px solid var(--anomaly-edge);
+  border-radius: var(--radius);
+  color: var(--ink-dim);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.fatal strong { color: var(--anomaly); }
+
+@media (max-width: 520px) {
+  .scoreboard { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* minmax(0, …) not 1fr: a plain 1fr track has min-width:auto, so one long
+     badge name ("Strobogrammatic") pushes the grid wider than the screen. */
+  .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .top { align-items: flex-start; }
+}
+</style>
+
+<div class="shell">
+
+  <header class="top">
+    <div class="brand">
+      <h1>RNG<span>dle</span></h1>
+      <p class="tag">Nothing to guess. Roll a number and find out what it's hiding.</p>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab is-on" data-view="play" role="tab" aria-selected="true">Play</button>
+      <button class="tab" data-view="badges" role="tab" aria-selected="false">Badges</button>
+      <button class="tab" data-view="best" role="tab" aria-selected="false">Best</button>
+    </nav>
+  </header>
+
+  <section class="scoreboard" aria-label="Your stats">
+    <div class="stat"><span class="k" id="stat-rolls">0</span><span class="v">rolls</span></div>
+    <div class="stat"><span class="k" id="stat-lifetime">0</span><span class="v">lifetime EP</span></div>
+    <div class="stat"><span class="k" id="stat-best">—</span><span class="v">best roll</span></div>
+    <div class="stat"><span class="k" id="stat-found">0/0</span><span class="v">badges found</span></div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <main class="view is-on" id="view-play">
+
+    <div class="stage" id="stage">
+      <div class="prompt" id="prompt">
+        <p class="prompt-line">Nothing rolled yet.</p>
+        <p class="prompt-note">0 – 1,000,000 · 169 badges hiding in the digits</p>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <div class="numberwrap">
+          <output class="number" id="number" aria-live="polite">0</output>
+        </div>
+        <div class="verdict">
+          <span class="pill" id="rarity">Common</span>
+          <span class="ep"><strong id="ep">0</strong> EP</span>
+        </div>
+        <p class="oneliner" id="oneliner"></p>
+        <div class="badges" id="badge-list"></div>
+      </div>
+
+      <div class="controls">
+        <button class="roll-btn" id="roll-btn">Roll</button>
+        <button class="btn auto" id="auto-btn" aria-pressed="false">Auto-roll</button>
+        <button class="btn ghost" id="share-btn" hidden>Share</button>
+      </div>
+
+      <div class="auto-panel" id="auto-panel">
+        <div class="auto-live" id="auto-live" hidden>
+          <span class="auto-dot" id="auto-dot" aria-hidden="true"></span>
+          <span id="auto-status">Rolling…</span>
+          <span class="auto-sep">·</span>
+          <span><strong id="auto-count">0</strong> <span id="auto-count-word">rolls</span> this run</span>
+          <span class="auto-sep">·</span>
+          <span>best <strong id="auto-best">0</strong> EP</span>
+        </div>
+        <div class="auto-opts">
+          <label>
+            <span>Speed</span>
+            <select id="speed-select">
+              <option value="slow">Slow</option>
+              <option value="fast" selected>Fast</option>
+              <option value="turbo">Turbo</option>
+            </select>
+          </label>
+          <label>
+            <span>Stop at</span>
+            <!-- "Never" is the default on purpose: with an empty collection
+                 every badge is new, so "New badge" would end every run on its
+                 first roll and auto-roll would look broken. -->
+            <select id="stop-select">
+              <option value="none" selected>Never</option>
+              <option value="new">New badge</option>
+              <option value="Rare">Rare card</option>
+              <option value="Epic">Epic card</option>
+              <option value="Anomaly">Anomaly card</option>
+              <option value="Mythic">Mythic card</option>
+            </select>
+          </label>
+          <label>
+            <span>Roll limit</span>
+            <select id="limit-select">
+              <option value="0">No limit</option>
+              <option value="100">100</option>
+              <option value="1000" selected>1,000</option>
+              <option value="100000">100,000</option>
+              <option value="1000000">1,000,000</option>
+            </select>
+          </label>
+        </div>
+        <p class="auto-found" id="auto-found" hidden></p>
+      </div>
+
+      <p class="hint">Press <kbd>Space</kbd> to roll · <kbd>A</kbd> to toggle auto-roll</p>
+    </div>
+  </main>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section class="view" id="view-badges">
+    <div class="badges-head">
+      <h2>Every badge</h2>
+      <p>
+        A badge's EP is not a design decision — it is derived from exactly how often
+        the badge can be earned across all 1,000,001 possible rolls. Rarer is worth more,
+        by construction. Within a family only your best badge pays out.
+      </p>
+      <div class="progress" aria-label="Collection progress">
+        <div class="progress-bar"><span id="progress-fill"></span></div>
+        <span class="progress-label" id="progress-label">0 of 0 found</span>
+      </div>
+      <label class="search">
+        <input type="search" id="badge-search" placeholder="Search badges…" aria-label="Search badges">
+      </label>
+      <div class="chips" id="rarity-chips" role="group" aria-label="Filter by rarity">
+        <button class="chip is-on" data-filter="all">All</button>
+        <button class="chip" data-filter="missing">Missing</button>
+        <button class="chip" data-filter="found">Found</button>
+      </div>
+    </div>
+    <div class="catalogue" id="catalogue"></div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section class="view" id="view-best">
+    <div class="badges-head">
+      <h2>Your best rolls</h2>
+      <p>Everything is stored in this browser only. Nothing leaves your device.</p>
+    </div>
+    <div class="history" id="history"></div>
+    <button class="btn ghost danger" id="reset-btn">Erase my data</button>
+  </section>
+
+  <footer class="foot">
+    <p>
+      A self-contained remake, built from public descriptions of the game.
+      EP values are derived from first principles — see the README.
+    </p>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<noscript>
+  <div class="fatal">
+    <strong>This page needs JavaScript.</strong>
+    <span>The whole game runs in your browser — there is no server. If you are
+    viewing this inside a chat, email or file-preview window, scripts are
+    usually blocked there: save the file and open it in a real browser.</span>
+  </div>
+</noscript>
+
+<div class="fatal" id="fatal" hidden>
+  <strong>Something broke while starting the game.</strong>
+  <span id="fatal-msg"></span>
+  <span>If you opened this from a preview window, try saving the file and
+  opening it in a browser instead.</span>
+</div>
+
+<!-- Registers before the game loads, so a failure surfaces as a message rather
+     than a page that silently does nothing when you tap it. Classic script:
+     it must run ahead of the deferred module below. -->
+<script>
+  window.addEventListener('error', function (e) {
+    var box = document.getElementById('fatal');
+    var msg = document.getElementById('fatal-msg');
+    if (!box || box.hidden === false) return;
+    box.hidden = false;
+    if (msg) msg.textContent = (e && e.message) ? e.message : 'Unknown error.';
+  });
+</script>
+
+<script>
+// ---- defs.js -----------------------------------------------------------
+// RNGdle badge definitions.
+//
+// Every badge is a pure predicate over a roll context. No EP values live here:
+// EP is *derived* from each badge's exact frequency over the whole roll space by
+// tools/generate.mjs, using the formula documented in README.md. That keeps the
+// rarity economy self-consistent — a badge is worth exactly what it is rare.
+//
+// A badge may declare a `fam`. Within a family only the single highest-EP earned
+// badge scores; the others are still shown as earned but contribute 0, because
+// the higher tier already implies them (Exact Nice implies Nice).
+
+const ROLL_MIN = 0;
+const ROLL_MAX = 1000000;
+const ROLL_SPACE = ROLL_MAX - ROLL_MIN + 1; // 1,000,001
+
+// ---------------------------------------------------------------------------
+// Precomputed number sets
+// ---------------------------------------------------------------------------
+
+const SIEVE = (() => {
+  const s = new Uint8Array(ROLL_MAX + 1).fill(1);
+  s[0] = s[1] = 0;
+  for (let i = 2; i * i <= ROLL_MAX; i++) {
+    if (!s[i]) continue;
+    for (let j = i * i; j <= ROLL_MAX; j += i) s[j] = 0;
+  }
+  return s;
+})();
+
+const isPrime = n => SIEVE[n] === 1;
+
+// Perfect k-th powers up to ROLL_MAX. 0 and 1 are perfect powers of every
+// exponent, so they show up in all of these.
+const powerSet = k => {
+  const set = new Set([0, 1]);
+  for (let base = 2; base ** k <= ROLL_MAX; base++) set.add(base ** k);
+  return set;
+};
+const POWERS = {};
+for (let k = 2; k <= 19; k++) POWERS[k] = powerSet(k);
+
+// Powers of a fixed base (1, b, b^2, ...) — distinct from perfect powers.
+const baseSet = b => {
+  const set = new Set();
+  for (let v = 1; v <= ROLL_MAX; v *= b) set.add(v);
+  return set;
+};
+const POW2 = baseSet(2), POW3 = baseSet(3), POW5 = baseSet(5);
+const POW7 = baseSet(7), POW10 = baseSet(10);
+
+const FIB = (() => {
+  const set = new Set([0, 1]);
+  let a = 0, b = 1;
+  while (b <= ROLL_MAX) { set.add(b); [a, b] = [b, a + b]; }
+  return set;
+})();
+
+const TRIANGULAR = (() => {
+  const set = new Set();
+  for (let i = 1, t = 1; t <= ROLL_MAX; i++, t += i) set.add(t);
+  return set;
+})();
+
+const FACTORIAL = (() => {
+  const set = new Set();
+  for (let i = 1, f = 1; f <= ROLL_MAX; i++, f *= i) set.add(f);
+  return set;
+})();
+
+// Repunits (1, 11, 111, ...) and repdigits (any digit repeated).
+const REPDIGIT = (() => {
+  const set = new Set();
+  for (let d = 1; d <= 9; d++) {
+    let v = 0;
+    for (let len = 1; len <= 7; len++) {
+      v = v * 10 + d;
+      if (v <= ROLL_MAX) set.add(v);
+    }
+  }
+  return set;
+})();
+
+// Perfect numbers (equal to the sum of their proper divisors) below 1e6.
+const PERFECT = new Set([6, 28, 496, 8128]);
+
+// ---------------------------------------------------------------------------
+// Roll context
+// ---------------------------------------------------------------------------
+
+/**
+ * Build the shared analysis context for one roll. Every predicate reads from
+ * this, so each derived quantity is computed once per number rather than once
+ * per badge.
+ */
+function context(n) {
+  const s = String(n);
+  const len = s.length;
+  const d = new Array(len);
+  const counts = new Uint8Array(10);
+  let sum = 0, prod = 1;
+  for (let i = 0; i < len; i++) {
+    const v = s.charCodeAt(i) - 48;
+    d[i] = v;
+    counts[v]++;
+    sum += v;
+    prod *= v;
+  }
+  let distinct = 0, maxCount = 0;
+  for (let v = 0; v < 10; v++) {
+    if (!counts[v]) continue;
+    distinct++;
+    if (counts[v] > maxCount) maxCount = counts[v];
+  }
+  // Run-length encoding of adjacent equal digits, e.g. 445556 -> [2,3,1].
+  const runs = [];
+  for (let i = 0; i < len;) {
+    let j = i;
+    while (j < len && d[j] === d[i]) j++;
+    runs.push(j - i);
+    i = j;
+  }
+  return { n, s, len, d, counts, distinct, sum, prod, maxCount, runs };
+}
+
+// ---------------------------------------------------------------------------
+// Predicate helpers
+// ---------------------------------------------------------------------------
+
+/** How many distinct digits occur exactly k times. */
+const exactly = (c, k) => {
+  let out = 0;
+  for (let v = 0; v < 10; v++) if (c.counts[v] === k) out++;
+  return out;
+};
+
+/** Longest run of adjacent identical digits. */
+const longestRun = c => Math.max(...c.runs);
+
+/** Longest contiguous stretch of consecutive digits, ascending or descending. */
+const longestLadder = c => {
+  let best = 1, up = 1, down = 1;
+  for (let i = 1; i < c.len; i++) {
+    up = c.d[i] === c.d[i - 1] + 1 ? up + 1 : 1;
+    down = c.d[i] === c.d[i - 1] - 1 ? down + 1 : 1;
+    best = Math.max(best, up, down);
+  }
+  return best;
+};
+
+/** True when the digits, sorted, form a run of consecutive values. */
+const isScramble = c => {
+  if (c.len < 3 || c.distinct !== c.len) return false;
+  const sorted = [...c.d].sort((a, b) => a - b);
+  for (let i = 1; i < sorted.length; i++) if (sorted[i] !== sorted[i - 1] + 1) return false;
+  return true;
+};
+
+/** Digits form an arithmetic progression with a non-zero common difference. */
+const isArithmetic = c => {
+  if (c.len < 3) return false;
+  const step = c.d[1] - c.d[0];
+  if (step === 0) return false;
+  for (let i = 2; i < c.len; i++) if (c.d[i] - c.d[i - 1] !== step) return false;
+  return true;
+};
+
+/** Digits form a geometric progression with an integer ratio of 2 or more. */
+const isGeometric = c => {
+  if (c.len < 3 || c.d[0] === 0) return false;
+  const ratio = c.d[1] / c.d[0];
+  if (!Number.isInteger(ratio) || ratio < 2) return false;
+  for (let i = 2; i < c.len; i++) if (c.d[i] !== c.d[i - 1] * ratio) return false;
+  return true;
+};
+
+/** Strictly rises to a single peak then strictly falls (or the inverse). */
+const isPeak = (c, up) => {
+  if (c.len < 3) return false;
+  let i = 1;
+  while (i < c.len && (up ? c.d[i] > c.d[i - 1] : c.d[i] < c.d[i - 1])) i++;
+  if (i === 1 || i === c.len) return false; // never turned, or never rose
+  for (let j = i; j < c.len; j++) {
+    if (up ? c.d[j] >= c.d[j - 1] : c.d[j] <= c.d[j - 1]) return false;
+  }
+  return true;
+};
+
+/** Rises to a plateau of equal digits then falls (or the inverse). */
+const isPlateau = (c, up) => {
+  if (c.len < 4) return false;
+  let i = 1;
+  while (i < c.len && (up ? c.d[i] > c.d[i - 1] : c.d[i] < c.d[i - 1])) i++;
+  if (i === 1) return false;
+  let j = i;
+  while (j < c.len && c.d[j] === c.d[j - 1]) j++;
+  if (j === i) return false; // no flat top
+  if (j === c.len) return false; // never came back down
+  for (let k = j; k < c.len; k++) {
+    if (up ? c.d[k] >= c.d[k - 1] : c.d[k] <= c.d[k - 1]) return false;
+  }
+  return true;
+};
+
+/** Monotonic across the whole number. `strict` forbids equal neighbours. */
+const monotonic = (c, up, strict) => {
+  if (c.len < 3) return false;
+  let flat = false;
+  for (let i = 1; i < c.len; i++) {
+    const a = c.d[i - 1], b = c.d[i];
+    if (a === b) { flat = true; continue; }
+    if (up ? b < a : b > a) return false;
+  }
+  return strict ? !flat : flat;
+};
+
+/** Alternating two-digit pattern: ababab with a !== b. */
+const isAlternating = c => {
+  if (c.len < 4 || c.distinct !== 2) return false;
+  for (let i = 2; i < c.len; i++) if (c.d[i] !== c.d[i - 2]) return false;
+  return c.d[0] !== c.d[1];
+};
+
+/** The whole number is a block repeated `times` times, e.g. 123123. */
+const isRepeatedBlock = (c, times) => {
+  if (c.len % times !== 0) return false;
+  const size = c.len / times;
+  const block = c.s.slice(0, size);
+  if (block === block[0].repeat(size)) return false; // that's a repdigit, not an echo
+  for (let i = 1; i < times; i++) {
+    if (c.s.slice(i * size, (i + 1) * size) !== block) return false;
+  }
+  return true;
+};
+
+const isPalindrome = s => {
+  for (let i = 0, j = s.length - 1; i < j; i++, j--) if (s[i] !== s[j]) return false;
+  return true;
+};
+
+/** Any substring of the given length is a palindrome. */
+const hasPalindromeOfLength = (c, k) => {
+  for (let i = 0; i + k <= c.len; i++) if (isPalindrome(c.s.slice(i, i + k))) return true;
+  return false;
+};
+
+/** Count of non-overlapping adjacent doubles, e.g. 114455 -> 3. */
+const doubleRuns = c => c.runs.filter(r => r >= 2).length;
+
+/** Digits readable upside down, and reading as the same number when flipped. */
+const FLIP = { 0: '0', 1: '1', 6: '9', 8: '8', 9: '6' };
+const isStrobogrammatic = c => {
+  let out = '';
+  for (let i = c.len - 1; i >= 0; i--) {
+    const f = FLIP[c.d[i]];
+    if (f === undefined) return false;
+    out += f;
+  }
+  return out === c.s;
+};
+
+/** Reads as a valid DDMMYY date. */
+const isCalendar = c => {
+  if (c.len !== 6) return false;
+  const day = +c.s.slice(0, 2), month = +c.s.slice(2, 4);
+  if (month < 1 || month > 12 || day < 1) return false;
+  return day <= [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+};
+
+const digitsIn = (c, set) => c.d.every(v => set.has(v));
+
+// ---------------------------------------------------------------------------
+// Badge catalogue
+// ---------------------------------------------------------------------------
+
+/** An exact-value badge: the rarest thing in the game, one number each. */
+const exact = (id, label, emoji, value, fam, desc) =>
+  ({ id, label, emoji, fam, desc: desc || `Rolled exactly ${value}.`, test: c => c.n === value });
+
+const BADGES = [
+  // --- Exact hits: meme numbers and single digits -------------------------
+  exact('NICE_EXACT', 'Exact Nice', '😏', 69, 'NICE'),
+  exact('VERY_VERY_NICE', 'Very Very Nice', '🥵', 696969, 'NICE'),
+  exact('JACKPOT_EXACT', 'Exact Jackpot', '💰', 777, 'JACKPOT'),
+  exact('BOTANIST_EXACT', 'Exact Botanist', '🌿', 420, 'BOTANIST'),
+  exact('HOTBOX', 'Hotbox', '💨', 420420, 'BOTANIST'),
+  exact('DEVIL_EXACT', 'Exact Devil', '😈', 666, 'DEVIL'),
+  exact('LEET_EXACT', 'Exact Leet', '💻', 1337, 'LEET'),
+  exact('MEANING_EXACT', 'Exact Meaning', '🌌', 42, 'MEANING'),
+  exact('UNIVERSAL_ANSWER', 'Universal Answer', '🔭', 424242, 'MEANING'),
+  exact('EMERGENCY_EXACT', 'Exact Emergency', '🚑', 911, 'EMERGENCY'),
+  exact('MAYDAY', 'Mayday', '🆘', 911911, 'EMERGENCY'),
+  exact('HELL_EXACT', 'Exact Hell', '👹', 7734, 'HELL'),
+  exact('BOOB_EXACT', 'Exact 80085', '💎', 80085, 'BOOB'),
+  exact('BIG_BROTHER_EXACT', 'Orwellian', '👁️', 1984, 'BIG_BROTHER'),
+  exact('TREE_FIDDY_EXACT', 'Exact Tree Fiddy', '🦕', 350, 'TREE_FIDDY'),
+  exact('SIXTY_SEVEN_EXACT', 'Exact Six-Seven', '🫠', 67, 'SIXTY_SEVEN'),
+  exact('EIGHTY_SIX_EXACT', 'Exact Eighty-Six', '🍽️', 86, 'EIGHTY_SIX'),
+  exact('ERROR_EXACT', 'Exact Not Found', '🚫', 404, 'ERROR'),
+  exact('ULTIMEME_EXACT', 'Exact Ultimeme', '🃏', 69420, 'ULTIMEME'),
+  exact('PI_EXACT', 'Exact Pi', '🥧', 314159, 'PI'),
+  exact('E_EXACT', 'Exact e', '🧮', 271828, 'E'),
+  exact('TAU_EXACT', 'Exact Tau', '🌀', 628318, 'TAU'),
+  exact('GOLDEN_RATIO', 'Golden Ratio', '🐚', 161803, null),
+  exact('SPEED_OF_LIGHT', 'Lightspeed', '💫', 299792, null),
+  exact('FULL_DAY', 'Full Day', '⏱️', 86400, null, 'Rolled 86400 — the number of seconds in a day.'),
+  ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((v, i) =>
+    exact(`DIGIT_${v}`, ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'][i],
+      ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'][i], v, 'SINGLE_DIGIT')),
+  exact('MILLION', 'Millionaire', '🎩', 1000000, null, 'Rolled the ceiling itself: 1,000,000.'),
+
+  // --- Meme substrings ----------------------------------------------------
+  { id: 'NICE', label: 'Nice', emoji: '😏', fam: 'NICE', desc: 'Contains 69.', test: c => c.s.includes('69') },
+  { id: 'VERY_NICE', label: 'Very Nice', emoji: '😉', fam: 'NICE', desc: 'Contains 6969.', test: c => c.s.includes('6969') },
+  { id: 'BOTANIST', label: 'Botanist', emoji: '🌱', fam: 'BOTANIST', desc: 'Contains 420.', test: c => c.s.includes('420') },
+  { id: 'DEVIL', label: 'Devil', emoji: '👿', fam: 'DEVIL', desc: 'Contains 666.', test: c => c.s.includes('666') },
+  { id: 'INFERNAL', label: 'Infernal', emoji: '🔥', fam: 'DEVIL', desc: 'Contains 6666.', test: c => c.s.includes('6666') },
+  { id: 'LEET', label: 'Leet', emoji: '⌨️', fam: 'LEET', desc: 'Contains 1337.', test: c => c.s.includes('1337') },
+  { id: 'MEANING', label: 'Meaning', emoji: '🌠', fam: 'MEANING', desc: 'Contains 42.', test: c => c.s.includes('42') },
+  { id: 'DEEPER_MEANING', label: 'Deeper Meaning', emoji: '🛸', fam: 'MEANING', desc: 'Contains 4242.', test: c => c.s.includes('4242') },
+  { id: 'EMERGENCY', label: 'Emergency', emoji: '🚨', fam: 'EMERGENCY', desc: 'Contains 911.', test: c => c.s.includes('911') },
+  { id: 'HELL', label: 'Hell', emoji: '🔥', fam: 'HELL', desc: 'Contains 7734 — "hELL" on a flipped calculator.', test: c => c.s.includes('7734') },
+  { id: 'BOOB', label: 'Boob', emoji: '🍒', fam: 'BOOB', desc: 'Contains 8008.', test: c => c.s.includes('8008') },
+  { id: 'BOOB_58008', label: 'Boobies', emoji: '🍈', fam: 'BOOB', desc: 'Contains 58008.', test: c => c.s.includes('58008') },
+  { id: 'BIG_BROTHER', label: 'Big Brother', emoji: '📺', fam: 'BIG_BROTHER', desc: 'Contains 1984.', test: c => c.s.includes('1984') },
+  { id: 'TREE_FIDDY', label: 'Tree Fiddy', emoji: '🦖', fam: 'TREE_FIDDY', desc: 'Contains 350.', test: c => c.s.includes('350') },
+  { id: 'SIXTY_SEVEN', label: 'Six-Seven', emoji: '😵‍💫', fam: 'SIXTY_SEVEN', desc: 'Contains 67.', test: c => c.s.includes('67') },
+  { id: 'SIXTY_SEVEN_DOUBLE', label: 'Double Six-Seven', emoji: '🤯', fam: 'SIXTY_SEVEN', desc: 'Contains 6767.', test: c => c.s.includes('6767') },
+  { id: 'BRAINROT', label: 'Brainrot', emoji: '🧠', fam: 'SIXTY_SEVEN', desc: 'Contains 676767.', test: c => c.s.includes('676767') },
+  { id: 'EIGHTY_SIX', label: 'Eighty-Six', emoji: '🍴', fam: 'EIGHTY_SIX', desc: 'Contains 86.', test: c => c.s.includes('86') },
+  { id: 'ERROR', label: 'Not Found', emoji: '❓', fam: 'ERROR', desc: 'Contains 404.', test: c => c.s.includes('404') },
+  { id: 'ULTIMEME', label: 'Ultimeme', emoji: '🎴', fam: 'ULTIMEME', desc: 'Contains both 69 and 420.', test: c => c.s.includes('69') && c.s.includes('420') },
+
+  // --- Jackpot / sevens ---------------------------------------------------
+  { id: 'JACKPOT', label: 'Jackpot', emoji: '🎰', fam: 'JACKPOT', desc: 'Contains 777.', test: c => c.s.includes('777') },
+  { id: 'JACKPOT_FOUR', label: 'Jackpot Four', emoji: '🎲', fam: 'JACKPOT', desc: 'Contains 7777.', test: c => c.s.includes('7777') },
+  { id: 'JACKPOT_FIVE', label: 'Jackpot Five', emoji: '🏆', fam: 'JACKPOT', desc: 'Contains 77777.', test: c => c.s.includes('77777') },
+  { id: 'JACKPOT_SIX', label: 'Jackpot Six', emoji: '🏦', fam: 'JACKPOT', desc: 'Contains 777777.', test: c => c.s.includes('777777') },
+  { id: 'LUCKY_SEVEN', label: 'Lucky Seven', emoji: '🍀', fam: null, desc: 'Contains at least one 7.', test: c => c.counts[7] > 0 },
+
+  // --- Constants: digits of pi, e, tau ------------------------------------
+  { id: 'PI_3', label: 'Pi Slice', emoji: '🔺', fam: 'PI', desc: 'Contains 314.', test: c => c.s.includes('314') },
+  { id: 'PI_4', label: 'Pi Wedge', emoji: '🍕', fam: 'PI', desc: 'Contains 3141.', test: c => c.s.includes('3141') },
+  { id: 'PI_5', label: 'Pi Half', emoji: '🥮', fam: 'PI', desc: 'Contains 31415.', test: c => c.s.includes('31415') },
+  { id: 'E_3', label: 'e Slice', emoji: '📈', fam: 'E', desc: 'Contains 271.', test: c => c.s.includes('271') },
+  { id: 'E_4', label: 'e Wedge', emoji: '📊', fam: 'E', desc: 'Contains 2718.', test: c => c.s.includes('2718') },
+  { id: 'E_5', label: 'e Half', emoji: '🧊', fam: 'E', desc: 'Contains 27182.', test: c => c.s.includes('27182') },
+  { id: 'TAU_4', label: 'Tau Wedge', emoji: '🎡', fam: 'TAU', desc: 'Contains 6283.', test: c => c.s.includes('6283') },
+  { id: 'TAU_5', label: 'Tau Half', emoji: '🎢', fam: 'TAU', desc: 'Contains 62831.', test: c => c.s.includes('62831') },
+
+  // --- Poker-shaped digit patterns ---------------------------------------
+  { id: 'PAIR', label: 'Pair', emoji: '👯', fam: 'PAIRS', desc: 'Some digit appears at least twice.', test: c => c.maxCount >= 2 },
+  { id: 'TWO_PAIR', label: 'Two Pair', emoji: '👨‍👩‍👦', fam: 'PAIRS', desc: 'Two digits each appear exactly twice.', test: c => exactly(c, 2) >= 2 },
+  { id: 'THREE_PAIR', label: 'Three Pair', emoji: '👨‍👩‍👧‍👦', fam: 'PAIRS', desc: 'Three digits each appear exactly twice.', test: c => exactly(c, 2) >= 3 },
+  { id: 'CONTIGUOUS_PAIR', label: 'Adjacent Pair', emoji: '🤝', fam: 'PAIRS', desc: 'Two identical digits sit side by side.', test: c => longestRun(c) >= 2 },
+  { id: 'CONTIGUOUS_TWO_PAIR', label: 'Adjacent Two Pair', emoji: '🧑‍🤝‍🧑', fam: 'PAIRS', desc: 'Two separate side-by-side doubles.', test: c => doubleRuns(c) >= 2 },
+  { id: 'CONTIGUOUS_THREE_PAIR', label: 'Adjacent Three Pair', emoji: '🫂', fam: 'PAIRS', desc: 'Three separate side-by-side doubles.', test: c => doubleRuns(c) >= 3 },
+  { id: 'TRIPS', label: 'Three of a Kind', emoji: '🎯', fam: 'OF_A_KIND', desc: 'Some digit appears exactly three times.', test: c => exactly(c, 3) > 0 },
+  { id: 'QUADS', label: 'Four of a Kind', emoji: '🍀', fam: 'OF_A_KIND', desc: 'Some digit appears exactly four times.', test: c => exactly(c, 4) > 0 },
+  { id: 'FIVE_OF_A_KIND', label: 'Five of a Kind', emoji: '🖐️', fam: 'OF_A_KIND', desc: 'Some digit appears exactly five times.', test: c => exactly(c, 5) > 0 },
+  { id: 'SIX_OF_A_KIND', label: 'Six of a Kind', emoji: '🌟', fam: 'OF_A_KIND', desc: 'Some digit appears six times.', test: c => exactly(c, 6) > 0 },
+  { id: 'CONTIGUOUS_TRIPS', label: 'Triple Run', emoji: '🧱', fam: 'CONTIGUOUS_RUN', desc: 'Three identical digits in a row.', test: c => longestRun(c) >= 3 },
+  { id: 'CONTIGUOUS_QUADS', label: 'Quad Run', emoji: '🏗️', fam: 'CONTIGUOUS_RUN', desc: 'Four identical digits in a row.', test: c => longestRun(c) >= 4 },
+  { id: 'CONTIGUOUS_FIVES', label: 'Quint Run', emoji: '🗼', fam: 'CONTIGUOUS_RUN', desc: 'Five identical digits in a row.', test: c => longestRun(c) >= 5 },
+  { id: 'CONTIGUOUS_SIXES', label: 'Monolith', emoji: '🗿', fam: 'CONTIGUOUS_RUN', desc: 'Six identical digits in a row.', test: c => longestRun(c) >= 6 },
+  { id: 'BOAT', label: 'Full House', emoji: '🏠', fam: 'BOAT', desc: 'A three of a kind and a pair.', test: c => exactly(c, 3) > 0 && exactly(c, 2) > 0 },
+  { id: 'CONTIGUOUS_BOAT', label: 'Packed House', emoji: '🏘️', fam: 'BOAT', desc: 'A triple run and a double run, both contiguous.', test: c => c.runs.filter(r => r >= 3).length > 0 && c.runs.filter(r => r === 2).length > 0 },
+  { id: 'RAINBOW', label: 'Rainbow', emoji: '🌈', fam: null, desc: 'Every digit is different.', test: c => c.distinct === c.len && c.len >= 4 },
+  { id: 'DUALITY', label: 'Duality', emoji: '☯️', fam: 'DUALITY', desc: 'Built from exactly two distinct digits.', test: c => c.distinct === 2 && c.len >= 4 },
+  { id: 'FIREFLY', label: 'Firefly', emoji: '🪰', fam: 'DUALITY', desc: 'Two digits alternating perfectly.', test: c => isAlternating(c) },
+
+  // --- Straights and ladders ---------------------------------------------
+  { id: 'SEQUENCE_3', label: 'Sequence', emoji: '🪜', fam: 'PROGRESSION', desc: 'Three consecutive digits in a row, up or down.', test: c => longestLadder(c) >= 3 },
+  { id: 'SEQUENCE_4', label: 'Long Sequence', emoji: '🧗', fam: 'PROGRESSION', desc: 'Four consecutive digits in a row.', test: c => longestLadder(c) >= 4 },
+  { id: 'STRAIGHT', label: 'Straight', emoji: '➡️', fam: 'PROGRESSION', desc: 'Five consecutive digits in a row.', test: c => longestLadder(c) >= 5 },
+  { id: 'SEQUENCE_6', label: 'Perfect Straight', emoji: '🚀', fam: 'PROGRESSION', desc: 'All six digits consecutive.', test: c => c.len === 6 && longestLadder(c) === 6 },
+  { id: 'SCRAMBLE', label: 'Scramble', emoji: '🔀', fam: 'PROGRESSION', desc: 'The digits are a shuffled run of consecutive values.', test: c => isScramble(c) },
+  { id: 'ARITHMETIC', label: 'Arithmetic', emoji: '➕', fam: 'PROGRESSION', desc: 'Digits step by a constant amount.', test: c => isArithmetic(c) },
+  { id: 'GEOMETRIC', label: 'Geometric', emoji: '✖️', fam: 'PROGRESSION', desc: 'Each digit is a fixed multiple of the last.', test: c => isGeometric(c) },
+  { id: 'ASCENSION', label: 'Ascension', emoji: '📈', fam: 'MONOTONIC', desc: 'Digits strictly increase.', test: c => monotonic(c, true, true) },
+  { id: 'DECAY', label: 'Decay', emoji: '📉', fam: 'MONOTONIC', desc: 'Digits strictly decrease.', test: c => monotonic(c, false, true) },
+  { id: 'STEPS', label: 'Steps', emoji: '🪜', fam: 'MONOTONIC', desc: 'Digits never decrease, but repeat somewhere.', test: c => monotonic(c, true, false) },
+  { id: 'SLOPES', label: 'Slopes', emoji: '⛷️', fam: 'MONOTONIC', desc: 'Digits never increase, but repeat somewhere.', test: c => monotonic(c, false, false) },
+
+  // --- Terrain ------------------------------------------------------------
+  { id: 'MOUNTAIN', label: 'Mountain', emoji: '⛰️', fam: 'PEAK', desc: 'Rises to one peak, then falls.', test: c => isPeak(c, true) },
+  { id: 'VALLEY', label: 'Valley', emoji: '🏞️', fam: 'PEAK', desc: 'Falls to one low point, then rises.', test: c => isPeak(c, false) },
+  { id: 'MESA', label: 'Mesa', emoji: '🏜️', fam: 'PEAK', desc: 'Rises to a flat top, then falls.', test: c => isPlateau(c, true) },
+  { id: 'CANYON', label: 'Canyon', emoji: '🪨', fam: 'PEAK', desc: 'Falls to a flat floor, then rises.', test: c => isPlateau(c, false) },
+  { id: 'HOPSCOTCH', label: 'Hopscotch', emoji: '🦘', fam: 'HOPSCOTCH', desc: 'Digits alternate up, down, up, down.', test: c => {
+      if (c.len < 4) return false;
+      for (let i = 1; i < c.len; i++) {
+        const rising = c.d[i] > c.d[i - 1], falling = c.d[i] < c.d[i - 1];
+        if (!rising && !falling) return false;
+        if (i > 1 && rising === (c.d[i - 1] > c.d[i - 2])) return false;
+      }
+      return true;
+    } },
+
+  // --- Symmetry -----------------------------------------------------------
+  { id: 'PALINDROME', label: 'Palindrome', emoji: '🪞', fam: 'PALINDROME', desc: 'Reads the same backwards.', test: c => isPalindrome(c.s) },
+  { id: 'POCKET_MIRROR', label: 'Pocket Mirror', emoji: '🔍', fam: 'PALINDROME', desc: 'Contains a three-digit palindrome.', test: c => hasPalindromeOfLength(c, 3) },
+  { id: 'BOOKENDS', label: 'Bookends', emoji: '📚', fam: 'BOOKENDS', desc: 'Starts and ends on the same digit.', test: c => c.len >= 3 && c.d[0] === c.d[c.len - 1] },
+  { id: 'PAIRED_BOOKENDS', label: 'Paired Bookends', emoji: '🗄️', fam: 'BOOKENDS', desc: 'Opens and closes with the same two digits.', test: c => c.len >= 5 && c.s.slice(0, 2) === c.s.slice(-2) },
+  { id: 'ORIENTATION', label: 'Orientation', emoji: '🔄', fam: 'ORIENTATION', desc: 'Every digit is readable upside down.', test: c => digitsIn(c, new Set([0, 1, 6, 8, 9])) },
+  { id: 'ORIENTATION_EXACT', label: 'Strobogrammatic', emoji: '🙃', fam: 'ORIENTATION', desc: 'Reads as the same number upside down.', test: c => isStrobogrammatic(c) },
+  { id: 'RHYME', label: 'Rhyme', emoji: '🎵', fam: 'REPEAT', desc: 'A block of digits repeated twice, e.g. 348348.', test: c => isRepeatedBlock(c, 2) },
+  { id: 'MINI_ECHO', label: 'Echo', emoji: '📣', fam: 'REPEAT', desc: 'A block of digits repeated three times, e.g. 232323.', test: c => isRepeatedBlock(c, 3) },
+  { id: 'EQUILIBRIUM', label: 'Equilibrium', emoji: '⚖️', fam: 'EQUILIBRIUM', desc: 'Both halves have the same digit sum.', test: c => {
+      if (c.len % 2 !== 0) return false;
+      const h = c.len / 2;
+      let a = 0, b = 0;
+      for (let i = 0; i < h; i++) { a += c.d[i]; b += c.d[i + h]; }
+      return a === b;
+    } },
+  { id: 'SANDWICH', label: 'Sandwich', emoji: '🥪', fam: 'EQUILIBRIUM', desc: 'Symmetric outer digits around a different core.', test: c => c.len >= 5 && c.d[0] === c.d[c.len - 1] && c.d[1] === c.d[c.len - 2] && c.d[0] !== c.d[1] },
+
+  // --- Zeros --------------------------------------------------------------
+  { id: 'DEEP_VOID', label: 'Void', emoji: '🕳️', fam: 'VOID_DEPTH', desc: 'Two zeros in a row.', test: c => c.s.includes('00') },
+  { id: 'DEEP_VOID_THREE', label: 'Deep Void', emoji: '🌑', fam: 'VOID_DEPTH', desc: 'Three zeros in a row.', test: c => c.s.includes('000') },
+  { id: 'DEEP_VOID_FOUR', label: 'Deeper Void', emoji: '🌚', fam: 'VOID_DEPTH', desc: 'Four zeros in a row.', test: c => c.s.includes('0000') },
+  { id: 'DEEP_VOID_FIVE', label: 'Abyss', emoji: '🌀', fam: 'VOID_DEPTH', desc: 'Five zeros in a row.', test: c => c.s.includes('00000') },
+  { id: 'CLEAN_HUNDRED', label: 'Clean Hundred', emoji: '💯', fam: 'CLEAN', desc: 'Ends in 00.', test: c => c.n % 100 === 0 },
+  { id: 'CLEAN_THOUSAND', label: 'Clean Thousand', emoji: '🧼', fam: 'CLEAN', desc: 'Ends in 000.', test: c => c.n % 1000 === 0 },
+  { id: 'CLEAN_TEN_THOUSAND', label: 'Very Clean', emoji: '🫧', fam: 'CLEAN', desc: 'Ends in 0000.', test: c => c.n % 10000 === 0 },
+  { id: 'CLEAN_HUNDRED_THOUSAND', label: 'Immaculate', emoji: '✨', fam: 'CLEAN', desc: 'Ends in 00000.', test: c => c.n % 100000 === 0 },
+
+  // --- Nine endings -------------------------------------------------------
+  { id: 'DOUBLE_NINE', label: 'Double Nine', emoji: '🛒', fam: 'NINE_ENDING', desc: 'Ends in 99.', test: c => c.n % 100 === 99 },
+  { id: 'TRIPLE_NINE', label: 'Triple Nine', emoji: '🏷️', fam: 'NINE_ENDING', desc: 'Ends in 999.', test: c => c.n % 1000 === 999 },
+  { id: 'QUAD_NINE', label: 'Quad Nine', emoji: '💸', fam: 'NINE_ENDING', desc: 'Ends in 9999.', test: c => c.n % 10000 === 9999 },
+  { id: 'QUINT_NINE', label: 'Quint Nine', emoji: '🤑', fam: 'NINE_ENDING', desc: 'Ends in 99999.', test: c => c.n % 100000 === 99999 },
+
+  // --- Number theory ------------------------------------------------------
+  { id: 'PRIME', label: 'Prime', emoji: '💎', fam: null, desc: 'Divisible only by itself and one.', test: c => isPrime(c.n) },
+  { id: 'TWIN_PRIME', label: 'Twin Prime', emoji: '👬', fam: null, desc: 'Prime, and two away from another prime.', test: c => isPrime(c.n) && (isPrime(c.n - 2) || (c.n + 2 <= ROLL_MAX && isPrime(c.n + 2))) },
+  { id: 'PALINDROMIC_PRIME', label: 'Palindromic Prime', emoji: '🔮', fam: null, desc: 'Prime and a palindrome.', test: c => isPrime(c.n) && isPalindrome(c.s) },
+  { id: 'SQUARE', label: 'Perfect Square', emoji: '⬜', fam: 'POWER', desc: 'A whole number squared.', test: c => POWERS[2].has(c.n) },
+  { id: 'CUBE', label: 'Perfect Cube', emoji: '🧊', fam: 'POWER', desc: 'A whole number cubed.', test: c => POWERS[3].has(c.n) },
+  { id: 'FOURTH_POWER', label: 'Fourth Power', emoji: '🎁', fam: 'POWER', desc: 'A whole number to the fourth.', test: c => POWERS[4].has(c.n) },
+  { id: 'FIFTH_POWER', label: 'Fifth Power', emoji: '⭐', fam: 'POWER', desc: 'A whole number to the fifth.', test: c => POWERS[5].has(c.n) },
+  { id: 'SIXTH_POWER', label: 'Sixth Power', emoji: '❄️', fam: 'POWER', desc: 'A whole number to the sixth.', test: c => POWERS[6].has(c.n) },
+  { id: 'SEVENTH_POWER', label: 'Seventh Power', emoji: '🌟', fam: 'POWER', desc: 'A whole number to the seventh.', test: c => POWERS[7].has(c.n) },
+  { id: 'EIGHTH_POWER', label: 'Eighth Power', emoji: '🕸️', fam: 'POWER', desc: 'A whole number to the eighth.', test: c => POWERS[8].has(c.n) },
+  { id: 'NINTH_POWER', label: 'Ninth Power', emoji: '🌌', fam: 'POWER', desc: 'A whole number to the ninth.', test: c => POWERS[9].has(c.n) },
+  { id: 'TENTH_POWER', label: 'Tenth Power', emoji: '🛸', fam: 'POWER', desc: 'A whole number to the tenth.', test: c => POWERS[10].has(c.n) },
+  { id: 'POWER_OF_TWO', label: 'Power of Two', emoji: '💾', fam: 'BASE_POWER', desc: 'A power of two.', test: c => POW2.has(c.n) },
+  { id: 'POWER_OF_THREE', label: 'Power of Three', emoji: '🔱', fam: 'BASE_POWER', desc: 'A power of three.', test: c => POW3.has(c.n) },
+  { id: 'POWER_OF_FIVE', label: 'Power of Five', emoji: '🖐️', fam: 'BASE_POWER', desc: 'A power of five.', test: c => POW5.has(c.n) },
+  { id: 'POWER_OF_SEVEN', label: 'Power of Seven', emoji: '🎰', fam: 'BASE_POWER', desc: 'A power of seven.', test: c => POW7.has(c.n) },
+  { id: 'POWER_OF_TEN', label: 'Power of Ten', emoji: '🔟', fam: 'BASE_POWER', desc: 'A power of ten.', test: c => POW10.has(c.n) },
+  { id: 'FIBONACCI', label: 'Fibonacci', emoji: '🐚', fam: null, desc: 'A Fibonacci number.', test: c => FIB.has(c.n) },
+  { id: 'TRIANGULAR', label: 'Triangular', emoji: '🔺', fam: null, desc: 'A triangular number.', test: c => TRIANGULAR.has(c.n) },
+  { id: 'FACTORIAL', label: 'Factorial', emoji: '❗', fam: null, desc: 'A factorial.', test: c => FACTORIAL.has(c.n) },
+  { id: 'PERFECT_NUMBER', label: 'Perfect Number', emoji: '🏅', fam: null, desc: 'Equal to the sum of its proper divisors.', test: c => PERFECT.has(c.n) },
+  { id: 'REPDIGIT', label: 'Repdigit', emoji: '🧿', fam: null, desc: 'The same digit all the way through.', test: c => REPDIGIT.has(c.n) && c.len >= 2 },
+  { id: 'SPY', label: 'Spy', emoji: '🕵️', fam: null, desc: 'Digit sum equals digit product.', test: c => c.len >= 2 && c.sum === c.prod },
+  { id: 'EQUATION', label: 'Equation', emoji: '🟰', fam: null, desc: 'The last digit is the sum of all the others.', test: c => c.len >= 3 && c.sum - c.d[c.len - 1] === c.d[c.len - 1] },
+  { id: 'HARSHAD', label: 'Harshad', emoji: '🧮', fam: null, desc: 'Divisible by its own digit sum.', test: c => c.n > 0 && c.n % c.sum === 0 },
+
+  // --- Digit composition --------------------------------------------------
+  { id: 'ALL_EVEN', label: 'All Even', emoji: '🟦', fam: null, desc: 'Every digit is even.', test: c => c.len >= 3 && c.d.every(v => v % 2 === 0) },
+  { id: 'ALL_ODD', label: 'All Odd', emoji: '🟥', fam: null, desc: 'Every digit is odd.', test: c => c.len >= 3 && c.d.every(v => v % 2 === 1) },
+  { id: 'ALL_PRIME_DIGITS', label: 'Prime Digits', emoji: '💠', fam: null, desc: 'Every digit is 2, 3, 5 or 7.', test: c => c.len >= 3 && digitsIn(c, new Set([2, 3, 5, 7])) },
+  { id: 'BINARY', label: 'Binary', emoji: '🤖', fam: null, desc: 'Written with only 0 and 1.', test: c => c.len >= 3 && digitsIn(c, new Set([0, 1])) },
+  { id: 'LOWLANDS', label: 'Lowlands', emoji: '🐜', fam: null, desc: 'Every digit is 3 or less.', test: c => c.len >= 4 && c.d.every(v => v <= 3) },
+  { id: 'HIGHLANDS', label: 'Highlands', emoji: '🦅', fam: null, desc: 'Every digit is 6 or more.', test: c => c.len >= 4 && c.d.every(v => v >= 6) },
+  { id: 'HEAVY', label: 'Heavy', emoji: '🏋️', fam: 'WEIGHT', desc: 'Digits sum to 40 or more.', test: c => c.sum >= 40 },
+  { id: 'FEATHERWEIGHT', label: 'Featherweight', emoji: '🪶', fam: 'WEIGHT', desc: 'Six digits summing to 6 or less.', test: c => c.len === 6 && c.sum <= 6 },
+  { id: 'CALENDAR', label: 'Calendar', emoji: '📅', fam: 'CALENDAR', desc: 'Reads as a valid DDMMYY date.', test: c => isCalendar(c) },
+  // A six-digit roll can never start with a leading zero, so 02/02 can only
+  // show up mid-number rather than as the leading DDMM.
+  { id: 'GROUNDHOG_DAY', label: 'Groundhog Day', emoji: '🦫', fam: 'CALENDAR', desc: 'Contains 0202 — the 2nd of February, again.', test: c => c.s.includes('0202') },
+
+  // --- Baseline -----------------------------------------------------------
+  { id: 'EVEN', label: 'Even', emoji: '⚖️', fam: 'PARITY', desc: 'An even number.', test: c => c.n % 2 === 0 },
+  { id: 'ODD', label: 'Odd', emoji: '🦄', fam: 'PARITY', desc: 'An odd number.', test: c => c.n % 2 === 1 },
+  { id: 'ONE_DIGIT', label: 'One Digit', emoji: '🔹', fam: 'SINGLE_DIGIT', desc: 'A single-digit roll.', test: c => c.len === 1 },
+  { id: 'TWO_DIGITS', label: 'Two Digits', emoji: '🔸', fam: 'LENGTH', desc: 'A two-digit roll.', test: c => c.len === 2 },
+  { id: 'THREE_DIGITS', label: 'Three Digits', emoji: '🔶', fam: 'LENGTH', desc: 'A three-digit roll.', test: c => c.len === 3 },
+  { id: 'FOUR_DIGITS', label: 'Four Digits', emoji: '🔷', fam: 'LENGTH', desc: 'A four-digit roll.', test: c => c.len === 4 },
+  { id: 'FIVE_DIGITS', label: 'Five Digits', emoji: '🟣', fam: 'LENGTH', desc: 'A five-digit roll.', test: c => c.len === 5 },
+  { id: 'SIX_DIGITS', label: 'Six Digits', emoji: '🐝', fam: 'LENGTH', desc: 'A six-digit roll.', test: c => c.len === 6 },
+];
+
+/** Human-readable names for the supersession families. */
+const FAMILY_NAMES = {
+  NICE: 'Nice', JACKPOT: 'Jackpot', BOTANIST: 'Botanist', DEVIL: 'Devil', LEET: 'Leet',
+  MEANING: 'Meaning', EMERGENCY: 'Emergency', HELL: 'Hell', BOOB: 'Boob',
+  BIG_BROTHER: 'Big Brother', TREE_FIDDY: 'Tree Fiddy', SIXTY_SEVEN: 'Six-Seven',
+  EIGHTY_SIX: 'Eighty-Six', ERROR: 'Error', ULTIMEME: 'Ultimeme', PI: 'Pi', E: 'E',
+  TAU: 'Tau', SINGLE_DIGIT: 'Single Digit', PAIRS: 'Pairs', OF_A_KIND: 'Of a Kind',
+  CONTIGUOUS_RUN: 'Contiguous Run', BOAT: 'Full House', DUALITY: 'Duality',
+  PROGRESSION: 'Progression', MONOTONIC: 'Monotonic', PEAK: 'Terrain',
+  HOPSCOTCH: 'Hopscotch', PALINDROME: 'Palindrome', BOOKENDS: 'Bookends',
+  ORIENTATION: 'Orientation', REPEAT: 'Repeat', EQUILIBRIUM: 'Equilibrium',
+  VOID_DEPTH: 'Void Depth', CLEAN: 'Clean Ending', NINE_ENDING: 'Nine Ending',
+  POWER: 'Perfect Power', BASE_POWER: 'Power Of', WEIGHT: 'Weight',
+  CALENDAR: 'Calendar', PARITY: 'Parity', LENGTH: 'Length',
+};
+
+if (new Set(BADGES.map(b => b.id)).size !== BADGES.length) {
+  throw new Error('duplicate badge id in BADGES');
+}
+
+// ---- badges.gen.js -----------------------------------------------------
+// GENERATED by tools/generate.mjs — do not edit by hand.
+//
+// Exact hit counts over all 1,000,001 possible rolls, and the EP each
+// badge is therefore worth. Regenerate after changing any predicate in defs.js:
+//
+//     node tools/generate.mjs
+
+/** badge id -> [number of rolls that earn it, EP it is worth]. */
+const STATS = {
+  NICE_EXACT: [1, 100000100],
+  VERY_VERY_NICE: [1, 100000100],
+  JACKPOT_EXACT: [1, 100000100],
+  BOTANIST_EXACT: [1, 100000100],
+  HOTBOX: [1, 100000100],
+  DEVIL_EXACT: [1, 100000100],
+  LEET_EXACT: [1, 100000100],
+  MEANING_EXACT: [1, 100000100],
+  UNIVERSAL_ANSWER: [1, 100000100],
+  EMERGENCY_EXACT: [1, 100000100],
+  MAYDAY: [1, 100000100],
+  HELL_EXACT: [1, 100000100],
+  BOOB_EXACT: [1, 100000100],
+  BIG_BROTHER_EXACT: [1, 100000100],
+  TREE_FIDDY_EXACT: [1, 100000100],
+  SIXTY_SEVEN_EXACT: [1, 100000100],
+  EIGHTY_SIX_EXACT: [1, 100000100],
+  ERROR_EXACT: [1, 100000100],
+  ULTIMEME_EXACT: [1, 100000100],
+  PI_EXACT: [1, 100000100],
+  E_EXACT: [1, 100000100],
+  TAU_EXACT: [1, 100000100],
+  GOLDEN_RATIO: [1, 100000100],
+  SPEED_OF_LIGHT: [1, 100000100],
+  FULL_DAY: [1, 100000100],
+  DIGIT_0: [1, 100000100],
+  DIGIT_1: [1, 100000100],
+  DIGIT_2: [1, 100000100],
+  DIGIT_3: [1, 100000100],
+  DIGIT_4: [1, 100000100],
+  DIGIT_5: [1, 100000100],
+  DIGIT_6: [1, 100000100],
+  DIGIT_7: [1, 100000100],
+  DIGIT_8: [1, 100000100],
+  DIGIT_9: [1, 100000100],
+  MILLION: [1, 100000100],
+  NICE: [49401, 2024],
+  VERY_NICE: [299, 334448],
+  BOTANIST: [3999, 25006],
+  DEVIL: [3700, 27027],
+  INFERNAL: [280, 357143],
+  LEET: [300, 333334],
+  MEANING: [49401, 2024],
+  DEEPER_MEANING: [299, 334448],
+  EMERGENCY: [3999, 25006],
+  HELL: [300, 333334],
+  BOOB: [300, 333334],
+  BOOB_58008: [20, 5000005],
+  BIG_BROTHER: [300, 333334],
+  TREE_FIDDY: [3999, 25006],
+  SIXTY_SEVEN: [49401, 2024],
+  SIXTY_SEVEN_DOUBLE: [299, 334448],
+  BRAINROT: [1, 100000100],
+  EIGHTY_SIX: [49401, 2024],
+  ERROR: [3979, 25132],
+  ULTIMEME: [60, 1666668],
+  JACKPOT: [3700, 27027],
+  JACKPOT_FOUR: [280, 357143],
+  JACKPOT_FIVE: [19, 5263163],
+  JACKPOT_SIX: [1, 100000100],
+  LUCKY_SEVEN: [468559, 213],
+  PI_3: [3999, 25006],
+  PI_4: [300, 333334],
+  PI_5: [20, 5000005],
+  E_3: [3999, 25006],
+  E_4: [300, 333334],
+  E_5: [20, 5000005],
+  TAU_4: [300, 333334],
+  TAU_5: [20, 5000005],
+  PAIR: [831430, 120],
+  TWO_PAIR: [223803, 447],
+  THREE_PAIR: [9720, 10288],
+  CONTIGUOUS_PAIR: [402130, 249],
+  CONTIGUOUS_TWO_PAIR: [47142, 2121],
+  CONTIGUOUS_THREE_PAIR: [729, 137174],
+  TRIPS: [138033, 724],
+  QUADS: [11349, 8811],
+  FIVE_OF_A_KIND: [495, 202020],
+  SIX_OF_A_KIND: [10, 10000010],
+  CONTIGUOUS_TRIPS: [35920, 2784],
+  CONTIGUOUS_QUADS: [2701, 37023],
+  CONTIGUOUS_FIVES: [181, 552487],
+  CONTIGUOUS_SIXES: [10, 10000010],
+  BOAT: [39690, 2520],
+  CONTIGUOUS_BOAT: [4698, 21286],
+  RAINBOW: [167832, 596],
+  DUALITY: [4294, 23288],
+  FIREFLY: [243, 411523],
+  SEQUENCE_3: [58287, 1716],
+  SEQUENCE_4: [3860, 25907],
+  STRAIGHT: [220, 454546],
+  SEQUENCE_6: [9, 11111122],
+  SCRAMBLE: [4384, 22810],
+  ARITHMETIC: [80, 1250001],
+  GEOMETRIC: [4, 25000025],
+  ASCENSION: [420, 238095],
+  DECAY: [792, 126263],
+  STEPS: [4530, 22075],
+  SLOPES: [7147, 13992],
+  MOUNTAIN: [16992, 5885],
+  VALLEY: [23817, 4199],
+  MESA: [8058, 12410],
+  CANYON: [10503, 9521],
+  HOPSCOTCH: [136425, 733],
+  PALINDROME: [1999, 50025],
+  POCKET_MIRROR: [335701, 298],
+  BOOKENDS: [99990, 1000],
+  PAIRED_BOOKENDS: [9900, 10101],
+  ORIENTATION: [15626, 6400],
+  ORIENTATION_EXACT: [199, 502513],
+  RHYME: [972, 102881],
+  MINI_ECHO: [81, 1234569],
+  EQUILIBRIUM: [51036, 1959],
+  SANDWICH: [8910, 11223],
+  DEEP_VOID: [35920, 2784],
+  DEEP_VOID_THREE: [2701, 37023],
+  DEEP_VOID_FOUR: [181, 552487],
+  DEEP_VOID_FIVE: [10, 10000010],
+  CLEAN_HUNDRED: [10001, 9999],
+  CLEAN_THOUSAND: [1001, 99900],
+  CLEAN_TEN_THOUSAND: [101, 990100],
+  CLEAN_HUNDRED_THOUSAND: [11, 9090918],
+  DOUBLE_NINE: [10000, 10000],
+  TRIPLE_NINE: [1000, 100000],
+  QUAD_NINE: [100, 1000001],
+  QUINT_NINE: [10, 10000010],
+  PRIME: [78498, 1274],
+  TWIN_PRIME: [16337, 6121],
+  PALINDROMIC_PRIME: [113, 884957],
+  SQUARE: [1001, 99900],
+  CUBE: [101, 990100],
+  FOURTH_POWER: [32, 3125003],
+  FIFTH_POWER: [16, 6250006],
+  SIXTH_POWER: [11, 9090918],
+  SEVENTH_POWER: [8, 12500013],
+  EIGHTH_POWER: [6, 16666683],
+  NINTH_POWER: [5, 20000020],
+  TENTH_POWER: [4, 25000025],
+  POWER_OF_TWO: [20, 5000005],
+  POWER_OF_THREE: [13, 7692315],
+  POWER_OF_FIVE: [9, 11111122],
+  POWER_OF_SEVEN: [8, 12500013],
+  POWER_OF_TEN: [7, 14285729],
+  FIBONACCI: [30, 3333337],
+  TRIANGULAR: [1413, 70771],
+  FACTORIAL: [9, 11111122],
+  PERFECT_NUMBER: [4, 25000025],
+  REPDIGIT: [45, 2222224],
+  SPY: [89, 1123597],
+  EQUATION: [1992, 50201],
+  HARSHAD: [95428, 1048],
+  ALL_EVEN: [15600, 6410],
+  ALL_ODD: [19500, 5128],
+  ALL_PRIME_DIGITS: [5440, 18382],
+  BINARY: [61, 1639346],
+  LOWLANDS: [4033, 24795],
+  HIGHLANDS: [5376, 18601],
+  HEAVY: [37500, 2667],
+  FEATHERWEIGHT: [462, 216450],
+  CALENDAR: [25800, 3876],
+  GROUNDHOG_DAY: [189, 529101],
+  EVEN: [500001, 200],
+  ODD: [500000, 200],
+  ONE_DIGIT: [10, 10000010],
+  TWO_DIGITS: [90, 1111112],
+  THREE_DIGITS: [900, 111111],
+  FOUR_DIGITS: [9000, 11111],
+  FIVE_DIGITS: [90000, 1111],
+  SIX_DIGITS: [900000, 111],
+};
+
+/** Card rarity cut points as [name, minimum total EP], best tier first. */
+const CARD_TIERS = [
+  ['Mythic', 122968],
+  ['Anomaly', 28098],
+  ['Epic', 16106],
+  ['Rare', 5676],
+  ['Uncommon', 2584],
+  ['Common', 560],
+];
+
+// ---- engine.js ---------------------------------------------------------
+// RNGdle scoring engine.
+//
+// Two entry points over the same rules:
+//   analyze(n) — full detail for one roll: every badge, its EP, the card rarity.
+//   scan(n, out) — the hot path for auto-rolling: total EP plus a hit bitmap,
+//                  with no per-badge object allocation.
+//
+// analyze() is implemented on top of scan(), so the two can never disagree.
+// Pure and side-effect free — the UI layer owns all persistence.
+
+
+
+
+/** Badge rarity is a function of EP, which is itself a function of frequency. */
+const BADGE_TIERS = [
+  ['Mythic', 1e7], ['Anomaly', 1e6], ['Epic', 1e5], ['Rare', 1e4], ['Uncommon', 1e3],
+];
+
+/** Card tiers, worst to best, for ranking comparisons. */
+const RARITY_ORDER = ['Trash', 'Common', 'Uncommon', 'Rare', 'Epic', 'Anomaly', 'Mythic'];
+
+/** Badges have no Trash tier — the floor is Common, as in the live game. */
+function badgeRarity(ep) {
+  for (const [name, cut] of BADGE_TIERS) if (ep >= cut) return name;
+  return 'Common';
+}
+
+function cardRarity(totalEP) {
+  for (const [name, cut] of CARD_TIERS) if (totalEP >= cut) return name;
+  return 'Trash';
+}
+
+/** The minimum total EP that reaches a given card tier. */
+function rarityFloor(name) {
+  const hit = CARD_TIERS.find(([tier]) => tier === name);
+  return hit ? hit[1] : 0;
+}
+
+// ---------------------------------------------------------------------------
+// Index-aligned tables (defs order). Everything hot is a flat array.
+// ---------------------------------------------------------------------------
+
+const BADGE_COUNT = BADGES.length;
+const BADGE_IDS = BADGES.map(b => b.id);
+
+const TESTS = BADGES.map(b => b.test);
+const EP_AT = Float64Array.from(BADGES, b => STATS[b.id][1]);
+const SOLO_AT = Uint8Array.from(BADGES, b => (b.fam ? 0 : 1));
+
+/** Family members as index groups, so supersession is a flat array walk. */
+const FAMILY_GROUPS = (() => {
+  const byName = new Map();
+  BADGES.forEach((b, i) => {
+    if (!b.fam) return;
+    if (!byName.has(b.fam)) byName.set(b.fam, []);
+    byName.get(b.fam).push(i);
+  });
+  return [...byName.values()];
+})();
+
+/** Static catalogue: every badge with its derived cost and odds, rarest first. */
+const CATALOGUE = BADGES.map((b, i) => {
+  const [count, ep] = STATS[b.id];
+  return {
+    index: i,
+    id: b.id, label: b.label, emoji: b.emoji, desc: b.desc,
+    fam: b.fam, famName: b.fam ? FAMILY_NAMES[b.fam] : null,
+    ep, count, chance: count / ROLL_SPACE,
+    rarity: badgeRarity(ep),
+  };
+}).sort((a, b) => b.ep - a.ep);
+
+const BY_INDEX = [];
+for (const b of CATALOGUE) BY_INDEX[b.index] = b;
+
+/** Allocate a hit buffer sized for scan(). Callers reuse one across rolls. */
+const hitBuffer = () => new Uint8Array(BADGE_COUNT);
+
+function assertRoll(n) {
+  if (!Number.isInteger(n) || n < ROLL_MIN || n > ROLL_MAX) {
+    throw new RangeError(`roll must be an integer in [${ROLL_MIN}, ${ROLL_MAX}], got ${n}`);
+  }
+}
+
+/**
+ * Fast path. Fills `out[i] = 1` for each earned badge (defs order) and returns
+ * the total EP after family supersession. Allocates nothing per badge, so this
+ * is what auto-roll runs thousands of times a second.
+ */
+function scan(n, out) {
+  assertRoll(n);
+  const c = context(n);
+  out.fill(0);
+  let total = 0;
+  for (let i = 0; i < BADGE_COUNT; i++) {
+    if (!TESTS[i](c)) continue;
+    out[i] = 1;
+    if (SOLO_AT[i]) total += EP_AT[i];
+  }
+  // Within a family only the single highest-EP badge pays out.
+  for (const group of FAMILY_GROUPS) {
+    let best = 0;
+    for (const i of group) if (out[i] && EP_AT[i] > best) best = EP_AT[i];
+    total += best;
+  }
+  return total;
+}
+
+/**
+ * Score a single roll, in full.
+ *
+ * Returns every earned badge in rarest-first order. Badges superseded by a
+ * higher-EP member of the same family are still listed — they were genuinely
+ * earned — but carry `scored: false` and contribute nothing to the total.
+ */
+function analyze(n, out = hitBuffer()) {
+  const totalEP = scan(n, out);
+
+  const earned = [];
+  for (let i = 0; i < BADGE_COUNT; i++) if (out[i]) earned.push({ ...BY_INDEX[i], scored: true });
+
+  const best = new Map();
+  for (const b of earned) {
+    if (!b.fam) continue;
+    const incumbent = best.get(b.fam);
+    if (!incumbent || b.ep > incumbent.ep) best.set(b.fam, b);
+  }
+  for (const b of earned) {
+    if (!b.fam) continue;
+    const winner = best.get(b.fam);
+    if (winner === b) continue;
+    b.scored = false;
+    b.coveredBy = winner.label; // name the badge that took the payout, not the family
+  }
+
+  earned.sort((a, b) => b.ep - a.ep);
+  return { n, badges: earned, totalEP, rarity: cardRarity(totalEP) };
+}
+
+/** A uniformly random roll, using the platform CSPRNG when one is available. */
+function roll() {
+  // Some browsers expose crypto but refuse it outside a secure context, and a
+  // throw here would take the whole game down. Math.random is a fine fallback
+  // for a toy: fall back rather than fail.
+  try {
+    const crypto = globalThis.crypto;
+    if (crypto?.getRandomValues) {
+      // Rejection sampling keeps the distribution flat across ROLL_SPACE.
+      const limit = Math.floor(0x100000000 / ROLL_SPACE) * ROLL_SPACE;
+      const buf = new Uint32Array(1);
+      let v;
+      do { crypto.getRandomValues(buf); v = buf[0]; } while (v >= limit);
+      return ROLL_MIN + (v % ROLL_SPACE);
+    }
+  } catch { /* fall through to Math.random */ }
+  return ROLL_MIN + Math.floor(Math.random() * ROLL_SPACE);
+}
+
+/** The shareable result card, in the usual -dle clipboard format. */
+function shareText(result, stats = {}) {
+  const top = result.badges.filter(b => b.scored).slice(0, 5);
+  const lines = [
+    'RNGdle',
+    `${result.n.toLocaleString('en-US')} — ${result.rarity} · ${result.totalEP.toLocaleString('en-US')} EP`,
+    top.map(b => b.emoji).join(' '),
+  ];
+  if (stats.rolls) lines.push(`🎲 found in ${stats.rolls.toLocaleString('en-US')} rolls`);
+  if (stats.found && stats.total) lines.push(`📖 ${stats.found}/${stats.total} badges collected`);
+  return lines.filter(Boolean).join('\n');
+}
+
+// ---- app.js ------------------------------------------------------------
+// RNGdle UI: rolling, auto-roll, collection tracking, local stats.
+// All game rules live in engine.js — nothing here decides what a roll is worth.
+
+
+const STORE_KEY = 'rngdle.v2';
+const TOP_N = 50;
+
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n).toLocaleString('en-US');
+
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
+
+const blankState = () => ({
+  rolls: 0,
+  lifetimeEP: 0,
+  best: null,   // { n, ep, rarity }
+  found: [],    // badge ids ever earned
+  top: [],      // best rolls, newest sort applied lazily
+});
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? { ...blankState(), ...JSON.parse(raw) } : blankState();
+  } catch {
+    // Private mode, disabled storage, or corrupt JSON: play unsaved rather than break.
+    return blankState();
+  }
+}
+
+let state = load();
+
+let saveTimer = 0;
+/** Debounced: auto-roll can fire thousands of times a second. */
+function saveSoon() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveNow, 400);
+}
+function saveNow() {
+  clearTimeout(saveTimer);
+  trimTop();
+  state.found = [...foundBits.entries()].filter(([, v]) => v).map(([i]) => BADGE_IDS[i]);
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  } catch { /* nothing we can do; the session still plays */ }
+}
+
+// Collection as a flat bitmap for the hot path, rehydrated from stored ids.
+const INDEX_OF = new Map(BADGE_IDS.map((id, i) => [id, i]));
+const foundBits = new Uint8Array(BADGE_COUNT);
+for (const id of state.found) {
+  const i = INDEX_OF.get(id);
+  if (i !== undefined) foundBits[i] = 1; // unknown ids are from an older badge set
+}
+const foundCount = () => foundBits.reduce((a, b) => a + b, 0);
+
+// Keep only the best rolls, deduped by number.
+let topFloor = 0;
+function trimTop() {
+  const seen = new Set();
+  state.top = state.top
+    .sort((a, b) => b.ep - a.ep)
+    .filter(r => !seen.has(r.n) && seen.add(r.n))
+    .slice(0, TOP_N);
+  topFloor = state.top.length >= TOP_N ? state.top[TOP_N - 1].ep : 0;
+}
+trimTop();
+
+/** Fold one roll into the running totals. Hot: called once per auto-roll. */
+function record(n, ep, rarity) {
+  state.rolls++;
+  state.lifetimeEP += ep;
+  if (!state.best || ep > state.best.ep) state.best = { n, ep, rarity };
+  if (state.top.length < TOP_N || ep > topFloor) {
+    state.top.push({ n, ep, rarity });
+    if (state.top.length > TOP_N * 2) trimTop();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Rendering
+// ---------------------------------------------------------------------------
+
+function renderScoreboard() {
+  $('stat-rolls').textContent = fmt(state.rolls);
+  $('stat-lifetime').textContent = fmt(state.lifetimeEP);
+  $('stat-best').textContent = state.best ? fmt(state.best.n) : '—';
+  $('stat-found').textContent = `${foundCount()}/${BADGE_COUNT}`;
+}
+
+/** "1 in 14,493" reads better than a probability for anything this rare. */
+function oddsLabel(chance) {
+  if (chance >= 0.1) return `${(chance * 100).toFixed(1)}% of rolls`;
+  return `1 in ${fmt(1 / chance)}`;
+}
+
+function badgeCard(b, i) {
+  const el = document.createElement('div');
+  el.className = `badge r-${b.rarity}${b.scored ? '' : ' is-muted'}${b.isNew ? ' is-new' : ''}`;
+  el.style.animationDelay = `${Math.min(i, 20) * 24}ms`;
+  el.innerHTML = `
+    <span class="glyph">${b.emoji}</span>
+    <span class="body">
+      <span class="name">${b.label}${b.isNew ? '<em class="new">new</em>' : ''}</span>
+      <span class="meta">${b.scored ? `+${fmt(b.ep)} EP` : `covered by ${b.coveredBy}`}</span>
+    </span>`;
+  el.title = `${b.desc}  ·  ${b.rarity}  ·  ${oddsLabel(b.chance)}`;
+  return el;
+}
+
+/** A short human read on the roll, keyed off its best badge. */
+function oneLiner(result) {
+  const scored = result.badges.filter(b => b.scored);
+  const top = scored[0];
+  if (!top) return 'A number with nothing to say.';
+  if (result.rarity === 'Trash' || result.rarity === 'Common') {
+    return `Mostly quiet. Your best find: ${top.label.toLowerCase()}.`;
+  }
+  const rest = scored.length - 1;
+  return `${top.label} — ${oddsLabel(top.chance)}.` +
+    (rest > 0 ? ` Plus ${rest} more badge${rest === 1 ? '' : 's'}.` : '');
+}
+
+/** Full result render. Not called per-roll while auto-rolling — too expensive. */
+function renderResult(result, newIndexes = null) {
+  $('prompt').hidden = true;
+  $('result').hidden = false;
+  $('share-btn').hidden = false;
+
+  setNumber(result.n, result.totalEP, result.rarity);
+  $('oneliner').textContent = oneLiner(result);
+
+  const badges = newIndexes
+    ? result.badges.map(b => ({ ...b, isNew: newIndexes.has(b.index) }))
+    : result.badges;
+  $('badge-list').replaceChildren(...badges.map(badgeCard));
+
+  $('stage').className = `stage glow-${result.rarity}`;
+}
+
+/** Cheap per-frame update: just the headline numbers. */
+function setNumber(n, ep, rarity) {
+  $('number').textContent = fmt(n);
+  $('ep').textContent = fmt(ep);
+  const pill = $('rarity');
+  pill.textContent = rarity;
+  pill.className = `pill r-${rarity}`;
+}
+
+/** Spin through decoys before landing, so a hand roll has a beat to it. */
+function revealNumber(done) {
+  const el = $('number');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { done(); return; }
+
+  el.classList.add('is-rolling');
+  const start = performance.now();
+  const DURATION = 620;
+
+  (function tick(now) {
+    const t = (now - start) / DURATION;
+    if (t >= 1) { el.classList.remove('is-rolling'); done(); return; }
+    el.textContent = fmt(Math.floor(Math.random() * (ROLL_MAX + 1)));
+    // Ease out: frames get further apart as it settles.
+    setTimeout(() => requestAnimationFrame(tick), 26 + t * t * 130);
+  })(start);
+}
+
+// ---------------------------------------------------------------------------
+// Rolling by hand
+// ---------------------------------------------------------------------------
+
+const hits = hitBuffer();
+
+/** Mark newly-earned badges as collected. Returns the indexes that were new. */
+function collect(buffer) {
+  const fresh = [];
+  for (let i = 0; i < BADGE_COUNT; i++) {
+    if (buffer[i] && !foundBits[i]) { foundBits[i] = 1; fresh.push(i); }
+  }
+  return fresh;
+}
+
+function rollOnce() {
+  stopAuto();
+  const n = roll();
+  const result = analyze(n, hits); // analyze fills `hits` as a side effect
+  const fresh = collect(hits);
+
+  record(n, result.totalEP, result.rarity);
+  saveSoon();
+
+  revealNumber(() => {
+    renderResult(result, new Set(fresh));
+    renderScoreboard();
+    renderCatalogue();
+    renderHistory();
+    if (fresh.length) toast(`New badge: ${CATALOGUE.find(b => b.index === fresh[0]).label}`);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Auto-roll
+// ---------------------------------------------------------------------------
+
+// Slow is one visible roll at a time. Fast is a fixed batch per frame. Turbo
+// rolls until it has spent its frame budget, so it scales with the machine
+// instead of locking up a slow one.
+const SPEEDS = {
+  slow: { perFrame: 1, minDelay: 120 },
+  fast: { perFrame: 25, minDelay: 0 },
+  turbo: { budgetMs: 10, chunk: 64 },
+};
+
+const auto = {
+  on: false, raf: 0, last: 0, lastSave: 0,
+  count: 0, bestEP: 0, bestN: 0,
+  fresh: [], lastN: 0, lastEP: 0, lastRarity: 'Common',
+  stopped: null,
+};
+
+function stopCondition() {
+  const mode = $('stop-select').value;
+  if (mode === 'none') return { mode, hit: () => false };
+  if (mode === 'new') return { mode, hit: (rarity, isNew) => isNew };
+  const floor = RARITY_ORDER.indexOf(mode);
+  return { mode, hit: rarity => RARITY_ORDER.indexOf(rarity) >= floor };
+}
+
+/**
+ * Roll `count` times. Returns true when a stop condition fired, leaving the
+ * triggering roll in auto.stopped.
+ */
+function autoBatch(count, stop, limit) {
+  for (let k = 0; k < count; k++) {
+    const n = roll();
+    const ep = scan(n, hits);
+    const rarity = cardRarity(ep);
+
+    let isNew = false;
+    for (let i = 0; i < BADGE_COUNT; i++) {
+      if (hits[i] && !foundBits[i]) { foundBits[i] = 1; auto.fresh.push(i); isNew = true; }
+    }
+
+    record(n, ep, rarity);
+    auto.count++;
+    auto.lastN = n; auto.lastEP = ep; auto.lastRarity = rarity;
+    if (ep > auto.bestEP) { auto.bestEP = ep; auto.bestN = n; }
+
+    // The reason is whichever condition the player armed — not whether this roll
+    // happened to also be a new badge, which would mislabel a rarity stop.
+    if (stop.hit(rarity, isNew)) { auto.stopped = { n, reason: stop.mode === 'new' ? 'new' : 'rarity' }; return true; }
+    if (limit && auto.count >= limit) { auto.stopped = { n, reason: 'limit' }; return true; }
+  }
+  return false;
+}
+
+function autoFrame(ts) {
+  if (!auto.on) return;
+
+  const spec = SPEEDS[$('speed-select').value] || SPEEDS.fast;
+  const limit = Number($('limit-select').value) || 0;
+  const stop = stopCondition();
+  let done = false;
+
+  if (spec.budgetMs) {
+    const start = performance.now();
+    do { done = autoBatch(spec.chunk, stop, limit); }
+    while (!done && performance.now() - start < spec.budgetMs);
+  } else if (spec.minDelay && ts - auto.last < spec.minDelay) {
+    auto.raf = requestAnimationFrame(autoFrame);
+    return;
+  } else {
+    auto.last = ts;
+    done = autoBatch(spec.perFrame, stop, limit);
+  }
+
+  paintAuto();
+
+  if (done) { finishAuto(); return; }
+
+  // An unlimited turbo run can go for minutes; checkpoint it so a crashed tab
+  // doesn't cost the whole session.
+  if (ts - auto.lastSave > 3000) { auto.lastSave = ts; saveNow(); }
+
+  auto.raf = requestAnimationFrame(autoFrame);
+}
+
+/** Per-frame paint: counters plus the headline, but never the badge grid. */
+function paintAuto() {
+  $('auto-count').textContent = fmt(auto.count);
+  $('auto-count-word').textContent = auto.count === 1 ? 'roll' : 'rolls';
+  $('auto-best').textContent = fmt(auto.bestEP);
+  $('prompt').hidden = true;
+  $('result').hidden = false;
+  setNumber(auto.lastN, auto.lastEP, auto.lastRarity);
+  renderScoreboard();
+}
+
+function startAuto() {
+  if (auto.on) return;
+  Object.assign(auto, {
+    on: true, count: 0, bestEP: 0, bestN: 0, fresh: [], stopped: null,
+    last: 0, lastSave: performance.now(),
+  });
+
+  $('auto-btn').textContent = 'Stop';
+  $('auto-btn').classList.add('is-on');
+  $('auto-btn').setAttribute('aria-pressed', 'true');
+  $('auto-live').hidden = false;
+  $('auto-dot').hidden = false;
+  $('auto-found').hidden = true;
+  $('auto-status').textContent = 'Rolling…';
+  $('roll-btn').disabled = true;
+  $('badge-list').replaceChildren();
+  $('stage').className = 'stage'; // drop the previous card's glow for the run
+
+  auto.raf = requestAnimationFrame(autoFrame);
+}
+
+function stopAuto() {
+  if (!auto.on) return;
+  auto.on = false;
+  cancelAnimationFrame(auto.raf);
+  $('auto-btn').textContent = 'Auto-roll';
+  $('auto-btn').classList.remove('is-on');
+  $('auto-btn').setAttribute('aria-pressed', 'false');
+  $('auto-dot').hidden = true; // the run summary stays; the live pulse should not
+  $('roll-btn').disabled = false;
+  saveNow();
+  renderScoreboard();
+  renderCatalogue();
+  renderHistory();
+}
+
+/** A run ended on its own: show the roll that ended it, in full. */
+function finishAuto() {
+  const { n, reason } = auto.stopped ?? { n: auto.lastN, reason: 'limit' };
+  const fresh = new Set(auto.fresh);
+  stopAuto();
+
+  renderResult(analyze(n), fresh);
+  $('auto-status').textContent = {
+    new: 'Stopped — new badge found',
+    rarity: 'Stopped — rarity hit',
+    limit: 'Stopped — roll limit reached',
+  }[reason];
+
+  if (auto.fresh.length) {
+    // A first turbo run can uncover most of the catalogue at once, so name a
+    // handful and count the rest rather than printing a wall of labels.
+    const names = auto.fresh.map(i => CATALOGUE.find(b => b.index === i).label);
+    const shown = names.slice(0, 6);
+    const rest = names.length - shown.length;
+    $('auto-found').hidden = false;
+    $('auto-found').textContent =
+      `Found ${names.length} new badge${names.length === 1 ? '' : 's'} this run: ` +
+      `${shown.join(', ')}${rest > 0 ? `, and ${rest} more` : ''}.`;
+  }
+}
+
+function toggleAuto() {
+  if (auto.on) { stopAuto(); $('auto-status').textContent = 'Stopped'; }
+  else startAuto();
+}
+
+// ---------------------------------------------------------------------------
+// Catalogue & history views
+// ---------------------------------------------------------------------------
+
+let catFilter = 'all';
+
+function renderCatalogue() {
+  const q = $('badge-search').value.trim().toLowerCase();
+  const rows = CATALOGUE.filter(b => {
+    const has = foundBits[b.index] === 1;
+    if (catFilter === 'found' && !has) return false;
+    if (catFilter === 'missing' && has) return false;
+    return !q || b.label.toLowerCase().includes(q) || b.desc.toLowerCase().includes(q) ||
+      (b.famName || '').toLowerCase().includes(q);
+  });
+
+  const found = foundCount();
+  $('progress-fill').style.width = `${(found / BADGE_COUNT) * 100}%`;
+  $('progress-label').textContent = `${found} of ${BADGE_COUNT} found`;
+
+  const host = $('catalogue');
+  if (!rows.length) {
+    host.replaceChildren();
+    host.innerHTML = '<p class="empty">No badge matches that.</p>';
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  for (const b of rows) {
+    const has = foundBits[b.index] === 1;
+    const el = document.createElement('div');
+    el.className = `row r-${b.rarity}${has ? '' : ' is-locked'}`;
+    el.innerHTML = `
+      <span class="glyph">${has ? b.emoji : '🔒'}</span>
+      <span>
+        <span class="name">${b.label}</span>
+        <span class="desc">${b.desc}</span>
+        ${b.famName ? `<span class="fam">${b.famName} family</span>` : ''}
+      </span>
+      <span class="num">${fmt(b.ep)} EP<span class="odds">${oddsLabel(b.chance)}</span></span>`;
+    frag.append(el);
+  }
+  host.replaceChildren(frag);
+}
+
+function renderHistory() {
+  trimTop();
+  const host = $('history');
+  if (!state.top.length) {
+    host.replaceChildren();
+    host.innerHTML = '<p class="empty">No rolls yet. Roll something.</p>';
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  state.top.forEach((h, i) => {
+    const item = document.createElement('div');
+    item.className = 'hitem';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `row r-${h.rarity}`;
+    button.setAttribute('aria-expanded', 'false');
+    button.innerHTML = `
+      <span>
+        <span class="roll">${fmt(h.n)}</span>
+        <span class="day">#${i + 1}</span>
+      </span>
+      <span class="num">${fmt(h.ep)} EP<span class="odds">${h.rarity}</span><span class="chev" aria-hidden="true">▾</span></span>`;
+
+    const detail = document.createElement('div');
+    detail.className = 'row-detail';
+    detail.hidden = true;
+
+    // Built on first open: scoring 50 rolls up front would be wasted work for
+    // a list most people only poke at.
+    button.addEventListener('click', () => {
+      const open = button.getAttribute('aria-expanded') === 'true';
+      if (!open && !detail.childElementCount) {
+        const result = analyze(h.n);
+        const grid = document.createElement('div');
+        grid.className = 'badges';
+        grid.append(...result.badges.map(badgeCard));
+        detail.append(grid);
+      }
+      button.setAttribute('aria-expanded', String(!open));
+      detail.hidden = open;
+    });
+
+    item.append(button, detail);
+    frag.append(item);
+  });
+  host.replaceChildren(frag);
+}
+
+// ---------------------------------------------------------------------------
+// Chrome
+// ---------------------------------------------------------------------------
+
+let toastTimer;
+function toast(msg) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('is-on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('is-on'), 2200);
+}
+
+async function share() {
+  if (!state.best) return;
+  const text = shareText(analyze(state.best.n), {
+    rolls: state.rolls, found: foundCount(), total: BADGE_COUNT,
+  });
+  try {
+    await navigator.clipboard.writeText(text);
+    toast('Best roll copied');
+  } catch {
+    // Clipboard needs a secure context; fall back to a selectable prompt.
+    window.prompt('Copy your result:', text);
+  }
+}
+
+function switchView(name) {
+  for (const tab of document.querySelectorAll('.tab')) {
+    const on = tab.dataset.view === name;
+    tab.classList.toggle('is-on', on);
+    tab.setAttribute('aria-selected', String(on));
+  }
+  for (const view of document.querySelectorAll('.view')) {
+    view.classList.toggle('is-on', view.id === `view-${name}`);
+  }
+}
+
+function eraseData() {
+  if (!confirm('Erase your rolls, EP, and badge collection? This cannot be undone.')) return;
+  stopAuto();
+  clearTimeout(saveTimer);
+  try { localStorage.removeItem(STORE_KEY); } catch { /* already gone */ }
+  state = blankState();
+  foundBits.fill(0);
+  topFloor = 0;
+  $('result').hidden = true;
+  $('prompt').hidden = false;
+  $('share-btn').hidden = true;
+  $('auto-live').hidden = true;
+  $('auto-found').hidden = true;
+  $('stage').className = 'stage';
+  renderScoreboard();
+  renderCatalogue();
+  renderHistory();
+  switchView('play');
+  toast('Data erased');
+}
+
+// ---------------------------------------------------------------------------
+// Boot
+// ---------------------------------------------------------------------------
+
+$('roll-btn').addEventListener('click', rollOnce);
+$('auto-btn').addEventListener('click', toggleAuto);
+$('share-btn').addEventListener('click', share);
+$('reset-btn').addEventListener('click', eraseData);
+$('badge-search').addEventListener('input', renderCatalogue);
+
+for (const chip of document.querySelectorAll('.chip')) {
+  chip.addEventListener('click', () => {
+    catFilter = chip.dataset.filter;
+    for (const other of document.querySelectorAll('.chip')) {
+      other.classList.toggle('is-on', other === chip);
+    }
+    renderCatalogue();
+  });
+}
+for (const tab of document.querySelectorAll('.tab')) {
+  tab.addEventListener('click', () => switchView(tab.dataset.view));
+}
+
+// Speed, stop condition and limit are re-read every frame, so changing any of
+// them mid-run takes effect immediately without restarting the run.
+
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input, select, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.code === 'Space') { e.preventDefault(); if (!auto.on) rollOnce(); else stopAuto(); }
+  if (e.key === 'a' || e.key === 'A') { e.preventDefault(); toggleAuto(); }
+});
+
+// A long turbo run holds unsaved progress; don't lose it on navigation.
+addEventListener('beforeunload', saveNow);
+addEventListener('visibilitychange', () => { if (document.hidden) saveNow(); });
+
+renderScoreboard();
+renderCatalogue();
+renderHistory();
+
+// Open on the player's best roll so the page never starts empty for a returner.
+if (state.best) {
+  const result = analyze(state.best.n);
+  renderResult(result);
+  $('oneliner').textContent = `Your best roll so far. ${oneLiner(result)}`;
+}
+</script>
+</body>
+</html>
