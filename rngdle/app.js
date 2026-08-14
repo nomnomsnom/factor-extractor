@@ -3,7 +3,7 @@
 
 import {
   analyze, scan, roll, hitBuffer, cardRarity, shareText, topPercentLabel,
-  CATALOGUE, BADGE_IDS, BADGE_COUNT, RARITY_ORDER, ROLL_MAX,
+  CATALOGUE, BADGE_IDS, BADGE_COUNT, RARITY_ORDER, ROLL_MAX, ROLL_SPACE,
 } from './engine.js';
 
 const STORE_KEY = 'rngdle.v2';
@@ -106,17 +106,49 @@ function oddsLabel(chance) {
   return `1 in ${fmt(1 / chance)}`;
 }
 
+/**
+ * Why a badge is worth what it is: the rule it matched, and the frequency that
+ * priced it. Superseded badges lead with the one that took their payout, since
+ * "covered by X" on the face of the card is the thing that needs explaining.
+ */
+function badgeNote(b) {
+  if (!b.scored) {
+    return `Already covered by ${b.coveredBy}, which is rarer — within a family only your best badge pays out.`;
+  }
+  if (b.famName) {
+    return `${b.famName} family — if you ever earn a rarer badge in it, this one stops paying.`;
+  }
+  return '';
+}
+
+/** A tappable badge. Opens to show the rule it matched and how rare that is. */
 function badgeCard(b, i) {
-  const el = document.createElement('div');
+  const el = document.createElement('button');
+  el.type = 'button';
   el.className = `badge r-${b.rarity}${b.scored ? '' : ' is-muted'}${b.isNew ? ' is-new' : ''}`;
   el.style.animationDelay = `${Math.min(i, 20) * 24}ms`;
+  el.setAttribute('aria-expanded', 'false');
+
+  const note = badgeNote(b);
   el.innerHTML = `
     <span class="glyph">${b.emoji}</span>
     <span class="body">
       <span class="name">${b.label}${b.isNew ? '<em class="new">new</em>' : ''}</span>
       <span class="meta">${b.scored ? `+${fmt(b.ep)} EP` : `covered by ${b.coveredBy}`}</span>
-    </span>`;
-  el.title = `${b.desc}  ·  ${b.rarity}  ·  ${oddsLabel(b.chance)}`;
+      <span class="badge-detail" hidden>
+        <span class="d-desc">${b.desc}</span>
+        <span class="d-facts">${b.rarity} · ${oddsLabel(b.chance)} · ${fmt(b.count)} of ${fmt(ROLL_SPACE)} rolls · ${fmt(b.ep)} EP</span>
+        ${note ? `<span class="d-note">${note}</span>` : ''}
+      </span>
+    </span>
+    <span class="chev" aria-hidden="true">▾</span>`;
+
+  const detail = el.querySelector('.badge-detail');
+  el.addEventListener('click', () => {
+    const open = el.getAttribute('aria-expanded') === 'true';
+    el.setAttribute('aria-expanded', String(!open));
+    detail.hidden = open;
+  });
   return el;
 }
 
@@ -575,7 +607,12 @@ for (const tab of document.querySelectorAll('.tab')) {
 
 document.addEventListener('keydown', e => {
   if (e.target.matches('input, select, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
-  if (e.code === 'Space') { e.preventDefault(); if (!auto.on) rollOnce(); else stopAuto(); }
+  // A focused button owns Space: without this, tabbing to a badge and pressing
+  // it would roll — re-rendering the grid — instead of opening the badge.
+  if (e.code === 'Space' && !e.target.matches('button')) {
+    e.preventDefault();
+    if (!auto.on) rollOnce(); else stopAuto();
+  }
   if (e.key === 'a' || e.key === 'A') { e.preventDefault(); toggleAuto(); }
 });
 

@@ -129,6 +129,9 @@ rngdle.com  ->  6,434 EP | Uncommon | TOP 43% | 14 badges
   your single highest-EP badge pays out. Rolling `69` earns both *Nice* and
   *Exact Nice*, but only the rarer one scores — the other is shown greyed out,
   since the rarer badge already implies it.
+- **Tap any badge** to open it: the rule it matched, its tier, how many of the
+  1,000,001 rolls earn it, and what that frequency prices it at. A badge showing
+  *covered by X* opens to say which badge took its payout and why.
 - **Card rarity** (Trash → Mythic) matches rngdle.com's own tier distribution,
   described below, shown alongside the percentile the live game reports
   ("TOP 43%"). That needs the whole EP distribution, which is far too big to

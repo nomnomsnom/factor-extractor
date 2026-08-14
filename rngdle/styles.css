@@ -339,6 +339,9 @@ kbd {
   gap: 8px;
   text-align: left;
   margin-bottom: 4px;
+  /* Cards open in place. Stretching would drag every card in the row to the
+     height of the open one; `start` keeps the growth local to what you tapped. */
+  align-items: start;
 }
 
 /* The stage's own grid sits below the controls, so it needs the rule that used
@@ -351,6 +354,9 @@ kbd {
 }
 .stage-badges:empty { display: none; }
 
+/* A <button>, so tapping it opens the badge's rule and odds. Deliberately does
+   not set `color`: the .r-<tier> class above owns it, and the left border reads
+   it through currentColor. */
 .badge {
   display: flex;
   gap: 10px;
@@ -361,8 +367,19 @@ kbd {
   border-radius: 10px;
   padding: 9px 11px;
   animation: pop .32s cubic-bezier(.2, .9, .3, 1.4) backwards;
+  font: inherit;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
 }
+.badge:hover { border-color: currentColor; }
+.badge:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
 .badge.is-muted { opacity: .42; }
+/* Open, a covered badge is explaining itself — it has to be readable to do it. */
+.badge.is-muted[aria-expanded="true"] { opacity: .82; }
 
 @keyframes pop {
   from { opacity: 0; transform: translateY(6px) scale(.96); }
@@ -374,7 +391,32 @@ kbd {
 }
 
 .badge .glyph { font-size: 18px; line-height: 1.3; }
-.badge .body { min-width: 0; }
+.badge .body { min-width: 0; flex: 1 1 auto; }
+.badge .chev { margin-left: auto; align-self: flex-start; font-size: 11px; }
+button.badge[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+/* What the badge actually means, and the frequency that priced it. */
+.badge-detail {
+  display: block;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+.badge-detail .d-desc {
+  display: block;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-dim);
+}
+.badge-detail .d-facts,
+.badge-detail .d-note {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink-faint);
+}
+.badge-detail .d-facts { font-variant-numeric: tabular-nums; }
 .badge .name {
   display: block;
   color: var(--ink);
@@ -382,7 +424,10 @@ kbd {
   font-weight: 600;
   line-height: 1.35;
   text-wrap: balance;
-  overflow-wrap: anywhere; /* long single-word names must break, not overflow */
+  /* break-word, not anywhere: "Strobogrammatic" still breaks rather than
+     overflowing, but ordinary names are left alone — `anywhere` was splitting
+     "Neighbors" across lines in a narrow column. */
+  overflow-wrap: break-word;
 }
 .badge .meta {
   display: block;
@@ -406,6 +451,7 @@ kbd {
   padding: 1px 4px;
   margin-left: 6px;
   vertical-align: 1px;
+  white-space: nowrap; /* the pill is four letters; it must never break to "NE W" */
 }
 
 /* --- buttons ----------------------------------------------------------- */
@@ -603,8 +649,11 @@ button.row[aria-expanded="true"] .chev { transform: rotate(180deg); }
 
 @media (max-width: 520px) {
   .scoreboard { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* minmax(0, …) not 1fr: a plain 1fr track has min-width:auto, so one long
-     badge name ("Strobogrammatic") pushes the grid wider than the screen. */
-  .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* One column on a phone. Two columns left ~170px per card, which was already
+     tight for a name plus its NEW pill and got worse once cards grew a chevron
+     and opened to a paragraph — "Neighbors" wrapped, and a description came out
+     five words tall. minmax(0, …) not 1fr: a plain 1fr track has min-width:auto,
+     so one long name ("Strobogrammatic") pushes the grid wider than the screen. */
+  .badges { grid-template-columns: minmax(0, 1fr); }
   .top { align-items: flex-start; }
 }

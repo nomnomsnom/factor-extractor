@@ -85,6 +85,27 @@ test('the badge grid collapses while empty', () => {
   assert.match(css, /\.stage-badges:empty\s*\{[^}]*display:\s*none/);
 });
 
+test('badge cards are buttons that open to explain themselves', () => {
+  const app = readFileSync(join(ROOT, 'app.js'), 'utf8');
+  const css = readFileSync(join(ROOT, 'styles.css'), 'utf8');
+  const card = app.match(/function badgeCard\([\s\S]*?\n}/);
+  assert.ok(card, 'no badgeCard() in app.js');
+
+  assert.match(card[0], /createElement\('button'\)/, 'a badge has to be focusable and tappable');
+  assert.match(card[0], /class="badge-detail" hidden/, 'the detail should start closed');
+  assert.match(card[0], /\$\{b\.desc\}/, 'the detail should carry the badge description');
+  assert.match(card[0], /aria-expanded/, 'the open/closed state has to be exposed');
+
+  // The rarity class owns .badge's colour, and the left border reads it through
+  // currentColor — a `color` on .badge would come later in the file and win.
+  const rule = css.match(/\n\.badge \{[\s\S]*?\n\}/);
+  assert.ok(rule, 'no .badge rule in styles.css');
+  assert.doesNotMatch(rule[0], /\bcolor:/, '.badge must not set color; .r-<tier> does');
+
+  // Rolling re-renders the grid, so Space on a focused badge would destroy it.
+  assert.match(app, /e\.code === 'Space' && !e\.target\.matches\('button'\)/);
+});
+
 test('a reset control is reachable from the play screen', () => {
   const controls = html.match(/<div class="controls">([\s\S]*?)<\/div>/);
   assert.ok(controls, 'no controls row in index.html');
