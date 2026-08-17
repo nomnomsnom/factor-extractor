@@ -17,7 +17,7 @@
   --line-strong: #cfcfc9;
   --text: #16181d;
   --text-2: #5c6169;
-  --text-3: #8b9098;
+  --text-3: #63686f;
   --accent: #2f6f6a;
   --accent-soft: #d8ebe8;
   --accent-text: #ffffff;
@@ -39,7 +39,7 @@
   --line-strong: #363b43;
   --text: #e8eaed;
   --text-2: #9aa1ab;
-  --text-3: #6b727c;
+  --text-3: #858c96;
   --accent: #6fd6c4;
   --accent-soft: #14312e;
   --accent-text: #06201d;
@@ -50,6 +50,17 @@
 }
 
 * { box-sizing: border-box; }
+
+/* Honour a stated preference for less motion: the pulsing status dot and the
+   flowing connectors are decoration, not information. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .wires path.live { stroke-dasharray: none; }
+}
 
 /* Our own display rules outrank the UA's [hidden] rule, so restate it. */
 [hidden] { display: none !important; }
@@ -409,10 +420,139 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
 .logline.err { color: var(--err); }
 .logline.ok { color: var(--ok); }
 
-@media (max-width: 1180px) {
-  .layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto; overflow: auto; }
-  .panel { overflow: visible; }
-  .canvas, .output { max-height: 70vh; }
+/* ── narrow desktop / tablet landscape ──────────────────────────────────── */
+@media (max-width: 1180px) and (min-width: 861px) {
+  .layout { grid-template-columns: minmax(260px, 300px) 1fr; }
+  /* The output panel moves under the graph rather than being squeezed to a
+     column too narrow to read a report in. */
+  .canvas { grid-row: 1; }
+  .output { grid-column: 1 / -1; max-height: 46vh; }
+}
+
+/* ── phones and small tablets ───────────────────────────────────────────────
+   Three stacked scroll areas do not work on a phone: you lose your place, and
+   the graph gets a viewport slice too short to read. So below this width the
+   panels become three views and a bottom bar switches between them — one
+   thing on screen, one scrollbar, thumb-reachable controls. */
+.mobile-nav { display: none; }
+.config-file { display: none; }
+
+@media (max-width: 860px) {
+  body { overflow: auto; }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding: 10px 14px;
+    padding-top: max(10px, env(safe-area-inset-top));
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .brand-sub { display: none; }          /* the bottom bar names the stages */
+  .topbar h1 { font-size: 15px; }
+  .topbar-actions { flex: 1 1 auto; justify-content: flex-end; }
+  /* Export/Import/theme are rare on a phone; the run button is not. */
+  #btn-export, #btn-import { display: none; }
+  #btn-run { flex: 0 0 auto; white-space: nowrap; padding-inline: 18px; }
+  /* The pill would push the header onto a second row, and it is redundant
+     here: Setup carries the full key explanation, and the bottom bar's Graph
+     dot carries the run state. */
+  .pill { display: none; }
+
+  .layout {
+    display: block;
+    gap: 0;
+    background: var(--bg);
+  }
+
+  .panel {
+    display: none;
+    height: calc(100dvh - var(--chrome, 124px));
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .layout[data-view="setup"]  .config { display: block; }
+  .layout[data-view="graph"]  .canvas { display: flex; }
+  .layout[data-view="output"] .output { display: flex; }
+
+  .config { padding-bottom: 24px; }
+  .config-file { display: block; }
+  .group { padding: 16px 14px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .role .row { grid-template-columns: 1fr; gap: 8px; }
+  .field.inline { display: block; }
+  .field.inline .label { margin-bottom: 6px; }
+  .field.inline select, .field.inline input { max-width: none; }
+
+  .canvas-head, .tabs { padding-left: 14px; padding-right: 14px; }
+  .tab-body { padding: 16px 14px; }
+  .usage-strip { gap: 12px; padding: 10px 14px; font-size: 11px; }
+
+  /* Stages read top-to-bottom on a phone — no sideways scrolling to follow a
+     run, and each stage gets the full width for its labels. */
+  .graph-scroll { padding: 16px 14px 24px; }
+  .graph {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    min-width: 0;
+  }
+  .lane-head { margin-bottom: 8px; }
+  .lane-body { gap: 8px; }
+  .node .node-label { -webkit-line-clamp: 4; }
+
+  .tabs { overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button { flex: 0 0 auto; }
+
+  /* Bottom bar: within thumb reach, and clear of the home indicator. */
+  .mobile-nav {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mobile-nav button {
+    flex: 1;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-3);
+    font-size: 12px;
+    font-weight: 550;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 9px 4px;
+    min-height: 56px;
+    border-top: 2px solid transparent;
+    margin-top: -1px;
+  }
+  .mobile-nav button[aria-selected="true"] {
+    color: var(--text);
+    border-top-color: var(--accent);
+    background: var(--surface-2);
+  }
+  .mobile-nav .nav-mark {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--line-strong);
+  }
+  .mobile-nav button[aria-selected="true"] .nav-mark { background: var(--accent); }
+  .mobile-nav .nav-mark.running { background: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+  .mobile-nav .nav-mark.done { background: var(--ok); }
+  .mobile-nav .nav-mark.error { background: var(--err); }
+}
+
+/* Very small phones: keep the header to one line of controls. */
+@media (max-width: 380px) {
+  .topbar { padding-left: 10px; padding-right: 10px; }
+  .topbar h1 { font-size: 14px; }
+  #btn-theme { display: none; }
 }
 
 /* ── API key panel (published single-file build only) ───────────────────── */
@@ -429,6 +569,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
 .keyrow button { flex: 0 0 auto; }
 .keyring .check { margin: 10px 0 4px; }
 .keyring #btn-clear-key { margin-top: 10px; }
+
+/* ── accessibility overrides ────────────────────────────────────────────
+   Last in the file on purpose: these have to beat the component rules
+   above, which are more specific than a bare element selector. */
+/* 44px targets and 16px fields — below 16px, iOS Safari zooms the page on
+   focus and the user has to pinch back out.
+   Keyed on width as well as pointer type: `pointer: coarse` is the honest
+   signal but browsers report it inconsistently under emulation and on hybrid
+   devices, and at phone widths the sizing is right either way. */
+@media (max-width: 860px), (pointer: coarse) {
+  button, .segmented button, summary { min-height: 44px; }
+  input[type="text"], input[type="number"], input[type="password"],
+  textarea, select,
+  .role select, .role input, .keyrow input,
+  .field.inline select, .field.inline input { font-size: 16px; min-height: 44px; }
+  textarea { min-height: 88px; }
+  .check, .role .check { min-height: 44px; align-items: center; }
+  .check input, .role .check input { width: 22px; height: 22px; flex: 0 0 auto; }
+  .tabs button { min-height: 48px; }
+  /* A 16px-tall slider is hard to grab; pad the hit area without moving it. */
+  input[type="range"] { height: 44px; }
+  input[type="range"]::-webkit-slider-thumb { width: 22px; height: 22px; }
+  input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; }
+}
 </style>
 </head>
 <body>
@@ -457,9 +621,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
     </div>
   </header>
 
-  <main class="layout">
+  <main class="layout" id="layout" data-view="setup">
     <!-- ─────────────────────────── configuration ─────────────────────────── -->
-    <aside class="panel config" aria-label="Configuration">
+    <aside class="panel config" id="panel-setup" aria-label="Configuration">
       <!-- Shown only in the published single-file build, which has no backend
            and so needs the visitor's own key to make real calls. -->
       <section class="group keyring" id="keyring" hidden>
@@ -502,10 +666,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
       <details class="group" open>
         <summary>Effort</summary>
         <div class="segmented" id="preset" role="radiogroup" aria-label="Effort preset">
-          <button type="button" data-value="quick">Quick</button>
-          <button type="button" data-value="standard" class="on">Standard</button>
-          <button type="button" data-value="deep">Deep</button>
-          <button type="button" data-value="exhaustive">Exhaustive</button>
+          <button type="button" role="radio" data-value="quick" aria-checked="false">Quick</button>
+          <button type="button" role="radio" data-value="standard" aria-checked="true" class="on">Standard</button>
+          <button type="button" role="radio" data-value="deep" aria-checked="false">Deep</button>
+          <button type="button" role="radio" data-value="exhaustive" aria-checked="false">Exhaustive</button>
         </div>
         <p class="hint" id="preset-hint"></p>
         <label class="field inline">
@@ -581,19 +745,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
         </label>
       </details>
 
+      <!-- The header's Export/Import are hidden at phone widths; these take
+           over there so the config file stays reachable. -->
+      <section class="group config-file">
+        <span class="label">Config file</span>
+        <div class="keyrow">
+          <button class="ghost" id="btn-export-2" type="button">Export</button>
+          <button class="ghost" id="btn-import-2" type="button">Import</button>
+        </div>
+        <p class="hint">The CLI takes the exported file via <code>--config</code>.</p>
+      </section>
+
       <details class="group">
         <summary>Execution</summary>
         <span class="label">Action stage</span>
         <div class="segmented" id="action_mode" role="radiogroup" aria-label="Action mode">
-          <button type="button" data-value="off">Off</button>
-          <button type="button" data-value="propose" class="on">Propose</button>
-          <button type="button" data-value="execute">Execute</button>
+          <button type="button" role="radio" data-value="off" aria-checked="false">Off</button>
+          <button type="button" role="radio" data-value="propose" aria-checked="true" class="on">Propose</button>
+          <button type="button" role="radio" data-value="execute" aria-checked="false">Execute</button>
         </div>
         <p class="hint" id="action-hint"></p>
         <span class="label">Provider</span>
         <div class="segmented" id="provider" role="radiogroup" aria-label="Provider">
-          <button type="button" data-value="anthropic" class="on">Claude</button>
-          <button type="button" data-value="mock">Mock</button>
+          <button type="button" role="radio" data-value="anthropic" aria-checked="true" class="on">Claude</button>
+          <button type="button" role="radio" data-value="mock" aria-checked="false">Mock</button>
         </div>
         <label class="check">
           <input id="prompt_caching" type="checkbox" checked />
@@ -603,13 +778,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
     </aside>
 
     <!-- ────────────────────────────── canvas ─────────────────────────────── -->
-    <section class="panel canvas" aria-label="Graph">
+    <section class="panel canvas" id="panel-graph" aria-label="Graph">
       <div class="canvas-head">
         <h2>Topology</h2>
-        <div class="run-meta" id="run-meta"><span class="dot idle"></span> idle</div>
+        <div class="run-meta" id="run-meta" role="status" aria-live="polite"><span class="dot idle"></span> idle</div>
       </div>
       <div class="graph-scroll">
-        <div class="graph" id="graph">
+        <div class="graph" id="graph" role="group" aria-label="Agent topology">
           <svg class="wires" id="wires" aria-hidden="true"></svg>
           <div class="lane" data-stage="lead">
             <div class="lane-head"><span class="lane-dot"></span>Lead</div>
@@ -637,24 +812,40 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
     </section>
 
     <!-- ────────────────────────────── output ─────────────────────────────── -->
-    <section class="panel output" aria-label="Output">
-      <nav class="tabs" id="tabs">
-        <button type="button" class="on" data-tab="deliverable">Deliverable</button>
-        <button type="button" data-tab="findings">Findings</button>
-        <button type="button" data-tab="plan">Plan</button>
-        <button type="button" data-tab="log">Log</button>
+    <section class="panel output" id="panel-output" aria-label="Output">
+      <nav class="tabs" id="tabs" role="tablist" aria-label="Output">
+        <button type="button" role="tab" id="tab-btn-deliverable" data-tab="deliverable" aria-controls="tab-deliverable" aria-selected="true" class="on">Deliverable</button>
+        <button type="button" role="tab" id="tab-btn-findings" data-tab="findings" aria-controls="tab-findings" aria-selected="false">Findings</button>
+        <button type="button" role="tab" id="tab-btn-plan" data-tab="plan" aria-controls="tab-plan" aria-selected="false">Plan</button>
+        <button type="button" role="tab" id="tab-btn-log" data-tab="log" aria-controls="tab-log" aria-selected="false">Log</button>
       </nav>
-      <div class="tab-body" id="tab-deliverable">
+      <div class="tab-body" id="tab-deliverable" role="tabpanel" aria-labelledby="tab-btn-deliverable" tabindex="0">
         <div class="empty" id="deliverable-empty">
           Describe a task and run the graph. The finished deliverable lands here.
         </div>
         <article class="prose" id="deliverable-out"></article>
       </div>
-      <div class="tab-body" id="tab-findings" hidden></div>
-      <div class="tab-body" id="tab-plan" hidden></div>
-      <div class="tab-body mono" id="tab-log" hidden></div>
+      <div class="tab-body" id="tab-findings" role="tabpanel" aria-labelledby="tab-btn-findings" tabindex="0" hidden></div>
+      <div class="tab-body" id="tab-plan" role="tabpanel" aria-labelledby="tab-btn-plan" tabindex="0" hidden></div>
+      <div class="tab-body mono" id="tab-log" aria-live="polite" role="tabpanel" aria-labelledby="tab-btn-log" tabindex="0" hidden></div>
     </section>
   </main>
+
+  <!-- Phone-width view switcher; the stylesheet hides it above 860px. -->
+  <nav class="mobile-nav" id="mobile-nav" role="tablist" aria-label="Sections">
+    <button type="button" role="tab" data-panel="setup" aria-selected="true"
+            aria-controls="panel-setup">
+      <span class="nav-mark" aria-hidden="true"></span>Setup
+    </button>
+    <button type="button" role="tab" data-panel="graph" aria-selected="false"
+            aria-controls="panel-graph">
+      <span class="nav-mark" id="nav-run-mark" aria-hidden="true"></span>Graph
+    </button>
+    <button type="button" role="tab" data-panel="output" aria-selected="false"
+            aria-controls="panel-output">
+      <span class="nav-mark" aria-hidden="true"></span>Output
+    </button>
+  </nav>
 
 <script>window.__AGENT_GRAPH_STATIC__ = {"schema": {"models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5", "claude-fable-5"], "roles": ["lead", "research", "worker", "compiler", "action"], "presets": {"quick": {"effort": "low", "limits": {"max_research_agents": 2, "max_worker_agents": 1, "max_action_agents": 2, "max_rounds": 1, "max_llm_calls": 20, "max_tool_iterations": 6, "quality_bar": 0.6}}, "standard": {"effort": "medium", "limits": {"max_research_agents": 4, "max_worker_agents": 4, "max_action_agents": 4, "max_rounds": 2, "max_llm_calls": 60, "max_tool_iterations": 10, "quality_bar": 0.8}}, "deep": {"effort": "high", "limits": {"max_research_agents": 8, "max_worker_agents": 8, "max_action_agents": 6, "max_rounds": 3, "max_llm_calls": 140, "max_tool_iterations": 16, "quality_bar": 0.88}}, "exhaustive": {"effort": "xhigh", "limits": {"max_research_agents": 12, "max_worker_agents": 12, "max_action_agents": 8, "max_rounds": 5, "max_llm_calls": 320, "max_tool_iterations": 24, "quality_bar": 0.94}}}, "tools": {"server": ["web_search", "web_fetch"], "local": ["calculator"]}, "efforts": ["low", "medium", "high", "xhigh", "max"], "formats": ["report", "brief", "bullets", "json", "template", "code", "custom"], "action_modes": ["off", "propose"], "defaults": {"task": "", "context": "", "preset": "standard", "effort": "medium", "deliverable": {"format": "report", "audience": "", "template": "", "json_schema": null, "instructions": ""}, "limits": {"max_research_agents": 4, "max_worker_agents": 4, "max_action_agents": 4, "max_rounds": 2, "max_llm_calls": 60, "max_tool_iterations": 10, "quality_bar": 0.8}, "tools": {"web_search": true, "web_fetch": true, "read_file": false, "list_dir": false, "write_file": false, "calculator": true, "max_web_searches": 8, "workspace": "."}, "roles": {"lead": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": []}, "research": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": ["calculator", "web_search", "web_fetch"]}, "worker": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": ["calculator", "web_search", "web_fetch"]}, "compiler": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": []}, "action": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": ["calculator", "web_search", "web_fetch"]}}, "action_mode": "propose", "provider": "anthropic", "prompt_caching": true}, "credentials": false, "token_cap": 16000}, "prompts": {"LEAD_SYSTEM": "You are the lead agent of a multi-agent graph. You do not do the work yourself;\nyou decide what work to commission.\n\nThe graph runs in stages: your research agents fan out in parallel, then your\nworker agents fan out in parallel with the research findings in hand, then a\ncompiler agent assembles the deliverable, then optional action agents act on it.\nAny stage may have zero agents.\n\nPlan for the task in front of you, not for a template:\n\n- A question you can answer from what you already have needs no research agents\n  at all. Commission research when the answer depends on information not present\n  in the conversation, or when a claim needs a source.\n- Research agents gather and report. Worker agents transform: drafting sections,\n  filling templates, computing, restructuring, writing code. A task that is pure\n  retrieval needs no workers; a task that is pure transformation of supplied\n  material needs no researchers.\n- Every task you write is read by an agent that sees nothing else — not this\n  plan, not the user's original wording, not its sibling tasks. Each brief must\n  carry its own context, constraints, and the shape of the answer you want back.\n- Split along genuinely independent lines. Two agents covering the same ground\n  cost twice and return the same thing.\n- Success criteria are how the compiler judges whether the work is done. Write\n  them so that meeting them is checkable, not a matter of taste.\n\nScale the number of agents to the task's real complexity, and stay within the\nceilings you are given. A small task with two research agents beats the same\ntask with eight.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "RESEARCH_SYSTEM": "You are a research agent. You own exactly one question and nothing else.\n\nSearch, read, and gather until you can answer it, then report what you found.\nGround each substantive claim in something you actually read — a source URL or a\nfile path — and say plainly when you could not establish something rather than\ninferring it. Distinguish what a source states from what you concluded from it.\n\nYou are one of several agents working in parallel; another agent will combine\nyour report with theirs. Answer your question completely and do not speculate\nabout the wider task.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "WORKER_SYSTEM": "You are a worker agent. You have one instruction and you carry it out.\n\nProduce the artifact you were asked for, in the format you were asked for.\nResearch findings, when supplied, are your evidence — use them and stay\nconsistent with them. Where a finding is thin or contradicts another, say so in\nyour notes rather than smoothing it over.\n\nDeliver what was asked at the scope intended. Make routine judgment calls\nyourself and record them as assumptions; don't widen the task, and don't leave\nplaceholders where real content belongs.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "COMPILER_SYSTEM": "You are the compiler agent. Everything the graph produced arrives here, and you\nturn it into the single deliverable the user asked for.\n\nYour job is assembly and judgment, not fresh research:\n\n- Reconcile the inputs. Where two agents disagree, resolve it if the evidence\n  allows and flag it if it does not.\n- Write the deliverable so it stands alone. A reader should never need the\n  intermediate findings to make sense of it, and should never see the graph's\n  internal machinery — task ids, agent names, stage labels.\n- Then assess your own output against the success criteria honestly. Coverage is\n  a report on the work, not on your effort: if criteria are unmet, name them.\n- Ask for another research round only when specific, answerable questions would\n  change the deliverable. Wanting more detail in general is not a reason.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "ACTION_SYSTEM": "You are an action agent. The deliverable is finished; you act on it.\n\nYou carry out exactly one action. Check that what you are about to do matches\nwhat was asked before you do it, and confine every effect to your workspace.\n\nIn propose mode you do not execute anything: describe precisely what you would\ndo — the exact paths, the exact content — and report status \"proposed\". In\nexecute mode you carry the action out with your tools and report what actually\nhappened, including failures.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "PLAN_SCHEMA": {"type": "object", "properties": {"objective": {"type": "string", "description": "The task restated as the outcome to deliver."}, "task_type": {"type": "string", "enum": ["research", "analysis", "synthesis", "template_fill", "build", "decision", "action"]}, "complexity": {"type": "integer", "enum": [1, 2, 3, 4, 5]}, "success_criteria": {"type": "array", "items": {"type": "string"}, "description": "Checkable conditions the finished work must meet."}, "research_tasks": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "question": {"type": "string", "description": "One self-contained question, answerable alone."}, "why": {"type": "string"}, "depth": {"type": "string", "enum": ["shallow", "normal", "deep"]}}, "required": ["id", "question", "why", "depth"], "additionalProperties": false}}, "worker_tasks": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "instruction": {"type": "string", "description": "A complete brief; the worker sees no other context."}, "output_format": {"type": "string"}, "needs_findings": {"type": "boolean"}}, "required": ["id", "instruction", "output_format", "needs_findings"], "additionalProperties": false}}, "needs_action": {"type": "boolean"}, "action_tasks": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "description": {"type": "string"}, "kind": {"type": "string", "enum": ["write_file", "compute", "summarize", "other"]}}, "required": ["id", "description", "kind"], "additionalProperties": false}}, "reasoning": {"type": "string", "description": "Why this shape of plan fits the task."}}, "required": ["objective", "task_type", "complexity", "success_criteria", "research_tasks", "worker_tasks", "needs_action", "action_tasks", "reasoning"], "additionalProperties": false}, "FINDING_SCHEMA": {"type": "object", "properties": {"summary": {"type": "string"}, "key_points": {"type": "array", "items": {"type": "string"}}, "confidence": {"type": "string", "enum": ["low", "medium", "high"]}, "gaps": {"type": "array", "items": {"type": "string"}, "description": "What remains unanswered after this pass."}}, "required": ["summary", "key_points", "confidence", "gaps"], "additionalProperties": false}, "ARTIFACT_SCHEMA": {"type": "object", "properties": {"output": {"type": "string"}, "notes": {"type": "string"}, "assumptions": {"type": "array", "items": {"type": "string"}}}, "required": ["output", "notes", "assumptions"], "additionalProperties": false}, "COMPILE_SCHEMA": {"type": "object", "properties": {"deliverable": {"type": "string", "description": "The finished work, in the requested format."}, "coverage": {"type": "string", "enum": ["poor", "partial", "good", "complete"], "description": "How fully the success criteria are met."}, "unmet_criteria": {"type": "array", "items": {"type": "string"}}, "needs_more_research": {"type": "boolean"}, "followup_questions": {"type": "array", "items": {"type": "string"}, "description": "Questions a further research round should answer."}, "caveats": {"type": "array", "items": {"type": "string"}}}, "required": ["deliverable", "coverage", "unmet_criteria", "needs_more_research", "followup_questions", "caveats"], "additionalProperties": false}, "ACTION_SCHEMA": {"type": "object", "properties": {"status": {"type": "string", "enum": ["executed", "proposed", "skipped", "failed"]}, "detail": {"type": "string"}, "artifacts": {"type": "array", "items": {"type": "string"}}}, "required": ["status", "detail", "artifacts"], "additionalProperties": false}, "deliverable_formats": {"report": "A structured prose report with headings. Depth over breadth.", "brief": "A short brief: the answer up front, then the reasoning that supports it.", "bullets": "A bulleted summary. Every bullet a complete, standalone statement.", "json": "A single JSON object and nothing else — no prose, no code fences.", "template": "The supplied template with every placeholder filled in. Preserve its structure and wording exactly; replace only the placeholders.", "code": "Working code with a brief note on how to run it. No placeholder bodies.", "custom": "Follow the format instructions below."}}};</script>
 <script>
@@ -819,10 +1010,9 @@ window.AgentGraphSimulator = (() => {
     return [
       "# Simulated deliverable",
       "",
-      `**${SIM_NOTE}** This page is the configuration studio: it shows how the`,
-      "graph would fan out for the settings on the left, but the model calls that",
-      "would fill this section need an API key, so they run on your machine rather",
-      "than in a public web page.",
+      `**${SIM_NOTE}** This run shows how the graph fans out for your settings,`,
+      "with placeholder content in place of what the agents would actually find.",
+      "Add an Anthropic key under Setup to run it for real, or use the CLI below.",
       "",
       "## What just happened",
       "",
@@ -833,7 +1023,7 @@ window.AgentGraphSimulator = (() => {
       "",
       "## Running it for real",
       "",
-      "Export the config with the button in the header, then:",
+      "Export the config from Setup, then:",
       "",
       "```",
       "pip install -r agent_graph/requirements.txt",
@@ -2058,8 +2248,13 @@ window.AgentGraphEngine = (() => {
 
   const segValue = (id) => $(id).querySelector("button.on")?.dataset.value;
   const setSeg = (id, value) => {
-    $(id).querySelectorAll("button").forEach((b) =>
-      b.classList.toggle("on", b.dataset.value === value));
+    $(id).querySelectorAll("button").forEach((b) => {
+      const on = b.dataset.value === value;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-checked", String(on));
+      // Roving tabindex: one stop for the group, arrows move within it.
+      b.tabIndex = on ? 0 : -1;
+    });
   };
 
   function readConfig() {
@@ -2337,21 +2532,40 @@ window.AgentGraphEngine = (() => {
     const origin = graph.getBoundingClientRect();
     const SVGNS = "http://www.w3.org/2000/svg";
 
+    // On a phone the lanes stack, so connectors have to run top-to-bottom.
+    // Detect it from the geometry rather than re-reading the media query.
+    const laneBoxes = STAGES.map((s) => $(`lane-${s}`).getBoundingClientRect());
+    const vertical = laneBoxes.length > 1 &&
+      laneBoxes[1].top >= laneBoxes[0].bottom - 1;
+
     const port = (node, side) => {
       const box = node.getBoundingClientRect();
+      if (vertical) {
+        return {
+          x: box.left + box.width / 2 - origin.left,
+          y: (side === "out" ? box.bottom : box.top) - origin.top,
+        };
+      }
       return {
-        x: (side === "right" ? box.right : box.left) - origin.left,
+        x: (side === "out" ? box.right : box.left) - origin.left,
         y: box.top + box.height / 2 - origin.top,
       };
     };
     const mean = (values) => values.reduce((a, b) => a + b, 0) / values.length;
 
     const curve = (from, to, live) => {
-      const bend = Math.max(18, Math.abs(to.x - from.x) * 0.5);
       const path = document.createElementNS(SVGNS, "path");
-      path.setAttribute("d",
-        `M ${from.x} ${from.y} C ${from.x + bend} ${from.y}, ` +
-        `${to.x - bend} ${to.y}, ${to.x} ${to.y}`);
+      if (vertical) {
+        const bend = Math.max(12, Math.abs(to.y - from.y) * 0.5);
+        path.setAttribute("d",
+          `M ${from.x} ${from.y} C ${from.x} ${from.y + bend}, ` +
+          `${to.x} ${to.y - bend}, ${to.x} ${to.y}`);
+      } else {
+        const bend = Math.max(18, Math.abs(to.x - from.x) * 0.5);
+        path.setAttribute("d",
+          `M ${from.x} ${from.y} C ${from.x + bend} ${from.y}, ` +
+          `${to.x - bend} ${to.y}, ${to.x} ${to.y}`);
+      }
       if (live) path.classList.add("live");
       svg.append(path);
     };
@@ -2364,12 +2578,17 @@ window.AgentGraphEngine = (() => {
       const targets = laneNodes[i + 1];
       if (!sources.length || !targets.length) continue;
 
-      const outs = sources.map((n) => port(n, "right"));
-      const ins = targets.map((n) => port(n, "left"));
-      const hub = {
-        x: (Math.max(...outs.map((p) => p.x)) + Math.min(...ins.map((p) => p.x))) / 2,
-        y: (mean(outs.map((p) => p.y)) + mean(ins.map((p) => p.y))) / 2,
-      };
+      const outs = sources.map((n) => port(n, "out"));
+      const ins = targets.map((n) => port(n, "in"));
+      const hub = vertical
+        ? {
+            x: (mean(outs.map((p) => p.x)) + mean(ins.map((p) => p.x))) / 2,
+            y: (Math.max(...outs.map((p) => p.y)) + Math.min(...ins.map((p) => p.y))) / 2,
+          }
+        : {
+            x: (Math.max(...outs.map((p) => p.x)) + Math.min(...ins.map((p) => p.x))) / 2,
+            y: (mean(outs.map((p) => p.y)) + mean(ins.map((p) => p.y))) / 2,
+          };
 
       // A single source and a single target needs no hub — draw it straight.
       if (outs.length === 1 && ins.length === 1) {
@@ -2589,6 +2808,9 @@ window.AgentGraphEngine = (() => {
   function setStatus(text, kind) {
     $("run-meta").innerHTML = "";
     $("run-meta").append(el("span", `dot ${kind}`), document.createTextNode(" " + text));
+    // The bottom bar is visible from every view, so carry the state there too.
+    const mark = $("nav-run-mark");
+    if (mark) mark.className = `nav-mark ${kind}`;
   }
 
   function renderUsage(usage, extra) {
@@ -2629,6 +2851,9 @@ window.AgentGraphEngine = (() => {
     $("deliverable-empty").hidden = false;
     $("deliverable-empty").textContent = "Running…";
     setStatus("running", "running");
+    // The run is the point of pressing the button; on a phone the graph is a
+    // different view, so go there rather than leaving the user on the form.
+    if (NARROW.matches) switchView("graph");
     // Stays enabled: a second click stops the run (see the click handler).
     $("btn-run").textContent = "Stop";
     $("btn-run").title = TRANSPORT.isStatic
@@ -2708,11 +2933,59 @@ window.AgentGraphEngine = (() => {
   }
 
   function switchTab(name) {
-    document.querySelectorAll("#tabs button").forEach((b) =>
-      b.classList.toggle("on", b.dataset.tab === name));
+    document.querySelectorAll("#tabs button").forEach((b) => {
+      const on = b.dataset.tab === name;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-selected", String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
     for (const tab of ["deliverable", "findings", "plan", "log"]) {
       $(`tab-${tab}`).hidden = tab !== name;
     }
+  }
+
+  /* ── mobile view switching ────────────────────────────────────────────── */
+
+  const NARROW = window.matchMedia("(max-width: 860px)");
+
+  function switchView(name) {
+    $("layout").dataset.view = name;
+    document.querySelectorAll("#mobile-nav button").forEach((b) =>
+      b.setAttribute("aria-selected", String(b.dataset.panel === name)));
+    // Each view is its own scroll area; start it at the top.
+    const panel = $(`panel-${name}`);
+    if (panel) panel.scrollTop = 0;
+    if (name === "graph") requestAnimationFrame(drawWires);
+  }
+
+  /* The panels size against the viewport minus the fixed chrome, which varies
+     with the header wrapping and the phone's safe-area inset. */
+  function measureChrome() {
+    if (!NARROW.matches) return;
+    const header = document.querySelector(".topbar").offsetHeight;
+    const nav = $("mobile-nav").offsetHeight;
+    document.documentElement.style.setProperty("--chrome", `${header + nav}px`);
+  }
+
+  /* Arrow-key navigation, which a radiogroup and a tablist are both expected
+     to support once they claim those roles. */
+  function bindRovingKeys(container, onPick, attr) {
+    container.addEventListener("keydown", (event) => {
+      const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
+      if (!keys.includes(event.key)) return;
+      const buttons = [...container.querySelectorAll("button")]
+        .filter((b) => !b.hidden);
+      const current = buttons.indexOf(document.activeElement);
+      if (current < 0) return;
+      event.preventDefault();
+      const step = (event.key === "ArrowRight" || event.key === "ArrowDown") ? 1
+                 : (event.key === "ArrowLeft" || event.key === "ArrowUp") ? -1 : 0;
+      const next = event.key === "Home" ? 0
+                 : event.key === "End" ? buttons.length - 1
+                 : (current + step + buttons.length) % buttons.length;
+      buttons[next].focus();
+      onPick(buttons[next].dataset[attr]);
+    });
   }
 
   /* ── wiring ───────────────────────────────────────────────────────────── */
@@ -2749,7 +3022,7 @@ window.AgentGraphEngine = (() => {
       requestAnimationFrame(drawWires);
     });
 
-    $("btn-export").addEventListener("click", () => {
+    const exportConfig = () => {
       let config;
       try { config = readConfig(); }
       catch (err) { log(err.message, "err"); switchTab("log"); return; }
@@ -2761,9 +3034,17 @@ window.AgentGraphEngine = (() => {
       a.download = "agent-graph.config.json";
       a.click();
       URL.revokeObjectURL(url);
-    });
+    };
+    const importConfig = () => $("file-import").click();
 
-    $("btn-import").addEventListener("click", () => $("file-import").click());
+    // Two sets of buttons: the header's, and the Setup-panel pair that takes
+    // over at phone widths where the header ones are hidden.
+    for (const id of ["btn-export", "btn-export-2"]) {
+      $(id)?.addEventListener("click", exportConfig);
+    }
+    for (const id of ["btn-import", "btn-import-2"]) {
+      $(id)?.addEventListener("click", importConfig);
+    }
     $("file-import").addEventListener("change", async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -2777,7 +3058,22 @@ window.AgentGraphEngine = (() => {
       event.target.value = "";
     });
 
-    window.addEventListener("resize", drawWires);
+    window.addEventListener("resize", () => { measureChrome(); drawWires(); });
+    NARROW.addEventListener("change", () => { measureChrome(); drawWires(); });
+
+    $("mobile-nav").addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (button) switchView(button.dataset.panel);
+    });
+    bindRovingKeys($("mobile-nav"), switchView, "panel");
+    bindRovingKeys($("tabs"), switchTab, "tab");
+    for (const id of ["preset", "action_mode", "provider"]) {
+      bindRovingKeys($(id), (value) => {
+        setSeg(id, value);
+        if (id === "preset") applyPreset(value);
+        syncHints();
+      }, "value");
+    }
 
     if (!TRANSPORT.isStatic) return;
 
@@ -2875,6 +3171,7 @@ window.AgentGraphEngine = (() => {
     for (const stage of STAGES) laneEmpty(stage, "—");
     setStatus("idle", "idle");
     renderUsage({});
+    measureChrome();
   }
 
   init().catch((err) => {
