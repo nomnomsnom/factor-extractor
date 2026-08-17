@@ -1,7 +1,9 @@
-name: Deploy RNGdle to GitHub Pages
+name: Deploy sites to GitHub Pages
 
-# Publishes rngdle/ as a public static site at
-# https://nomnomsnom.github.io/factor-extractor/
+# Publishes two static sites from this repo:
+#
+#   https://nomnomsnom.github.io/factor-extractor/              rngdle
+#   https://nomnomsnom.github.io/factor-extractor/agent-graph/  agent graph
 #
 # One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
 # Until that is switched on, this workflow deploys nothing.
@@ -15,7 +17,9 @@ on:
     branches: [main]
     paths:
       - 'rngdle/**'
-      - '.github/workflows/rngdle-pages.yml'
+      - 'agent_graph/**'
+      - 'tests/test_agent_graph.py'
+      - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -38,22 +42,44 @@ jobs:
         with:
           node-version: '22'
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r agent_graph/requirements.txt
+
       # Don't publish a broken game: the suite covers the scoring rules and the
       # page's own default settings.
-      - name: Test
+      - name: Test rngdle
         working-directory: rngdle
         run: node --test "test/**/*.test.mjs"
 
+      # Likewise for the graph: the topology, the guardrails, and the arithmetic
+      # the browser build evaluates without a server.
+      - name: Test agent graph
+        run: |
+          python -m pytest tests/test_agent_graph.py -q
+          node --test agent_graph/ui/engine.test.mjs
+
       # Inlines CSS, the four ES modules and the generated EP table into one
       # self-contained HTML file with no imports and no network requests.
-      - name: Bundle
+      - name: Bundle rngdle
         working-directory: rngdle
         run: node tools/bundle.mjs
 
+      # Inlines the stylesheet, the three scripts, and the schema and prompts
+      # read straight out of config.py and prompts.py, so the published page
+      # cannot drift from the Python implementation.
+      - name: Bundle agent graph
+        run: python -m agent_graph.bundle
+
       - name: Assemble site
         run: |
-          mkdir -p _site
+          mkdir -p _site/agent-graph
           cp rngdle/dist/rngdle.html _site/index.html
+          cp agent_graph/dist/agent-graph.html _site/agent-graph/index.html
 
       - uses: actions/upload-pages-artifact@v3
         with:

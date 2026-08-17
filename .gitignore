@@ -22,3 +22,6 @@ quality_report.md
 
 # Submission zip we rebuild on demand
 financial-data-quality-skill*.zip
+
+# Local dev venv for agent_graph
+.venv-dev/

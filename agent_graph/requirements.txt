@@ -1,0 +1,10 @@
+# Runtime dependencies for agent_graph.
+anthropic>=0.122
+langgraph>=1.1
+pydantic>=2.9
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-dotenv>=1.0
+
+# Tests
+pytest>=8.0
