@@ -141,8 +141,13 @@
 
   const segValue = (id) => $(id).querySelector("button.on")?.dataset.value;
   const setSeg = (id, value) => {
-    $(id).querySelectorAll("button").forEach((b) =>
-      b.classList.toggle("on", b.dataset.value === value));
+    $(id).querySelectorAll("button").forEach((b) => {
+      const on = b.dataset.value === value;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-checked", String(on));
+      // Roving tabindex: one stop for the group, arrows move within it.
+      b.tabIndex = on ? 0 : -1;
+    });
   };
 
   function readConfig() {
@@ -420,21 +425,40 @@
     const origin = graph.getBoundingClientRect();
     const SVGNS = "http://www.w3.org/2000/svg";
 
+    // On a phone the lanes stack, so connectors have to run top-to-bottom.
+    // Detect it from the geometry rather than re-reading the media query.
+    const laneBoxes = STAGES.map((s) => $(`lane-${s}`).getBoundingClientRect());
+    const vertical = laneBoxes.length > 1 &&
+      laneBoxes[1].top >= laneBoxes[0].bottom - 1;
+
     const port = (node, side) => {
       const box = node.getBoundingClientRect();
+      if (vertical) {
+        return {
+          x: box.left + box.width / 2 - origin.left,
+          y: (side === "out" ? box.bottom : box.top) - origin.top,
+        };
+      }
       return {
-        x: (side === "right" ? box.right : box.left) - origin.left,
+        x: (side === "out" ? box.right : box.left) - origin.left,
         y: box.top + box.height / 2 - origin.top,
       };
     };
     const mean = (values) => values.reduce((a, b) => a + b, 0) / values.length;
 
     const curve = (from, to, live) => {
-      const bend = Math.max(18, Math.abs(to.x - from.x) * 0.5);
       const path = document.createElementNS(SVGNS, "path");
-      path.setAttribute("d",
-        `M ${from.x} ${from.y} C ${from.x + bend} ${from.y}, ` +
-        `${to.x - bend} ${to.y}, ${to.x} ${to.y}`);
+      if (vertical) {
+        const bend = Math.max(12, Math.abs(to.y - from.y) * 0.5);
+        path.setAttribute("d",
+          `M ${from.x} ${from.y} C ${from.x} ${from.y + bend}, ` +
+          `${to.x} ${to.y - bend}, ${to.x} ${to.y}`);
+      } else {
+        const bend = Math.max(18, Math.abs(to.x - from.x) * 0.5);
+        path.setAttribute("d",
+          `M ${from.x} ${from.y} C ${from.x + bend} ${from.y}, ` +
+          `${to.x - bend} ${to.y}, ${to.x} ${to.y}`);
+      }
       if (live) path.classList.add("live");
       svg.append(path);
     };
@@ -447,12 +471,17 @@
       const targets = laneNodes[i + 1];
       if (!sources.length || !targets.length) continue;
 
-      const outs = sources.map((n) => port(n, "right"));
-      const ins = targets.map((n) => port(n, "left"));
-      const hub = {
-        x: (Math.max(...outs.map((p) => p.x)) + Math.min(...ins.map((p) => p.x))) / 2,
-        y: (mean(outs.map((p) => p.y)) + mean(ins.map((p) => p.y))) / 2,
-      };
+      const outs = sources.map((n) => port(n, "out"));
+      const ins = targets.map((n) => port(n, "in"));
+      const hub = vertical
+        ? {
+            x: (mean(outs.map((p) => p.x)) + mean(ins.map((p) => p.x))) / 2,
+            y: (Math.max(...outs.map((p) => p.y)) + Math.min(...ins.map((p) => p.y))) / 2,
+          }
+        : {
+            x: (Math.max(...outs.map((p) => p.x)) + Math.min(...ins.map((p) => p.x))) / 2,
+            y: (mean(outs.map((p) => p.y)) + mean(ins.map((p) => p.y))) / 2,
+          };
 
       // A single source and a single target needs no hub — draw it straight.
       if (outs.length === 1 && ins.length === 1) {
@@ -672,6 +701,9 @@
   function setStatus(text, kind) {
     $("run-meta").innerHTML = "";
     $("run-meta").append(el("span", `dot ${kind}`), document.createTextNode(" " + text));
+    // The bottom bar is visible from every view, so carry the state there too.
+    const mark = $("nav-run-mark");
+    if (mark) mark.className = `nav-mark ${kind}`;
   }
 
   function renderUsage(usage, extra) {
@@ -712,6 +744,9 @@
     $("deliverable-empty").hidden = false;
     $("deliverable-empty").textContent = "Running…";
     setStatus("running", "running");
+    // The run is the point of pressing the button; on a phone the graph is a
+    // different view, so go there rather than leaving the user on the form.
+    if (NARROW.matches) switchView("graph");
     // Stays enabled: a second click stops the run (see the click handler).
     $("btn-run").textContent = "Stop";
     $("btn-run").title = TRANSPORT.isStatic
@@ -791,11 +826,59 @@
   }
 
   function switchTab(name) {
-    document.querySelectorAll("#tabs button").forEach((b) =>
-      b.classList.toggle("on", b.dataset.tab === name));
+    document.querySelectorAll("#tabs button").forEach((b) => {
+      const on = b.dataset.tab === name;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-selected", String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
     for (const tab of ["deliverable", "findings", "plan", "log"]) {
       $(`tab-${tab}`).hidden = tab !== name;
     }
+  }
+
+  /* ── mobile view switching ────────────────────────────────────────────── */
+
+  const NARROW = window.matchMedia("(max-width: 860px)");
+
+  function switchView(name) {
+    $("layout").dataset.view = name;
+    document.querySelectorAll("#mobile-nav button").forEach((b) =>
+      b.setAttribute("aria-selected", String(b.dataset.panel === name)));
+    // Each view is its own scroll area; start it at the top.
+    const panel = $(`panel-${name}`);
+    if (panel) panel.scrollTop = 0;
+    if (name === "graph") requestAnimationFrame(drawWires);
+  }
+
+  /* The panels size against the viewport minus the fixed chrome, which varies
+     with the header wrapping and the phone's safe-area inset. */
+  function measureChrome() {
+    if (!NARROW.matches) return;
+    const header = document.querySelector(".topbar").offsetHeight;
+    const nav = $("mobile-nav").offsetHeight;
+    document.documentElement.style.setProperty("--chrome", `${header + nav}px`);
+  }
+
+  /* Arrow-key navigation, which a radiogroup and a tablist are both expected
+     to support once they claim those roles. */
+  function bindRovingKeys(container, onPick, attr) {
+    container.addEventListener("keydown", (event) => {
+      const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
+      if (!keys.includes(event.key)) return;
+      const buttons = [...container.querySelectorAll("button")]
+        .filter((b) => !b.hidden);
+      const current = buttons.indexOf(document.activeElement);
+      if (current < 0) return;
+      event.preventDefault();
+      const step = (event.key === "ArrowRight" || event.key === "ArrowDown") ? 1
+                 : (event.key === "ArrowLeft" || event.key === "ArrowUp") ? -1 : 0;
+      const next = event.key === "Home" ? 0
+                 : event.key === "End" ? buttons.length - 1
+                 : (current + step + buttons.length) % buttons.length;
+      buttons[next].focus();
+      onPick(buttons[next].dataset[attr]);
+    });
   }
 
   /* ── wiring ───────────────────────────────────────────────────────────── */
@@ -832,7 +915,7 @@
       requestAnimationFrame(drawWires);
     });
 
-    $("btn-export").addEventListener("click", () => {
+    const exportConfig = () => {
       let config;
       try { config = readConfig(); }
       catch (err) { log(err.message, "err"); switchTab("log"); return; }
@@ -844,9 +927,17 @@
       a.download = "agent-graph.config.json";
       a.click();
       URL.revokeObjectURL(url);
-    });
+    };
+    const importConfig = () => $("file-import").click();
 
-    $("btn-import").addEventListener("click", () => $("file-import").click());
+    // Two sets of buttons: the header's, and the Setup-panel pair that takes
+    // over at phone widths where the header ones are hidden.
+    for (const id of ["btn-export", "btn-export-2"]) {
+      $(id)?.addEventListener("click", exportConfig);
+    }
+    for (const id of ["btn-import", "btn-import-2"]) {
+      $(id)?.addEventListener("click", importConfig);
+    }
     $("file-import").addEventListener("change", async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -860,7 +951,22 @@
       event.target.value = "";
     });
 
-    window.addEventListener("resize", drawWires);
+    window.addEventListener("resize", () => { measureChrome(); drawWires(); });
+    NARROW.addEventListener("change", () => { measureChrome(); drawWires(); });
+
+    $("mobile-nav").addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (button) switchView(button.dataset.panel);
+    });
+    bindRovingKeys($("mobile-nav"), switchView, "panel");
+    bindRovingKeys($("tabs"), switchTab, "tab");
+    for (const id of ["preset", "action_mode", "provider"]) {
+      bindRovingKeys($(id), (value) => {
+        setSeg(id, value);
+        if (id === "preset") applyPreset(value);
+        syncHints();
+      }, "value");
+    }
 
     if (!TRANSPORT.isStatic) return;
 
@@ -958,6 +1064,7 @@
     for (const stage of STAGES) laneEmpty(stage, "—");
     setStatus("idle", "idle");
     renderUsage({});
+    measureChrome();
   }
 
   init().catch((err) => {

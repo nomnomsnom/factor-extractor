@@ -33,9 +33,9 @@
     </div>
   </header>
 
-  <main class="layout">
+  <main class="layout" id="layout" data-view="setup">
     <!-- ─────────────────────────── configuration ─────────────────────────── -->
-    <aside class="panel config" aria-label="Configuration">
+    <aside class="panel config" id="panel-setup" aria-label="Configuration">
       <!-- Shown only in the published single-file build, which has no backend
            and so needs the visitor's own key to make real calls. -->
       <section class="group keyring" id="keyring" hidden>
@@ -78,10 +78,10 @@
       <details class="group" open>
         <summary>Effort</summary>
         <div class="segmented" id="preset" role="radiogroup" aria-label="Effort preset">
-          <button type="button" data-value="quick">Quick</button>
-          <button type="button" data-value="standard" class="on">Standard</button>
-          <button type="button" data-value="deep">Deep</button>
-          <button type="button" data-value="exhaustive">Exhaustive</button>
+          <button type="button" role="radio" data-value="quick" aria-checked="false">Quick</button>
+          <button type="button" role="radio" data-value="standard" aria-checked="true" class="on">Standard</button>
+          <button type="button" role="radio" data-value="deep" aria-checked="false">Deep</button>
+          <button type="button" role="radio" data-value="exhaustive" aria-checked="false">Exhaustive</button>
         </div>
         <p class="hint" id="preset-hint"></p>
         <label class="field inline">
@@ -157,19 +157,30 @@
         </label>
       </details>
 
+      <!-- The header's Export/Import are hidden at phone widths; these take
+           over there so the config file stays reachable. -->
+      <section class="group config-file">
+        <span class="label">Config file</span>
+        <div class="keyrow">
+          <button class="ghost" id="btn-export-2" type="button">Export</button>
+          <button class="ghost" id="btn-import-2" type="button">Import</button>
+        </div>
+        <p class="hint">The CLI takes the exported file via <code>--config</code>.</p>
+      </section>
+
       <details class="group">
         <summary>Execution</summary>
         <span class="label">Action stage</span>
         <div class="segmented" id="action_mode" role="radiogroup" aria-label="Action mode">
-          <button type="button" data-value="off">Off</button>
-          <button type="button" data-value="propose" class="on">Propose</button>
-          <button type="button" data-value="execute">Execute</button>
+          <button type="button" role="radio" data-value="off" aria-checked="false">Off</button>
+          <button type="button" role="radio" data-value="propose" aria-checked="true" class="on">Propose</button>
+          <button type="button" role="radio" data-value="execute" aria-checked="false">Execute</button>
         </div>
         <p class="hint" id="action-hint"></p>
         <span class="label">Provider</span>
         <div class="segmented" id="provider" role="radiogroup" aria-label="Provider">
-          <button type="button" data-value="anthropic" class="on">Claude</button>
-          <button type="button" data-value="mock">Mock</button>
+          <button type="button" role="radio" data-value="anthropic" aria-checked="true" class="on">Claude</button>
+          <button type="button" role="radio" data-value="mock" aria-checked="false">Mock</button>
         </div>
         <label class="check">
           <input id="prompt_caching" type="checkbox" checked />
@@ -179,13 +190,13 @@
     </aside>
 
     <!-- ────────────────────────────── canvas ─────────────────────────────── -->
-    <section class="panel canvas" aria-label="Graph">
+    <section class="panel canvas" id="panel-graph" aria-label="Graph">
       <div class="canvas-head">
         <h2>Topology</h2>
-        <div class="run-meta" id="run-meta"><span class="dot idle"></span> idle</div>
+        <div class="run-meta" id="run-meta" role="status" aria-live="polite"><span class="dot idle"></span> idle</div>
       </div>
       <div class="graph-scroll">
-        <div class="graph" id="graph">
+        <div class="graph" id="graph" role="group" aria-label="Agent topology">
           <svg class="wires" id="wires" aria-hidden="true"></svg>
           <div class="lane" data-stage="lead">
             <div class="lane-head"><span class="lane-dot"></span>Lead</div>
@@ -213,24 +224,40 @@
     </section>
 
     <!-- ────────────────────────────── output ─────────────────────────────── -->
-    <section class="panel output" aria-label="Output">
-      <nav class="tabs" id="tabs">
-        <button type="button" class="on" data-tab="deliverable">Deliverable</button>
-        <button type="button" data-tab="findings">Findings</button>
-        <button type="button" data-tab="plan">Plan</button>
-        <button type="button" data-tab="log">Log</button>
+    <section class="panel output" id="panel-output" aria-label="Output">
+      <nav class="tabs" id="tabs" role="tablist" aria-label="Output">
+        <button type="button" role="tab" id="tab-btn-deliverable" data-tab="deliverable" aria-controls="tab-deliverable" aria-selected="true" class="on">Deliverable</button>
+        <button type="button" role="tab" id="tab-btn-findings" data-tab="findings" aria-controls="tab-findings" aria-selected="false">Findings</button>
+        <button type="button" role="tab" id="tab-btn-plan" data-tab="plan" aria-controls="tab-plan" aria-selected="false">Plan</button>
+        <button type="button" role="tab" id="tab-btn-log" data-tab="log" aria-controls="tab-log" aria-selected="false">Log</button>
       </nav>
-      <div class="tab-body" id="tab-deliverable">
+      <div class="tab-body" id="tab-deliverable" role="tabpanel" aria-labelledby="tab-btn-deliverable" tabindex="0">
         <div class="empty" id="deliverable-empty">
           Describe a task and run the graph. The finished deliverable lands here.
         </div>
         <article class="prose" id="deliverable-out"></article>
       </div>
-      <div class="tab-body" id="tab-findings" hidden></div>
-      <div class="tab-body" id="tab-plan" hidden></div>
-      <div class="tab-body mono" id="tab-log" hidden></div>
+      <div class="tab-body" id="tab-findings" role="tabpanel" aria-labelledby="tab-btn-findings" tabindex="0" hidden></div>
+      <div class="tab-body" id="tab-plan" role="tabpanel" aria-labelledby="tab-btn-plan" tabindex="0" hidden></div>
+      <div class="tab-body mono" id="tab-log" aria-live="polite" role="tabpanel" aria-labelledby="tab-btn-log" tabindex="0" hidden></div>
     </section>
   </main>
+
+  <!-- Phone-width view switcher; the stylesheet hides it above 860px. -->
+  <nav class="mobile-nav" id="mobile-nav" role="tablist" aria-label="Sections">
+    <button type="button" role="tab" data-panel="setup" aria-selected="true"
+            aria-controls="panel-setup">
+      <span class="nav-mark" aria-hidden="true"></span>Setup
+    </button>
+    <button type="button" role="tab" data-panel="graph" aria-selected="false"
+            aria-controls="panel-graph">
+      <span class="nav-mark" id="nav-run-mark" aria-hidden="true"></span>Graph
+    </button>
+    <button type="button" role="tab" data-panel="output" aria-selected="false"
+            aria-controls="panel-output">
+      <span class="nav-mark" aria-hidden="true"></span>Output
+    </button>
+  </nav>
 
   <script src="/static/simulate.js"></script>
   <script src="/static/engine.js"></script>
