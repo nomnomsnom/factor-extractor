@@ -1,0 +1,2888 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src https://api.anthropic.com; base-uri 'none'; form-action 'none'">
+<title>Agent Graph</title>
+<meta name="description" content="Configure and run a multi-agent Claude graph: a lead agent plans, research and worker agents fan out in parallel, a compiler assembles the deliverable. Runs in your browser with your own API key.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>">
+<style>
+/* ── tokens ─────────────────────────────────────────────────────────────── */
+:root {
+  --bg: #f7f7f6;
+  --surface: #ffffff;
+  --surface-2: #f1f1ef;
+  --line: #e2e2de;
+  --line-strong: #cfcfc9;
+  --text: #16181d;
+  --text-2: #5c6169;
+  --text-3: #8b9098;
+  --accent: #2f6f6a;
+  --accent-soft: #d8ebe8;
+  --accent-text: #ffffff;
+  --ok: #2f7a52;
+  --warn: #a86a1d;
+  --err: #b1483f;
+  --radius: 10px;
+  --radius-sm: 7px;
+  --shadow: 0 1px 2px rgba(16, 18, 22, .05), 0 8px 24px -12px rgba(16, 18, 22, .16);
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0e0f12;
+  --surface: #16181c;
+  --surface-2: #1c1f24;
+  --line: #262a30;
+  --line-strong: #363b43;
+  --text: #e8eaed;
+  --text-2: #9aa1ab;
+  --text-3: #6b727c;
+  --accent: #6fd6c4;
+  --accent-soft: #14312e;
+  --accent-text: #06201d;
+  --ok: #64c68d;
+  --warn: #d9a05b;
+  --err: #e2796e;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -16px rgba(0, 0, 0, .7);
+}
+
+* { box-sizing: border-box; }
+
+/* Our own display rules outrank the UA's [hidden] rule, so restate it. */
+[hidden] { display: none !important; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── topbar ─────────────────────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  flex: 0 0 auto;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+
+.brand-mark {
+  width: 26px; height: 26px; border-radius: 8px;
+  background: linear-gradient(140deg, var(--accent), color-mix(in oklab, var(--accent) 45%, var(--surface)));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+.topbar h1 { font-size: 14px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+.brand-sub { margin: 0; font-size: 11.5px; color: var(--text-3); letter-spacing: .01em; }
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+button {
+  font: inherit;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition: background .14s ease, border-color .14s ease, color .14s ease, opacity .14s;
+}
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.ghost {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--text-2);
+}
+.ghost:hover { background: var(--surface-2); color: var(--text); }
+.ghost.icon { padding: 7px 10px; }
+
+.primary { background: var(--accent); color: var(--accent-text); font-weight: 550; }
+.primary:hover { filter: brightness(1.06); }
+.primary[disabled] { opacity: .55; cursor: progress; }
+
+.pill {
+  font-size: 11.5px; color: var(--text-2);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 3px 10px; background: var(--surface-2);
+}
+
+/* ── layout ─────────────────────────────────────────────────────────────── */
+.layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(300px, 340px) minmax(360px, 1fr) minmax(320px, 30vw);
+  gap: 1px;
+  background: var(--line);
+}
+
+.panel { background: var(--bg); min-height: 0; overflow: auto; }
+.config { padding: 4px 0 40px; }
+
+/* ── config groups ──────────────────────────────────────────────────────── */
+.group {
+  border-bottom: 1px solid var(--line);
+  padding: 16px 18px;
+}
+details.group > summary {
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: -4px 0 0;
+}
+details.group > summary::-webkit-details-marker { display: none; }
+details.group > summary::before {
+  content: "›";
+  transition: transform .16s ease;
+  display: inline-block;
+  color: var(--text-3);
+}
+details.group[open] > summary::before { transform: rotate(90deg); }
+details.group[open] > summary { margin-bottom: 14px; }
+details.group > summary:hover { color: var(--text); }
+
+.field { display: block; margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field.inline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.field.inline select, .field.inline input { max-width: 46%; }
+
+.label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 550;
+  color: var(--text-2);
+  margin-bottom: 6px;
+  letter-spacing: .005em;
+}
+.field.inline .label { margin-bottom: 0; }
+.label em { font-style: normal; color: var(--text-3); font-weight: 400; }
+
+input[type="text"], input[type="number"], textarea, select {
+  width: 100%;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  transition: border-color .14s ease, box-shadow .14s ease;
+}
+textarea { resize: vertical; line-height: 1.5; font-family: inherit; }
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 20%, transparent);
+}
+select { appearance: none; padding-right: 26px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-3) 50%),
+                    linear-gradient(135deg, var(--text-3) 50%, transparent 50%);
+  background-position: right 12px center, right 7px center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; border: 0; background: none; }
+
+.hint { font-size: 11.5px; color: var(--text-3); margin: 6px 0 0; line-height: 1.45; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.grid-2 .field { margin-bottom: 4px; }
+
+.segmented {
+  display: flex;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+.segmented button {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 12.5px;
+  background: transparent;
+  color: var(--text-2);
+  border-radius: 5px;
+}
+.segmented button:hover { color: var(--text); }
+.segmented button.on {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 550;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+}
+
+.checks { display: grid; gap: 9px; margin-bottom: 14px; }
+.check { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--text); cursor: pointer; }
+.check input { accent-color: var(--accent); width: 15px; height: 15px; margin: 0; }
+
+.role {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  margin-bottom: 9px;
+  background: var(--surface);
+}
+.role h4 {
+  margin: 0 0 9px;
+  font-size: 11px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.role .row { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 7px; }
+.role select, .role input { padding: 6px 8px; font-size: 12.5px; }
+
+/* ── canvas ─────────────────────────────────────────────────────────────── */
+.canvas { display: flex; flex-direction: column; overflow: hidden; }
+.canvas-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 18px; border-bottom: 1px solid var(--line);
+  background: var(--surface); flex: 0 0 auto;
+}
+.canvas-head h2 { margin: 0; font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--text-3); font-weight: 600; }
+.run-meta { font-size: 12px; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-3); flex: 0 0 auto; }
+.dot.idle { background: var(--text-3); }
+.dot.running { background: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+.dot.done { background: var(--ok); }
+.dot.error { background: var(--err); }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+
+.graph-scroll { flex: 1 1 auto; overflow: auto; padding: 22px 18px; }
+.graph {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 46px;                 /* room for the connector bundles */
+  min-width: 880px;
+  align-items: start;
+}
+.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.wires path { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+.wires path.live { stroke: var(--accent); stroke-dasharray: 4 4; animation: flow .7s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -8; } }
+
+.lane { position: relative; z-index: 1; min-width: 0; }
+.lane-head {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-3); font-weight: 600; margin-bottom: 11px;
+}
+.lane-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--line-strong); }
+.lane[data-active="1"] .lane-dot { background: var(--accent); }
+.lane[data-active="1"] .lane-head { color: var(--text-2); }
+.lane-body { display: grid; gap: 8px; }
+
+.node {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+  box-shadow: var(--shadow);
+  animation: rise .22s ease both;
+  min-width: 0;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.node.pending { opacity: .5; border-left-color: var(--line); }
+.node.running { border-left-color: var(--accent); }
+.node.done { border-left-color: var(--ok); }
+.node.error { border-left-color: var(--err); }
+
+.node .node-top { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.node .node-id { font: 11px/1 var(--mono); color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.node .node-label { font-size: 12.5px; color: var(--text); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.node .node-sub { font-size: 11.5px; color: var(--text-3); margin-top: 5px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+.lane-empty {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 12px 11px;
+  font-size: 11.5px;
+  color: var(--text-3);
+  text-align: center;
+}
+
+.usage-strip {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 9px 18px;
+  display: flex;
+  gap: 20px;
+  font: 11.5px/1 var(--mono);
+  color: var(--text-3);
+  flex-wrap: wrap;
+}
+.usage-strip b { color: var(--text-2); font-weight: 500; }
+
+/* ── output ─────────────────────────────────────────────────────────────── */
+.output { display: flex; flex-direction: column; overflow: hidden; }
+.tabs {
+  display: flex; gap: 2px; padding: 8px 12px 0;
+  border-bottom: 1px solid var(--line); background: var(--surface); flex: 0 0 auto;
+}
+.tabs button {
+  background: transparent; color: var(--text-3);
+  border-radius: 6px 6px 0 0; padding: 8px 12px; font-size: 12.5px;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.tabs button:hover { color: var(--text-2); }
+.tabs button.on { color: var(--text); border-bottom-color: var(--accent); font-weight: 550; }
+
+.tab-body { flex: 1 1 auto; overflow: auto; padding: 18px; min-height: 0; }
+.tab-body.mono { font: 11.5px/1.65 var(--mono); color: var(--text-2); }
+
+.empty { color: var(--text-3); font-size: 13px; line-height: 1.6; padding: 8px 0; }
+
+.prose { font-size: 13.5px; line-height: 1.68; color: var(--text); }
+.prose h1 { font-size: 17px; margin: 22px 0 9px; letter-spacing: -.01em; }
+.prose h2 { font-size: 15px; margin: 20px 0 8px; }
+.prose h3 { font-size: 13.5px; margin: 16px 0 6px; color: var(--text-2); }
+.prose h1:first-child, .prose h2:first-child { margin-top: 0; }
+.prose p, .prose ul, .prose ol { margin: 0 0 11px; }
+.prose ul, .prose ol { padding-left: 20px; }
+.prose li { margin-bottom: 4px; }
+.prose code { font: 12px var(--mono); background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+.prose pre { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 11px 13px; overflow-x: auto; margin: 0 0 12px; }
+.prose pre code { background: none; padding: 0; }
+.prose a { color: var(--accent); }
+.prose table { border-collapse: collapse; width: 100%; margin-bottom: 12px; font-size: 12.5px; }
+.prose th, .prose td { border: 1px solid var(--line); padding: 6px 9px; text-align: left; }
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: 13px 14px;
+  margin-bottom: 10px;
+}
+.card h4 { margin: 0 0 7px; font-size: 13px; font-weight: 600; line-height: 1.4; }
+.card p { margin: 0 0 8px; font-size: 12.5px; color: var(--text-2); line-height: 1.6; }
+.card ul { margin: 0 0 8px; padding-left: 18px; font-size: 12.5px; color: var(--text-2); }
+.card li { margin-bottom: 3px; }
+.card .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.tag {
+  font: 10.5px/1 var(--mono);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 8px; color: var(--text-3); background: var(--surface-2);
+}
+.tag.high { color: var(--ok); border-color: color-mix(in oklab, var(--ok) 40%, var(--line)); }
+.tag.medium { color: var(--warn); border-color: color-mix(in oklab, var(--warn) 40%, var(--line)); }
+.tag.low { color: var(--err); border-color: color-mix(in oklab, var(--err) 40%, var(--line)); }
+.sources { list-style: none; padding: 0; margin: 8px 0 0; }
+.sources li { margin-bottom: 3px; font-size: 11.5px; }
+.sources a { color: var(--accent); text-decoration: none; }
+.sources a:hover { text-decoration: underline; }
+
+.logline { display: flex; gap: 10px; padding: 2px 0; }
+.logline .t { color: var(--text-3); flex: 0 0 auto; }
+.logline.err { color: var(--err); }
+.logline.ok { color: var(--ok); }
+
+@media (max-width: 1180px) {
+  .layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto; overflow: auto; }
+  .panel { overflow: visible; }
+  .canvas, .output { max-height: 70vh; }
+}
+
+/* ── API key panel (published single-file build only) ───────────────────── */
+.keyring { background: var(--surface-2); }
+.keyring code {
+  font: 11.5px var(--mono);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+.keyrow { display: flex; gap: 7px; margin: 4px 0 8px; }
+.keyrow input { flex: 1; font-family: var(--mono); font-size: 12.5px; }
+.keyrow button { flex: 0 0 auto; }
+.keyring .check { margin: 10px 0 4px; }
+.keyring #btn-clear-key { margin-top: 10px; }
+</style>
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div>
+        <h1>Agent Graph</h1>
+        <p class="brand-sub">lead → research → workers → compiler → actions</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span class="pill" id="cred-pill" hidden></span>
+      <button class="ghost" id="btn-export" type="button">Export</button>
+      <button class="ghost" id="btn-import" type="button">Import</button>
+      <input type="file" id="file-import" accept="application/json" hidden />
+      <button class="ghost icon" id="btn-theme" type="button" aria-label="Toggle theme" title="Toggle theme">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5" />
+          <path d="M12 12a5 5 0 0 0 0-10z" fill="currentColor" stroke="none" />
+          <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
+        </svg>
+      </button>
+      <button class="primary" id="btn-run" type="button">Run graph</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ─────────────────────────── configuration ─────────────────────────── -->
+    <aside class="panel config" aria-label="Configuration">
+      <!-- Shown only in the published single-file build, which has no backend
+           and so needs the visitor's own key to make real calls. -->
+      <section class="group keyring" id="keyring" hidden>
+        <span class="label">Anthropic API key</span>
+        <p class="hint">
+          This page is static — there is no server behind it. Your key is sent
+          only to <code>api.anthropic.com</code>, straight from this tab, and is
+          never transmitted anywhere else. Use a key you can rotate.
+        </p>
+        <div class="keyrow">
+          <input id="api-key" type="password" placeholder="sk-ant-…"
+                 autocomplete="off" spellcheck="false" />
+          <button class="ghost" id="btn-test-key" type="button">Test</button>
+        </div>
+        <p class="hint" id="key-status"></p>
+        <label class="check">
+          <input id="remember-key" type="checkbox" />
+          <span>Keep it in this browser</span>
+        </label>
+        <p class="hint">
+          Off by default: the key lives in memory for this tab only and is gone
+          when you close it. Ticking this stores it in
+          <code>localStorage</code>, where anything with access to this browser
+          profile can read it.
+        </p>
+        <button class="ghost" id="btn-clear-key" type="button">Forget key</button>
+      </section>
+
+      <section class="group">
+        <label class="field">
+          <span class="label">Task</span>
+          <textarea id="task" rows="4" placeholder="What should the graph accomplish?"></textarea>
+        </label>
+        <label class="field">
+          <span class="label">Context <em>optional</em></span>
+          <textarea id="context" rows="3" placeholder="Background, constraints, source material…"></textarea>
+        </label>
+      </section>
+
+      <details class="group" open>
+        <summary>Effort</summary>
+        <div class="segmented" id="preset" role="radiogroup" aria-label="Effort preset">
+          <button type="button" data-value="quick">Quick</button>
+          <button type="button" data-value="standard" class="on">Standard</button>
+          <button type="button" data-value="deep">Deep</button>
+          <button type="button" data-value="exhaustive">Exhaustive</button>
+        </div>
+        <p class="hint" id="preset-hint"></p>
+        <label class="field inline">
+          <span class="label">Reasoning effort</span>
+          <select id="effort"></select>
+        </label>
+      </details>
+
+      <details class="group">
+        <summary>Deliverable</summary>
+        <label class="field inline">
+          <span class="label">Format</span>
+          <select id="deliverable-format"></select>
+        </label>
+        <label class="field">
+          <span class="label">Audience <em>optional</em></span>
+          <input id="deliverable-audience" type="text" placeholder="e.g. a quant researcher" />
+        </label>
+        <label class="field" id="wrap-template" hidden>
+          <span class="label">Template</span>
+          <textarea id="deliverable-template" rows="6"
+            placeholder="Paste the template. Placeholders get filled; structure is preserved."></textarea>
+        </label>
+        <label class="field" id="wrap-schema" hidden>
+          <span class="label">JSON Schema <em>optional</em></span>
+          <textarea id="deliverable-schema" rows="6" placeholder='{"type": "object", "properties": {…}}'></textarea>
+        </label>
+        <label class="field" id="wrap-instructions" hidden>
+          <span class="label">Format instructions</span>
+          <textarea id="deliverable-instructions" rows="3"></textarea>
+        </label>
+      </details>
+
+      <details class="group">
+        <summary>Limits</summary>
+        <div class="grid-2">
+          <label class="field"><span class="label">Research agents</span>
+            <input id="max_research_agents" type="number" min="0" max="24" /></label>
+          <label class="field"><span class="label">Worker agents</span>
+            <input id="max_worker_agents" type="number" min="0" max="24" /></label>
+          <label class="field"><span class="label">Action agents</span>
+            <input id="max_action_agents" type="number" min="0" max="12" /></label>
+          <label class="field"><span class="label">Rounds</span>
+            <input id="max_rounds" type="number" min="1" max="8" /></label>
+          <label class="field"><span class="label">Model calls</span>
+            <input id="max_llm_calls" type="number" min="1" max="1000" /></label>
+          <label class="field"><span class="label">Tool steps</span>
+            <input id="max_tool_iterations" type="number" min="1" max="60" /></label>
+        </div>
+        <label class="field">
+          <span class="label">Quality bar <output id="quality_bar_out"></output></span>
+          <input id="quality_bar" type="range" min="0" max="1" step="0.01" />
+          <span class="hint">Coverage below this sends the work back to the lead for another round.</span>
+        </label>
+      </details>
+
+      <details class="group">
+        <summary>Models</summary>
+        <div id="roles"></div>
+      </details>
+
+      <details class="group">
+        <summary>Tools</summary>
+        <div class="checks" id="tools"></div>
+        <label class="field" id="wrap-workspace">
+          <span class="label">Workspace root</span>
+          <input id="workspace" type="text" placeholder="." />
+          <span class="hint">File tools are sandboxed to this directory.</span>
+        </label>
+        <label class="field inline">
+          <span class="label">Max web searches</span>
+          <input id="max_web_searches" type="number" min="1" max="40" />
+        </label>
+      </details>
+
+      <details class="group">
+        <summary>Execution</summary>
+        <span class="label">Action stage</span>
+        <div class="segmented" id="action_mode" role="radiogroup" aria-label="Action mode">
+          <button type="button" data-value="off">Off</button>
+          <button type="button" data-value="propose" class="on">Propose</button>
+          <button type="button" data-value="execute">Execute</button>
+        </div>
+        <p class="hint" id="action-hint"></p>
+        <span class="label">Provider</span>
+        <div class="segmented" id="provider" role="radiogroup" aria-label="Provider">
+          <button type="button" data-value="anthropic" class="on">Claude</button>
+          <button type="button" data-value="mock">Mock</button>
+        </div>
+        <label class="check">
+          <input id="prompt_caching" type="checkbox" checked />
+          <span>Cache system prompts across the run</span>
+        </label>
+      </details>
+    </aside>
+
+    <!-- ────────────────────────────── canvas ─────────────────────────────── -->
+    <section class="panel canvas" aria-label="Graph">
+      <div class="canvas-head">
+        <h2>Topology</h2>
+        <div class="run-meta" id="run-meta"><span class="dot idle"></span> idle</div>
+      </div>
+      <div class="graph-scroll">
+        <div class="graph" id="graph">
+          <svg class="wires" id="wires" aria-hidden="true"></svg>
+          <div class="lane" data-stage="lead">
+            <div class="lane-head"><span class="lane-dot"></span>Lead</div>
+            <div class="lane-body" id="lane-lead"></div>
+          </div>
+          <div class="lane" data-stage="research">
+            <div class="lane-head"><span class="lane-dot"></span>Research</div>
+            <div class="lane-body" id="lane-research"></div>
+          </div>
+          <div class="lane" data-stage="worker">
+            <div class="lane-head"><span class="lane-dot"></span>Workers</div>
+            <div class="lane-body" id="lane-worker"></div>
+          </div>
+          <div class="lane" data-stage="compiler">
+            <div class="lane-head"><span class="lane-dot"></span>Compiler</div>
+            <div class="lane-body" id="lane-compiler"></div>
+          </div>
+          <div class="lane" data-stage="action">
+            <div class="lane-head"><span class="lane-dot"></span>Actions</div>
+            <div class="lane-body" id="lane-action"></div>
+          </div>
+        </div>
+      </div>
+      <div class="usage-strip" id="usage"></div>
+    </section>
+
+    <!-- ────────────────────────────── output ─────────────────────────────── -->
+    <section class="panel output" aria-label="Output">
+      <nav class="tabs" id="tabs">
+        <button type="button" class="on" data-tab="deliverable">Deliverable</button>
+        <button type="button" data-tab="findings">Findings</button>
+        <button type="button" data-tab="plan">Plan</button>
+        <button type="button" data-tab="log">Log</button>
+      </nav>
+      <div class="tab-body" id="tab-deliverable">
+        <div class="empty" id="deliverable-empty">
+          Describe a task and run the graph. The finished deliverable lands here.
+        </div>
+        <article class="prose" id="deliverable-out"></article>
+      </div>
+      <div class="tab-body" id="tab-findings" hidden></div>
+      <div class="tab-body" id="tab-plan" hidden></div>
+      <div class="tab-body mono" id="tab-log" hidden></div>
+    </section>
+  </main>
+
+<script>window.__AGENT_GRAPH_STATIC__ = {"schema": {"models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5", "claude-fable-5"], "roles": ["lead", "research", "worker", "compiler", "action"], "presets": {"quick": {"effort": "low", "limits": {"max_research_agents": 2, "max_worker_agents": 1, "max_action_agents": 2, "max_rounds": 1, "max_llm_calls": 20, "max_tool_iterations": 6, "quality_bar": 0.6}}, "standard": {"effort": "medium", "limits": {"max_research_agents": 4, "max_worker_agents": 4, "max_action_agents": 4, "max_rounds": 2, "max_llm_calls": 60, "max_tool_iterations": 10, "quality_bar": 0.8}}, "deep": {"effort": "high", "limits": {"max_research_agents": 8, "max_worker_agents": 8, "max_action_agents": 6, "max_rounds": 3, "max_llm_calls": 140, "max_tool_iterations": 16, "quality_bar": 0.88}}, "exhaustive": {"effort": "xhigh", "limits": {"max_research_agents": 12, "max_worker_agents": 12, "max_action_agents": 8, "max_rounds": 5, "max_llm_calls": 320, "max_tool_iterations": 24, "quality_bar": 0.94}}}, "tools": {"server": ["web_search", "web_fetch"], "local": ["calculator"]}, "efforts": ["low", "medium", "high", "xhigh", "max"], "formats": ["report", "brief", "bullets", "json", "template", "code", "custom"], "action_modes": ["off", "propose"], "defaults": {"task": "", "context": "", "preset": "standard", "effort": "medium", "deliverable": {"format": "report", "audience": "", "template": "", "json_schema": null, "instructions": ""}, "limits": {"max_research_agents": 4, "max_worker_agents": 4, "max_action_agents": 4, "max_rounds": 2, "max_llm_calls": 60, "max_tool_iterations": 10, "quality_bar": 0.8}, "tools": {"web_search": true, "web_fetch": true, "read_file": false, "list_dir": false, "write_file": false, "calculator": true, "max_web_searches": 8, "workspace": "."}, "roles": {"lead": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": []}, "research": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": ["calculator", "web_search", "web_fetch"]}, "worker": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": ["calculator", "web_search", "web_fetch"]}, "compiler": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": []}, "action": {"model": "claude-opus-5", "effort": "medium", "max_tokens": 16000, "thinking": true, "tools": ["calculator", "web_search", "web_fetch"]}}, "action_mode": "propose", "provider": "anthropic", "prompt_caching": true}, "credentials": false, "token_cap": 16000}, "prompts": {"LEAD_SYSTEM": "You are the lead agent of a multi-agent graph. You do not do the work yourself;\nyou decide what work to commission.\n\nThe graph runs in stages: your research agents fan out in parallel, then your\nworker agents fan out in parallel with the research findings in hand, then a\ncompiler agent assembles the deliverable, then optional action agents act on it.\nAny stage may have zero agents.\n\nPlan for the task in front of you, not for a template:\n\n- A question you can answer from what you already have needs no research agents\n  at all. Commission research when the answer depends on information not present\n  in the conversation, or when a claim needs a source.\n- Research agents gather and report. Worker agents transform: drafting sections,\n  filling templates, computing, restructuring, writing code. A task that is pure\n  retrieval needs no workers; a task that is pure transformation of supplied\n  material needs no researchers.\n- Every task you write is read by an agent that sees nothing else — not this\n  plan, not the user's original wording, not its sibling tasks. Each brief must\n  carry its own context, constraints, and the shape of the answer you want back.\n- Split along genuinely independent lines. Two agents covering the same ground\n  cost twice and return the same thing.\n- Success criteria are how the compiler judges whether the work is done. Write\n  them so that meeting them is checkable, not a matter of taste.\n\nScale the number of agents to the task's real complexity, and stay within the\nceilings you are given. A small task with two research agents beats the same\ntask with eight.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "RESEARCH_SYSTEM": "You are a research agent. You own exactly one question and nothing else.\n\nSearch, read, and gather until you can answer it, then report what you found.\nGround each substantive claim in something you actually read — a source URL or a\nfile path — and say plainly when you could not establish something rather than\ninferring it. Distinguish what a source states from what you concluded from it.\n\nYou are one of several agents working in parallel; another agent will combine\nyour report with theirs. Answer your question completely and do not speculate\nabout the wider task.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "WORKER_SYSTEM": "You are a worker agent. You have one instruction and you carry it out.\n\nProduce the artifact you were asked for, in the format you were asked for.\nResearch findings, when supplied, are your evidence — use them and stay\nconsistent with them. Where a finding is thin or contradicts another, say so in\nyour notes rather than smoothing it over.\n\nDeliver what was asked at the scope intended. Make routine judgment calls\nyourself and record them as assumptions; don't widen the task, and don't leave\nplaceholders where real content belongs.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "COMPILER_SYSTEM": "You are the compiler agent. Everything the graph produced arrives here, and you\nturn it into the single deliverable the user asked for.\n\nYour job is assembly and judgment, not fresh research:\n\n- Reconcile the inputs. Where two agents disagree, resolve it if the evidence\n  allows and flag it if it does not.\n- Write the deliverable so it stands alone. A reader should never need the\n  intermediate findings to make sense of it, and should never see the graph's\n  internal machinery — task ids, agent names, stage labels.\n- Then assess your own output against the success criteria honestly. Coverage is\n  a report on the work, not on your effort: if criteria are unmet, name them.\n- Ask for another research round only when specific, answerable questions would\n  change the deliverable. Wanting more detail in general is not a reason.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "ACTION_SYSTEM": "You are an action agent. The deliverable is finished; you act on it.\n\nYou carry out exactly one action. Check that what you are about to do matches\nwhat was asked before you do it, and confine every effect to your workspace.\n\nIn propose mode you do not execute anything: describe precisely what you would\ndo — the exact paths, the exact content — and report status \"proposed\". In\nexecute mode you carry the action out with your tools and report what actually\nhappened, including failures.\n\nWrite for a reader who did not watch you work. Lead with the outcome, then the\nsupporting detail. Be selective about what you include rather than compressing\nthe writing into fragments — readable beats terse. Report faithfully: say what\nyou could not establish rather than papering over it, and don't claim work you\ndid not do.", "PLAN_SCHEMA": {"type": "object", "properties": {"objective": {"type": "string", "description": "The task restated as the outcome to deliver."}, "task_type": {"type": "string", "enum": ["research", "analysis", "synthesis", "template_fill", "build", "decision", "action"]}, "complexity": {"type": "integer", "enum": [1, 2, 3, 4, 5]}, "success_criteria": {"type": "array", "items": {"type": "string"}, "description": "Checkable conditions the finished work must meet."}, "research_tasks": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "question": {"type": "string", "description": "One self-contained question, answerable alone."}, "why": {"type": "string"}, "depth": {"type": "string", "enum": ["shallow", "normal", "deep"]}}, "required": ["id", "question", "why", "depth"], "additionalProperties": false}}, "worker_tasks": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "instruction": {"type": "string", "description": "A complete brief; the worker sees no other context."}, "output_format": {"type": "string"}, "needs_findings": {"type": "boolean"}}, "required": ["id", "instruction", "output_format", "needs_findings"], "additionalProperties": false}}, "needs_action": {"type": "boolean"}, "action_tasks": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "description": {"type": "string"}, "kind": {"type": "string", "enum": ["write_file", "compute", "summarize", "other"]}}, "required": ["id", "description", "kind"], "additionalProperties": false}}, "reasoning": {"type": "string", "description": "Why this shape of plan fits the task."}}, "required": ["objective", "task_type", "complexity", "success_criteria", "research_tasks", "worker_tasks", "needs_action", "action_tasks", "reasoning"], "additionalProperties": false}, "FINDING_SCHEMA": {"type": "object", "properties": {"summary": {"type": "string"}, "key_points": {"type": "array", "items": {"type": "string"}}, "confidence": {"type": "string", "enum": ["low", "medium", "high"]}, "gaps": {"type": "array", "items": {"type": "string"}, "description": "What remains unanswered after this pass."}}, "required": ["summary", "key_points", "confidence", "gaps"], "additionalProperties": false}, "ARTIFACT_SCHEMA": {"type": "object", "properties": {"output": {"type": "string"}, "notes": {"type": "string"}, "assumptions": {"type": "array", "items": {"type": "string"}}}, "required": ["output", "notes", "assumptions"], "additionalProperties": false}, "COMPILE_SCHEMA": {"type": "object", "properties": {"deliverable": {"type": "string", "description": "The finished work, in the requested format."}, "coverage": {"type": "string", "enum": ["poor", "partial", "good", "complete"], "description": "How fully the success criteria are met."}, "unmet_criteria": {"type": "array", "items": {"type": "string"}}, "needs_more_research": {"type": "boolean"}, "followup_questions": {"type": "array", "items": {"type": "string"}, "description": "Questions a further research round should answer."}, "caveats": {"type": "array", "items": {"type": "string"}}}, "required": ["deliverable", "coverage", "unmet_criteria", "needs_more_research", "followup_questions", "caveats"], "additionalProperties": false}, "ACTION_SCHEMA": {"type": "object", "properties": {"status": {"type": "string", "enum": ["executed", "proposed", "skipped", "failed"]}, "detail": {"type": "string"}, "artifacts": {"type": "array", "items": {"type": "string"}}}, "required": ["status", "detail", "artifacts"], "additionalProperties": false}, "deliverable_formats": {"report": "A structured prose report with headings. Depth over breadth.", "brief": "A short brief: the answer up front, then the reasoning that supports it.", "bullets": "A bulleted summary. Every bullet a complete, standalone statement.", "json": "A single JSON object and nothing else — no prose, no code fences.", "template": "The supplied template with every placeholder filled in. Preserve its structure and wording exactly; replace only the placeholders.", "code": "Working code with a brief note on how to run it. No placeholder bodies.", "custom": "Follow the format instructions below."}}};</script>
+<script>
+/* In-browser run simulator.
+ *
+ * Emits the same event stream the Python runner does, so the topology view and
+ * the output tabs work identically without a server. It plans, fans out,
+ * revises and compiles against the real configuration — the ceilings, the
+ * action mode and the quality bar all take effect — but it calls no model and
+ * makes no network request. Every string it produces says so.
+ */
+window.AgentGraphSimulator = (() => {
+  "use strict";
+
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const clamp = (items, limit) => items.slice(0, Math.max(0, limit));
+
+  /* A short, readable handle for the task, used inside the fake briefs. */
+  function subject(task) {
+    const clean = (task || "the task").replace(/\s+/g, " ").trim();
+    return clean.length > 90 ? clean.slice(0, 87) + "…" : clean;
+  }
+
+  const RESEARCH_ANGLES = [
+    (s) => `How is "${s}" defined and framed by the primary sources?`,
+    (s) => `What does the most recent evidence say about ${s}?`,
+    (s) => `What are the main criticisms, limitations, or failure cases?`,
+    (s) => `What comparable cases, benchmarks, or prior art exist?`,
+    (s) => `Which practical constraints govern ${s} in practice?`,
+    (s) => `Where do credible sources disagree, and on what?`,
+    (s) => `What quantitative data is available, and how reliable is it?`,
+    (s) => `What has changed most recently, and what is still unsettled?`,
+    (s) => `Who are the authoritative voices, and what do they claim?`,
+    (s) => `What terminology or methodology traps mislead newcomers?`,
+    (s) => `What second-order effects follow from ${s}?`,
+    (s) => `What would falsify the leading account of ${s}?`,
+  ];
+
+  function workerBriefs(config) {
+    const format = config.deliverable?.format || "report";
+    if (format === "template") {
+      return [
+        "Fill every placeholder in the supplied template from the findings.",
+        "Verify the filled template against the findings and flag unsupported fields.",
+        "Draft the supporting notes that accompany the filled template.",
+        "Reconcile placeholders that no finding covers and list them explicitly.",
+      ];
+    }
+    if (format === "code") {
+      return [
+        "Write the implementation described by the findings.",
+        "Write the tests that pin the behaviour the findings specify.",
+        "Write the run instructions and note the assumptions made.",
+        "Review the implementation against the stated success criteria.",
+      ];
+    }
+    return [
+      "Draft the opening: the answer, then the evidence behind it.",
+      "Assemble the structured body — comparisons, figures, and their sources.",
+      "Write the caveats and open questions the findings leave standing.",
+      "Cross-check every claim against the findings and flag unsupported ones.",
+    ];
+  }
+
+  function buildPlan(config, round) {
+    const s = subject(config.task);
+    const limits = config.limits || {};
+    const gap = round > 0;
+    const tag = `r${round + 1}`;
+
+    const angles = gap
+      ? RESEARCH_ANGLES.slice(2, 4)   // a gap round commissions less
+      : RESEARCH_ANGLES.slice(0, 3);
+    const research = clamp(angles, limits.max_research_agents ?? 4).map((make, i) => ({
+      id: `${tag}-research-${i + 1}`,
+      question: make(s),
+      why: gap ? "Closes a gap the compiler flagged." : "Covers one axis of the task.",
+      depth: "normal",
+    }));
+
+    const briefs = gap ? workerBriefs(config).slice(3) : workerBriefs(config).slice(0, 2);
+    const workers = clamp(briefs, limits.max_worker_agents ?? 4).map((brief, i) => ({
+      id: `${tag}-worker-${i + 1}`,
+      instruction: brief,
+      output_format: config.deliverable?.format || "report",
+      needs_findings: true,
+    }));
+
+    const wantsAction = (config.action_mode || "propose") !== "off";
+    const actions = wantsAction
+      ? clamp([{
+          id: `${tag}-action-1`,
+          description:
+            `Save the finished deliverable to ` +
+            `${(config.tools?.workspace || ".")}/deliverable.md`,
+          kind: "write_file",
+        }], limits.max_action_agents ?? 4)
+      : [];
+
+    return {
+      objective: s,
+      task_type: "research",
+      complexity: Math.min(5, 2 + research.length > 4 ? 4 : 3),
+      success_criteria: [
+        "The deliverable answers the task directly, in the requested format.",
+        "Every substantive claim is attributed to a source.",
+        "Anything that could not be established is stated rather than implied.",
+      ],
+      research_tasks: research,
+      worker_tasks: workers,
+      needs_action: actions.length > 0,
+      action_tasks: actions,
+      reasoning:
+        "Simulated plan. The real lead agent writes this from the task; the " +
+        "shape here is fixed, but the ceilings and the action mode you set do apply.",
+    };
+  }
+
+  const SIM_NOTE = "Simulated — no model was called and nothing was fetched.";
+
+  function makeFinding(spec, config) {
+    const searched = config.tools?.web_search;
+    return {
+      id: spec.id,
+      question: spec.question,
+      summary:
+        `${SIM_NOTE} In a real run this is where the agent's answer to ` +
+        `"${spec.question}" would sit, written from what it actually read.`,
+      key_points: [
+        "Each key point would carry a source the agent opened.",
+        "Points the agent could not verify would be marked as such.",
+      ],
+      confidence: "medium",
+      gaps: ["Nothing was researched, so everything remains open."],
+      sources: searched
+        ? [{ title: "sources appear here after a real run", url: "" }]
+        : [],
+      report: SIM_NOTE,
+    };
+  }
+
+  function makeArtifact(spec) {
+    return {
+      id: spec.id,
+      instruction: spec.instruction,
+      output:
+        `${SIM_NOTE} A real worker would return the artifact for ` +
+        `"${spec.instruction}" here, built from the findings above.`,
+      notes: "Simulated worker output.",
+      assumptions: ["No findings existed to work from — this is a placeholder."],
+    };
+  }
+
+  function deliverableText(config, rounds) {
+    const format = config.deliverable?.format || "report";
+    if (format === "json") {
+      return JSON.stringify(
+        { simulated: true, note: SIM_NOTE, task: config.task, rounds },
+        null, 2,
+      );
+    }
+    return [
+      "# Simulated deliverable",
+      "",
+      `**${SIM_NOTE}** This page is the configuration studio: it shows how the`,
+      "graph would fan out for the settings on the left, but the model calls that",
+      "would fill this section need an API key, so they run on your machine rather",
+      "than in a public web page.",
+      "",
+      "## What just happened",
+      "",
+      `The lead agent planned the run, ${rounds > 1 ? "two rounds of " : ""}research`,
+      "and worker agents fanned out in parallel, and the compiler assembled this",
+      "text and graded it against the success criteria — all with placeholder",
+      "content in place of real findings.",
+      "",
+      "## Running it for real",
+      "",
+      "Export the config with the button in the header, then:",
+      "",
+      "```",
+      "pip install -r agent_graph/requirements.txt",
+      "export ANTHROPIC_API_KEY=...",
+      "python -m agent_graph.cli --config agent-graph.config.json --stream",
+      "```",
+      "",
+      "Or `python -m agent_graph.cli --serve` for this same interface with the",
+      "graph actually wired up behind it.",
+    ].join("\n");
+  }
+
+  /* Mirrors runner.run(): resolves with the result once the graph finishes. */
+  async function run(config, emit, options = {}) {
+    const pace = options.pace ?? 1;
+    const wait = (ms) => sleep(ms * pace);
+    const started = Date.now();
+
+    const limits = config.limits || {};
+    const maxRounds = limits.max_rounds ?? 2;
+    const bar = limits.quality_bar ?? 0.8;
+
+    const findings = [];
+    const artifacts = [];
+    const actions = [];
+    const usage = {
+      calls: 0, input_tokens: 0, output_tokens: 0,
+      cache_read_tokens: 0, cache_write_tokens: 0, web_searches: 0,
+    };
+    const charge = (searches = 0) => {
+      usage.calls += 1;
+      usage.input_tokens += 900 + Math.floor(Math.random() * 600);
+      usage.output_tokens += 250 + Math.floor(Math.random() * 300);
+      usage.web_searches += searches;
+    };
+
+    emit({ type: "run", status: "started", at: started / 1000, config });
+
+    let plan = {};
+    let critique = {};
+    let round = 0;
+
+    while (true) {
+      // ── lead ───────────────────────────────────────────────────────────
+      const leadId = `lead-r${round}`;
+      const leadLabel = `Planning (round ${round + 1})`;
+      emit({ type: "agent", stage: "lead", id: leadId, status: "running",
+             label: leadLabel });
+      await wait(650);
+      plan = buildPlan(config, round);
+      charge();
+      emit({
+        type: "agent", stage: "lead", id: leadId, status: "done", label: leadLabel,
+        summary: `${plan.research_tasks.length} research, ` +
+                 `${plan.worker_tasks.length} worker, ${plan.action_tasks.length} action`,
+        plan,
+      });
+
+      // ── research fan-out ───────────────────────────────────────────────
+      await runStage("research", plan.research_tasks, async (spec) => {
+        if (config.tools?.web_search) {
+          emit({ type: "tool", stage: "research", id: spec.id, name: "web_search" });
+          await wait(260);
+        }
+        charge(config.tools?.web_search ? 2 : 0);
+        charge();  // the follow-up call that structures the report
+        findings.push(makeFinding(spec, config));
+      }, (spec) => spec.question);
+
+      // ── worker fan-out ─────────────────────────────────────────────────
+      await runStage("worker", plan.worker_tasks, async (spec) => {
+        charge();
+        charge();
+        artifacts.push(makeArtifact(spec));
+      }, (spec) => spec.instruction);
+
+      // ── compiler ───────────────────────────────────────────────────────
+      const compilerId = `compiler-r${round}`;
+      emit({ type: "agent", stage: "compiler", id: compilerId, status: "running",
+             label: "Compiling findings" });
+      await wait(800);
+      charge();
+      round += 1;
+
+      const roundsLeft = round < maxRounds;
+      // Mirrors the real gate: a first pass under the bar asks for one more round.
+      const wantsMore = roundsLeft && bar > 0.6;
+      critique = {
+        deliverable: deliverableText(config, round),
+        coverage: wantsMore ? "partial" : "complete",
+        unmet_criteria: wantsMore
+          ? ["Sources have not been gathered for every claim."] : [],
+        needs_more_research: wantsMore,
+        followup_questions: wantsMore
+          ? ["Which claims still lack a source?"] : [],
+        caveats: [SIM_NOTE],
+      };
+      emit({
+        type: "agent", stage: "compiler", id: compilerId, status: "done",
+        label: "Compiling findings", summary: `coverage: ${critique.coverage}`,
+        coverage: critique.coverage,
+      });
+
+      if (wantsMore) {
+        emit({
+          type: "stage", stage: "revise", status: "fanout", count: 1,
+          reason: `coverage ${critique.coverage} is below the ${bar.toFixed(2)} bar; ` +
+                  `round ${round + 1} of ${maxRounds}`,
+        });
+        await wait(500);
+        continue;
+      }
+      break;
+    }
+
+    // ── action fan-out ───────────────────────────────────────────────────
+    const mode = config.action_mode || "propose";
+    if (mode !== "off" && plan.needs_action && plan.action_tasks.length) {
+      await runStage("action", plan.action_tasks, async (spec) => {
+        charge();
+        charge();
+        actions.push({
+          id: spec.id,
+          description: spec.description,
+          kind: spec.kind,
+          mode,
+          status: mode === "execute" ? "executed" : "proposed",
+          detail: mode === "execute"
+            ? `${SIM_NOTE} A real run in execute mode would write the file here.`
+            : `${SIM_NOTE} Propose mode describes the action without doing it.`,
+          artifacts: [],
+        });
+      }, (spec) => spec.description);
+    } else {
+      emit({ type: "stage", stage: "action", status: "skipped", count: 0 });
+    }
+
+    const result = {
+      status: "complete",
+      error: null,
+      simulated: true,
+      report: critique.deliverable,
+      structured: null,
+      plan,
+      critique,
+      findings,
+      artifacts,
+      actions,
+      rounds: round,
+      usage,
+      elapsed_seconds: Number(((Date.now() - started) / 1000).toFixed(2)),
+    };
+    emit({ type: "run", status: "complete", result });
+    return result;
+
+    /* Fan a stage out, running its agents "in parallel" with staggered starts
+       so the topology animates the way a real run does. */
+    async function runStage(stage, specs, work, labelOf) {
+      if (!specs.length) {
+        emit({ type: "stage", stage, status: "skipped", count: 0 });
+        await wait(150);
+        return;
+      }
+      emit({
+        type: "stage", stage, status: "fanout", count: specs.length,
+        agents: specs.map((spec) => ({ id: spec.id, label: labelOf(spec) })),
+      });
+      await wait(250);
+
+      await Promise.all(specs.map(async (spec, index) => {
+        await wait(index * 180);
+        const label = labelOf(spec);
+        emit({ type: "agent", stage, id: spec.id, status: "running", label });
+        await wait(700 + Math.random() * 500);
+        await work(spec);
+        const record =
+          stage === "research" ? findings[findings.length - 1]
+          : stage === "worker" ? artifacts[artifacts.length - 1]
+          : actions[actions.length - 1];
+        emit({
+          type: "agent", stage, id: spec.id, status: "done", label,
+          summary: (record?.summary || record?.output || record?.detail || "")
+            .slice(0, 400),
+        });
+      }));
+    }
+  }
+
+  return { run };
+})();
+
+/* The graph, running in the browser against the Claude API.
+ *
+ * This is the runtime for the published single-file build, where there is no
+ * Python backend. It mirrors agent_graph/nodes.py and graph.py: the same five
+ * stages, the same ceilings, the same revision gate. The system prompts and
+ * JSON schemas are not duplicated here — they are injected at bundle time from
+ * prompts.py, so they cannot drift from the server implementation.
+ *
+ * Calls go straight from the page to api.anthropic.com with the visitor's own
+ * key. Anthropic gates that on an explicit header (see BROWSER_HEADER); without
+ * it the API refuses the origin outright.
+ *
+ * Two differences from the Python runtime, both forced by the browser:
+ *   - No filesystem, so read_file / list_dir / write_file do not exist here.
+ *     Web search, web fetch and the calculator do.
+ *   - Requests are non-streaming, so max_tokens is capped (see TOKEN_CAP).
+ */
+window.AgentGraphEngine = (() => {
+  "use strict";
+
+  const ENDPOINT = "https://api.anthropic.com/v1/messages";
+  const API_VERSION = "2023-06-01";
+  const BROWSER_HEADER = "anthropic-dangerous-direct-browser-access";
+
+  // Above roughly this many output tokens a non-streaming request risks an
+  // HTTP timeout. The browser build does not stream, so it clamps instead.
+  const TOKEN_CAP = 16000;
+
+  const NO_THINKING_PARAM = new Set(["claude-fable-5", "claude-mythos-5"]);
+  const HIGH_EFFORTS = new Set(["xhigh", "max"]);
+  const MODERN_SEARCH_MODELS = new Set([
+    "claude-opus-5", "claude-opus-4-8", "claude-opus-4-7", "claude-opus-4-6",
+    "claude-sonnet-5", "claude-sonnet-4-6", "claude-fable-5",
+  ]);
+
+  const P = () => window.__AGENT_GRAPH_STATIC__.prompts;
+
+  class BudgetExceeded extends Error {}
+  class Refusal extends Error {
+    constructor(category, explanation) {
+      super(`the model declined this request (${category || "unspecified"})` +
+            (explanation ? `: ${explanation}` : ""));
+      this.category = category;
+    }
+  }
+  class ApiError extends Error {}
+
+  /* ── request plumbing ─────────────────────────────────────────────────── */
+
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  async function request(apiKey, body, attempt = 0) {
+    let response;
+    try {
+      response = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": API_VERSION,
+          [BROWSER_HEADER]: "true",
+        },
+        body: JSON.stringify(body),
+      });
+    } catch (err) {
+      throw new ApiError(
+        "Could not reach api.anthropic.com. Check your connection — the page " +
+        "itself is static, so this request goes straight from your browser to " +
+        `Anthropic. (${err.message})`);
+    }
+
+    if (response.ok) return response.json();
+
+    const detail = await response.json().catch(() => null);
+    const message = detail?.error?.message || response.statusText;
+
+    // 429 and 5xx are worth retrying; 4xx are not.
+    if ((response.status === 429 || response.status >= 500) && attempt < 3) {
+      const header = Number(response.headers.get("retry-after"));
+      const delay = Number.isFinite(header) && header > 0
+        ? header * 1000
+        : Math.min(30000, 1000 * 2 ** attempt) + Math.random() * 500;
+      await sleep(delay);
+      return request(apiKey, body, attempt + 1);
+    }
+
+    if (response.status === 401) {
+      throw new ApiError("Anthropic rejected the API key (401). Check that it " +
+                         "is current and pasted in full.");
+    }
+    if (response.status === 403) {
+      throw new ApiError("That key lacks access to this model or feature (403). " +
+                         `${message}`);
+    }
+    if (response.status === 429) {
+      throw new ApiError(`Rate limited, and retries did not clear it. ${message}`);
+    }
+    throw new ApiError(`Anthropic returned ${response.status}: ${message}`);
+  }
+
+  function thinkingParam(role) {
+    if (NO_THINKING_PARAM.has(role.model)) return null;   // always on; sending is a 400
+    if (role.thinking !== false) return { type: "adaptive" };
+    // `disabled` above `high` effort is rejected, so fall back to adaptive.
+    if (HIGH_EFFORTS.has(role.effort)) return { type: "adaptive" };
+    return { type: "disabled" };
+  }
+
+  function baseBody(role, config, extra = {}) {
+    const body = {
+      model: role.model,
+      max_tokens: Math.min(role.max_tokens || TOKEN_CAP, TOKEN_CAP),
+      output_config: { effort: role.effort, ...(extra.output_config || {}) },
+      ...extra.rest,
+    };
+    const thinking = thinkingParam(role);
+    if (thinking) body.thinking = thinking;
+    return body;
+  }
+
+  function systemBlocks(text, config) {
+    if (!config.prompt_caching) return text;
+    return [{ type: "text", text, cache_control: { type: "ephemeral" } }];
+  }
+
+  function textOf(message) {
+    return (message.content || [])
+      .filter((block) => block.type === "text")
+      .map((block) => block.text)
+      .join("\n")
+      .trim();
+  }
+
+  function guardRefusal(message) {
+    if (message.stop_reason === "refusal") {
+      throw new Refusal(message.stop_details?.category,
+                        message.stop_details?.explanation);
+    }
+  }
+
+  /* Structured outputs guarantee valid JSON; stay defensive anyway. */
+  function parseJson(text) {
+    const trimmed = (text || "").trim();
+    try { return JSON.parse(trimmed); } catch { /* fall through */ }
+    const fenced = /```(?:json)?\s*([\s\S]*?)```/.exec(trimmed);
+    if (fenced) {
+      try { return JSON.parse(fenced[1]); } catch { /* fall through */ }
+    }
+    const braced = /\{[\s\S]*\}/.exec(trimmed);
+    if (braced) return JSON.parse(braced[0]);
+    throw new Error(`expected JSON, got: ${trimmed.slice(0, 200)}`);
+  }
+
+  function collectSources(message) {
+    const found = [];
+    for (const block of message.content || []) {
+      if (block.type === "web_search_tool_result") {
+        // On success `content` is a list of results; on error it is one object
+        // carrying an error_code.
+        if (Array.isArray(block.content)) {
+          for (const item of block.content) {
+            found.push({ title: item.title || "", url: item.url || "" });
+          }
+        }
+      } else if (block.type === "text" && Array.isArray(block.citations)) {
+        for (const citation of block.citations) {
+          if (citation.url) {
+            found.push({ title: citation.title || "", url: citation.url });
+          }
+        }
+      }
+    }
+    const seen = new Set();
+    return found.filter((source) => {
+      const key = source.url || source.title;
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function usageOf(message) {
+    const u = message.usage || {};
+    return {
+      calls: 1,
+      input_tokens: u.input_tokens || 0,
+      output_tokens: u.output_tokens || 0,
+      cache_read_tokens: u.cache_read_input_tokens || 0,
+      cache_write_tokens: u.cache_creation_input_tokens || 0,
+      web_searches: u.server_tool_use?.web_search_requests || 0,
+    };
+  }
+
+  /* ── tools ────────────────────────────────────────────────────────────── */
+
+  const BIN_OPS = { "+": 1, "-": 1, "*": 1, "/": 1, "%": 1, "**": 1 };
+
+  /* Arithmetic only. Rejects anything that is not numbers and operators, then
+     evaluates with the shunting-yard algorithm — never with eval(). */
+  function calculate(expression) {
+    if (typeof expression !== "string" || expression.length > 500) {
+      throw new Error("expression too long");
+    }
+    const tokens = expression.match(/(\d+\.?\d*|\*\*|[-+*/%()])/g) || [];
+    if (tokens.join("").replace(/\s/g, "") !== expression.replace(/\s/g, "")) {
+      throw new Error("only numeric arithmetic is supported");
+    }
+
+    // Unary minus is its own operator ("u-"), binding tighter than * but
+    // looser than **, so -2 ** 2 is -(2 ** 2) and 1 - -2 is 3.
+    const precedence = { "+": 1, "-": 1, "*": 2, "/": 2, "%": 2, "u-": 2.5, "**": 3 };
+    const output = [];
+    const operators = [];
+    let previous = null;
+
+    for (const token of tokens) {
+      if (/^\d/.test(token)) {
+        output.push(Number(token));
+      } else if (token === "(") {
+        operators.push(token);
+      } else if (token === ")") {
+        while (operators.length && operators[operators.length - 1] !== "(") {
+          output.push(operators.pop());
+        }
+        if (!operators.length) throw new Error("unbalanced parentheses");
+        operators.pop();
+      } else if (BIN_OPS[token]) {
+        // A '+' or '-' in leading position, after '(', or after another
+        // operator is a sign rather than a binary operator.
+        const unary = (token === "-" || token === "+") &&
+          (previous === null || previous === "(" || BIN_OPS[previous]);
+        if (unary) {
+          // Prefix and right-associative: nothing pending should pop first.
+          if (token === "-") operators.push("u-");
+        } else {
+          while (operators.length) {
+            const top = operators[operators.length - 1];
+            if (top === "(") break;
+            const rightAssociative = token === "**";
+            if (precedence[top] > precedence[token] ||
+                (precedence[top] === precedence[token] && !rightAssociative)) {
+              output.push(operators.pop());
+            } else break;
+          }
+          operators.push(token);
+        }
+      } else {
+        throw new Error(`unexpected token: ${token}`);
+      }
+      previous = token;
+    }
+    while (operators.length) {
+      const op = operators.pop();
+      if (op === "(") throw new Error("unbalanced parentheses");
+      output.push(op);
+    }
+
+    const stack = [];
+    for (const item of output) {
+      if (typeof item === "number") { stack.push(item); continue; }
+      if (item === "u-") {
+        const operand = stack.pop();
+        if (operand === undefined) throw new Error("malformed expression");
+        stack.push(-operand);
+        continue;
+      }
+      const right = stack.pop();
+      const left = stack.pop();
+      if (left === undefined || right === undefined) {
+        throw new Error("malformed expression");
+      }
+      if (item === "**" && Math.abs(right) > 64) {
+        throw new Error("exponent out of range");
+      }
+      stack.push(
+        item === "+" ? left + right :
+        item === "-" ? left - right :
+        item === "*" ? left * right :
+        item === "/" ? left / right :
+        item === "%" ? left % right :
+        left ** right,
+      );
+    }
+    if (stack.length !== 1 || !Number.isFinite(stack[0])) {
+      throw new Error("malformed expression");
+    }
+    return String(stack[0]);
+  }
+
+  const CALCULATOR_SPEC = {
+    name: "calculator",
+    description:
+      "Evaluate one arithmetic expression and return the result. Supports " +
+      "+ - * / % ** and parentheses over numbers. Use it whenever a figure in " +
+      "your answer comes from arithmetic, rather than computing it in your " +
+      "head. It does not run general code.",
+    input_schema: {
+      type: "object",
+      properties: {
+        expression: { type: "string", description: "e.g. (1250 * 0.07) / 12" },
+      },
+      required: ["expression"],
+    },
+  };
+
+  /* Which tools a role gets. The browser has no filesystem, so the file tools
+     from the Python build are absent by construction rather than disabled. */
+  function toolsFor(config, roleName, model) {
+    const enabled = new Set(config.roles?.[roleName]?.tools || []);
+    const specs = [];
+    const modern = MODERN_SEARCH_MODELS.has(model);
+    const maxUses = config.tools?.max_web_searches || 8;
+
+    if (enabled.has("web_search") && config.tools?.web_search) {
+      specs.push({
+        type: modern ? "web_search_20260209" : "web_search_20250305",
+        name: "web_search",
+        max_uses: maxUses,
+      });
+    }
+    if (enabled.has("web_fetch") && config.tools?.web_fetch && modern) {
+      specs.push({ type: "web_fetch_20260209", name: "web_fetch", max_uses: maxUses });
+    }
+    if (enabled.has("calculator") && config.tools?.calculator) {
+      specs.push(CALCULATOR_SPEC);
+    }
+
+    const execute = (name, input) => {
+      if (name === "calculator") return calculate(input.expression);
+      throw new Error(`tool '${name}' is not available in the browser build`);
+    };
+    return { specs, execute };
+  }
+
+  /* ── the two primitives ───────────────────────────────────────────────── */
+
+  function makeClient(config, apiKey, budget) {
+    async function callJson({ role, system, prompt, schema }) {
+      budget.check();
+      const body = baseBody(role, config, {
+        output_config: { format: { type: "json_schema", schema } },
+        rest: {
+          system: systemBlocks(system, config),
+          messages: [{ role: "user", content: prompt }],
+        },
+      });
+      const message = await request(apiKey, body);
+      budget.add(usageOf(message));
+      guardRefusal(message);
+      return parseJson(textOf(message));
+    }
+
+    async function callAgent({ role, system, prompt, tools, execute, maxIterations,
+                               onEvent }) {
+      const messages = [{ role: "user", content: prompt }];
+      const result = { text: "", sources: [], toolCalls: [], stop_reason: "end_turn" };
+
+      for (let i = 0; i < maxIterations; i++) {
+        budget.check();
+        const body = baseBody(role, config, {
+          rest: {
+            system: systemBlocks(system, config),
+            messages,
+            ...(tools.length ? { tools } : {}),
+          },
+        });
+        const message = await request(apiKey, body);
+        budget.add(usageOf(message));
+        guardRefusal(message);
+
+        result.sources.push(...collectSources(message));
+        result.stop_reason = message.stop_reason;
+
+        // A server-side tool loop hit its internal cap; resend to resume.
+        if (message.stop_reason === "pause_turn") {
+          messages.splice(1, messages.length,
+                          { role: "assistant", content: message.content });
+          continue;
+        }
+        if (message.stop_reason !== "tool_use") {
+          result.text = textOf(message);
+          result.sources = dedupe(result.sources);
+          return result;
+        }
+
+        messages.push({ role: "assistant", content: message.content });
+        const results = [];
+        for (const block of message.content) {
+          if (block.type !== "tool_use") continue;
+          onEvent?.({ type: "tool", name: block.name, input: block.input });
+          let output;
+          let isError = false;
+          try {
+            output = execute(block.name, block.input || {});
+          } catch (err) {
+            output = `${err.name}: ${err.message}`;
+            isError = true;
+          }
+          result.toolCalls.push({
+            name: block.name, input: block.input,
+            output: String(output).slice(0, 2000), error: isError,
+          });
+          results.push({
+            type: "tool_result",
+            tool_use_id: block.id,
+            content: String(output),
+            is_error: isError,
+          });
+        }
+        // All results go back in a single user message.
+        messages.push({ role: "user", content: results });
+      }
+
+      result.text = result.text || "(agent stopped at its tool-iteration limit)";
+      result.stop_reason = "max_iterations";
+      result.sources = dedupe(result.sources);
+      return result;
+    }
+
+    return { callJson, callAgent };
+  }
+
+  function dedupe(sources) {
+    const seen = new Set();
+    return sources.filter((source) => {
+      const key = source.url || source.title;
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  /* ── prompt assembly (mirrors prompts.py) ─────────────────────────────── */
+
+  const bullets = (items) =>
+    (items || []).length ? items.map((i) => `- ${i}`).join("\n") : "(none)";
+
+  function deliverableBrief(deliverable) {
+    const described = P().deliverable_formats;
+    const parts = [`Format: ${described[deliverable.format] || described.report}`];
+    if (deliverable.audience) parts.push(`Audience: ${deliverable.audience}`);
+    if (deliverable.format === "template" && deliverable.template) {
+      parts.push("Template to fill:\n---\n" + deliverable.template + "\n---");
+    }
+    if (deliverable.format === "json" && deliverable.json_schema) {
+      parts.push("The JSON must satisfy this schema:\n" +
+                 JSON.stringify(deliverable.json_schema, null, 2));
+    }
+    if (deliverable.instructions) {
+      parts.push("Format instructions: " + deliverable.instructions);
+    }
+    return parts.join("\n\n");
+  }
+
+  function findingsDigest(findings, full) {
+    if (!findings.length) return "(none)";
+    return findings.map((finding) => {
+      const lines = [`### ${finding.question || finding.id}`];
+      lines.push(`Confidence: ${finding.confidence || "unknown"}`);
+      lines.push(finding.summary || "");
+      if (full) {
+        if (finding.key_points?.length) lines.push(bullets(finding.key_points));
+        if (finding.sources?.length) {
+          lines.push("Sources: " + finding.sources.slice(0, 10)
+            .map((s) => `${s.title || s.url} <${s.url || ""}>`).join("; "));
+        }
+      }
+      if (finding.gaps?.length) lines.push("Unresolved: " + finding.gaps.join("; "));
+      return lines.filter(Boolean).join("\n");
+    }).join("\n\n");
+  }
+
+  function artifactsDigest(artifacts) {
+    if (!artifacts.length) return "(none)";
+    return artifacts.map((artifact) => {
+      const lines = [`### ${artifact.instruction || artifact.id}`];
+      lines.push(artifact.output || "");
+      if (artifact.notes) lines.push(`Worker notes: ${artifact.notes}`);
+      if (artifact.assumptions?.length) {
+        lines.push("Assumptions: " + artifact.assumptions.join("; "));
+      }
+      return lines.filter(Boolean).join("\n");
+    }).join("\n\n");
+  }
+
+  function leadPrompt(config, state) {
+    const limits = config.limits;
+    const sections = [`# Task\n${config.task}`];
+    if (config.context) sections.push(`# Supplied context\n${config.context}`);
+    sections.push("# Deliverable\n" + deliverableBrief(config.deliverable));
+    sections.push(
+      "# Ceilings for this round\n" +
+      `- research agents: at most ${limits.max_research_agents}\n` +
+      `- worker agents: at most ${limits.max_worker_agents}\n` +
+      `- action agents: at most ${limits.max_action_agents}\n` +
+      `- action mode: ${config.action_mode}` +
+      (config.action_mode === "off"
+        ? "  (action agents are disabled; set needs_action to false)" : ""));
+    sections.push(
+      "# Environment\n" +
+      "This run happens in a browser. The agents have web search and a " +
+      "calculator; there is no filesystem, so do not plan work that reads or " +
+      "writes files. Action agents can only describe what should be done.");
+
+    if (!state.round) {
+      sections.push("This is the first round. Plan the work from scratch.");
+    } else {
+      sections.push(
+        `# Round ${state.round + 1} — gap filling\n` +
+        "A first pass already ran. Commission only the work that closes the " +
+        "gaps below; do not re-commission anything already answered.\n\n" +
+        "## What the compiler found missing\n" +
+        bullets(state.critique.unmet_criteria) +
+        "\n\n## Open questions\n" + bullets(state.critique.followup_questions) +
+        "\n\n## Already established\n" + findingsDigest(state.findings, false));
+    }
+    return sections.join("\n\n");
+  }
+
+  function researchPrompt(spec, config, prior) {
+    const sections = [
+      `# Your question\n${spec.question}`,
+      `# Why it matters\n${spec.why || "(not stated)"}`,
+      `# Depth\n${spec.depth || "normal"}`,
+    ];
+    if (config.context) sections.push(`# Context supplied with the task\n${config.context}`);
+    if (prior.length) {
+      sections.push("# Already established by earlier agents\n" +
+                    "Do not re-derive these; build on them.\n\n" +
+                    findingsDigest(prior, false));
+    }
+    sections.push(
+      "Report your findings as prose. Cite a URL for each substantive claim, " +
+      "and end with anything you could not resolve.");
+    return sections.join("\n\n");
+  }
+
+  function workerPrompt(spec, config, findings) {
+    const sections = [
+      `# Your instruction\n${spec.instruction}`,
+      `# Required output format\n${spec.output_format || "prose"}`,
+    ];
+    if (config.context) sections.push(`# Context supplied with the task\n${config.context}`);
+    if (spec.needs_findings !== false) {
+      sections.push("# Research findings\n" + (findings.length
+        ? findingsDigest(findings, true)
+        : "None were gathered. Work from the instruction and context, and " +
+          "record what you assumed."));
+    }
+    return sections.join("\n\n");
+  }
+
+  function compilePrompt(config, state) {
+    const plan = state.plan;
+    const sections = [
+      `# Objective\n${plan.objective || config.task}`,
+      "# Success criteria\n" + bullets(plan.success_criteria),
+      "# Deliverable specification\n" + deliverableBrief(config.deliverable),
+    ];
+    if (config.context) sections.push(`# Context supplied with the task\n${config.context}`);
+    sections.push("# Research findings\n" + (state.findings.length
+      ? findingsDigest(state.findings, true) : "None — no research agents ran."));
+    sections.push("# Worker artifacts\n" + (state.artifacts.length
+      ? artifactsDigest(state.artifacts) : "None — no worker agents ran."));
+
+    const roundsLeft = config.limits.max_rounds - state.round - 1;
+    sections.push(roundsLeft <= 0
+      ? "This is the final round — no further research is possible. Set " +
+        "needs_more_research to false and record anything still missing as caveats."
+      : `${roundsLeft} further research round(s) are available if specific ` +
+        "answerable questions would change the deliverable.");
+    return sections.join("\n\n");
+  }
+
+  function actionPrompt(spec, config, report) {
+    return [
+      `# Your action\n${spec.description}`,
+      `# Kind\n${spec.kind || "other"}`,
+      `# Mode\n${config.action_mode}`,
+      "# Environment\nThis run has no filesystem. Describe the action precisely; " +
+      "report status \"proposed\".",
+      "# The finished deliverable\n" + report,
+    ].join("\n\n");
+  }
+
+  /* ── the graph ────────────────────────────────────────────────────────── */
+
+  const COVERAGE_SCORE = { poor: 0.25, partial: 0.55, good: 0.82, complete: 1.0 };
+  const clamp = (items, limit) => (items || []).slice(0, Math.max(0, limit));
+
+  async function run(config, emit, { apiKey } = {}) {
+    if (!apiKey) throw new ApiError("No API key was provided.");
+
+    const started = Date.now();
+    const usage = {
+      calls: 0, input_tokens: 0, output_tokens: 0,
+      cache_read_tokens: 0, cache_write_tokens: 0, web_searches: 0,
+    };
+    const budget = {
+      add(delta) { for (const key of Object.keys(usage)) usage[key] += delta[key] || 0; },
+      check() {
+        if (usage.calls >= config.limits.max_llm_calls) {
+          throw new BudgetExceeded(
+            `run hit its ceiling of ${config.limits.max_llm_calls} model calls`);
+        }
+      },
+    };
+    const client = makeClient(config, apiKey, budget);
+
+    const state = {
+      round: 0, plan: {}, critique: {},
+      findings: [], artifacts: [], actions: [], report: "",
+    };
+    let status = "complete";
+    let error = null;
+
+    emit({ type: "run", status: "started", at: started / 1000, config });
+
+    try {
+      for (;;) {
+        await leadStage();
+        await fanOut("research", state.plan.research_tasks, researchAgent);
+        await fanOut("worker", state.plan.worker_tasks, workerAgent);
+        const again = await compileStage();
+        if (!again) break;
+      }
+      await actionStage();
+    } catch (err) {
+      status = err instanceof BudgetExceeded ? "budget_exceeded"
+             : err instanceof Refusal ? "refused"
+             : "error";
+      error = err.message;
+      emit({ type: "log", level: "error", message: err.message });
+    }
+
+    const result = {
+      status, error,
+      report: state.report,
+      structured: state.structured ?? null,
+      plan: state.plan,
+      critique: state.critique,
+      findings: state.findings,
+      artifacts: state.artifacts,
+      actions: state.actions,
+      rounds: state.round,
+      usage,
+      elapsed_seconds: Number(((Date.now() - started) / 1000).toFixed(2)),
+    };
+    emit({ type: "run", status, result });
+    return result;
+
+    /* -- stages -------------------------------------------------------- */
+
+    async function leadStage() {
+      const id = `lead-r${state.round}`;
+      const label = `Planning (round ${state.round + 1})`;
+      emit({ type: "agent", stage: "lead", id, status: "running", label });
+
+      const role = config.roles.lead;
+      const plan = await client.callJson({
+        role,
+        system: P().LEAD_SYSTEM,
+        prompt: leadPrompt(config, state),
+        schema: P().PLAN_SCHEMA,
+      });
+
+      plan.research_tasks = clamp(plan.research_tasks, config.limits.max_research_agents);
+      plan.worker_tasks = clamp(plan.worker_tasks, config.limits.max_worker_agents);
+      if (config.action_mode === "off") {
+        plan.needs_action = false;
+        plan.action_tasks = [];
+      } else {
+        plan.action_tasks = clamp(plan.action_tasks, config.limits.max_action_agents);
+      }
+      state.plan = plan;
+
+      emit({
+        type: "agent", stage: "lead", id, status: "done", label,
+        summary: `${plan.research_tasks.length} research, ` +
+                 `${plan.worker_tasks.length} worker, ${plan.action_tasks.length} action`,
+        plan,
+      });
+    }
+
+    async function fanOut(stage, specs, work) {
+      if (!specs || !specs.length) {
+        emit({ type: "stage", stage, status: "skipped", count: 0 });
+        return;
+      }
+      const labelOf = (spec) =>
+        spec.question || spec.instruction || spec.description || spec.id;
+      emit({
+        type: "stage", stage, status: "fanout", count: specs.length,
+        agents: specs.map((spec) => ({ id: spec.id, label: labelOf(spec) })),
+      });
+      // Genuinely parallel: the agents in a stage are independent by design.
+      await Promise.all(specs.map((spec) => work(spec, labelOf(spec))));
+    }
+
+    async function researchAgent(spec, label) {
+      const stage = "research";
+      emit({ type: "agent", stage, id: spec.id, status: "running", label });
+      const role = config.roles.research;
+      const { specs, execute } = toolsFor(config, "research", role.model);
+      try {
+        const result = await client.callAgent({
+          role, system: P().RESEARCH_SYSTEM,
+          prompt: researchPrompt(spec, config, state.findings),
+          tools: specs, execute,
+          maxIterations: config.limits.max_tool_iterations,
+          onEvent: (event) => emit({ ...event, stage, id: spec.id }),
+        });
+        // Web search attaches citations, which cannot be combined with
+        // output_config.format, so the shaping is a second call.
+        const structured = await client.callJson({
+          role,
+          system: "Restate the research report below as structured data. Use " +
+                  "only what the report contains; do not add findings of your own.",
+          prompt: result.text,
+          schema: P().FINDING_SCHEMA,
+        });
+        state.findings.push({
+          id: spec.id, question: spec.question, report: result.text,
+          sources: result.sources, tool_calls: result.toolCalls.length, ...structured,
+        });
+        emit({
+          type: "agent", stage, id: spec.id, status: "done", label,
+          summary: (structured.summary || "").slice(0, 400),
+          sources: result.sources.length,
+        });
+      } catch (err) {
+        if (err instanceof BudgetExceeded) throw err;
+        state.findings.push({
+          id: spec.id, question: spec.question, failed: true,
+          summary: `This question was not answered: ${err.message}`,
+          key_points: [], confidence: "low", gaps: [spec.question],
+          sources: [], report: "",
+        });
+        emit({ type: "agent", stage, id: spec.id, status: "error", label,
+               summary: err.message });
+      }
+    }
+
+    async function workerAgent(spec, label) {
+      const stage = "worker";
+      emit({ type: "agent", stage, id: spec.id, status: "running", label });
+      const role = config.roles.worker;
+      const { specs, execute } = toolsFor(config, "worker", role.model);
+      try {
+        const result = await client.callAgent({
+          role, system: P().WORKER_SYSTEM,
+          prompt: workerPrompt(spec, config, state.findings),
+          tools: specs, execute,
+          maxIterations: config.limits.max_tool_iterations,
+          onEvent: (event) => emit({ ...event, stage, id: spec.id }),
+        });
+        const structured = await client.callJson({
+          role,
+          system: "Restate the worker output below as structured data, " +
+                  "preserving the produced artifact verbatim in `output`.",
+          prompt: result.text,
+          schema: P().ARTIFACT_SCHEMA,
+        });
+        state.artifacts.push({ id: spec.id, instruction: spec.instruction, ...structured });
+        emit({ type: "agent", stage, id: spec.id, status: "done", label,
+               summary: (structured.output || "").slice(0, 400) });
+      } catch (err) {
+        if (err instanceof BudgetExceeded) throw err;
+        state.artifacts.push({
+          id: spec.id, instruction: spec.instruction, output: "",
+          notes: `This worker failed: ${err.message}`, assumptions: [], failed: true,
+        });
+        emit({ type: "agent", stage, id: spec.id, status: "error", label,
+               summary: err.message });
+      }
+    }
+
+    /* Returns true when the compiler wants another round. */
+    async function compileStage() {
+      const id = `compiler-r${state.round}`;
+      emit({ type: "agent", stage: "compiler", id, status: "running",
+             label: "Compiling findings" });
+
+      const role = config.roles.compiler;
+      const critique = await client.callJson({
+        role, system: P().COMPILER_SYSTEM,
+        prompt: compilePrompt(config, state),
+        schema: P().COMPILE_SCHEMA,
+      });
+      state.critique = critique;
+      state.report = critique.deliverable || "";
+      state.round += 1;
+
+      const deliverable = config.deliverable;
+      if (deliverable.format === "json" && deliverable.json_schema) {
+        try {
+          state.structured = await client.callJson({
+            role,
+            system: "Return the content below as a JSON object matching the " +
+                    "required schema. Use only what is present; do not invent values.",
+            prompt: state.report,
+            schema: deliverable.json_schema,
+          });
+          state.report = JSON.stringify(state.structured, null, 2);
+        } catch (err) {
+          (critique.caveats ||= []).push(
+            `Could not conform the output to the supplied JSON Schema: ${err.message}`);
+        }
+      }
+
+      emit({
+        type: "agent", stage: "compiler", id, status: "done",
+        label: "Compiling findings", summary: `coverage: ${critique.coverage}`,
+        coverage: critique.coverage,
+      });
+
+      const coverage = COVERAGE_SCORE[critique.coverage] ?? 0.5;
+      const again = Boolean(critique.needs_more_research) &&
+                    Boolean(critique.followup_questions?.length) &&
+                    coverage < config.limits.quality_bar &&
+                    state.round < config.limits.max_rounds;
+      if (again) {
+        emit({
+          type: "stage", stage: "revise", status: "fanout", count: 1,
+          reason: `coverage ${critique.coverage} is below the ` +
+                  `${config.limits.quality_bar.toFixed(2)} bar; ` +
+                  `round ${state.round + 1} of ${config.limits.max_rounds}`,
+        });
+      }
+      return again;
+    }
+
+    async function actionStage() {
+      const specs = state.plan.action_tasks;
+      if (config.action_mode === "off" || !state.plan.needs_action ||
+          !specs || !specs.length) {
+        emit({ type: "stage", stage: "action", status: "skipped", count: 0 });
+        return;
+      }
+      await fanOut("action", specs, async (spec, label) => {
+        const stage = "action";
+        emit({ type: "agent", stage, id: spec.id, status: "running", label });
+        const role = config.roles.action;
+        const { specs: toolSpecs, execute } = toolsFor(config, "action", role.model);
+        try {
+          const result = await client.callAgent({
+            role, system: P().ACTION_SYSTEM,
+            prompt: actionPrompt(spec, config, state.report),
+            tools: toolSpecs, execute,
+            maxIterations: config.limits.max_tool_iterations,
+            onEvent: (event) => emit({ ...event, stage, id: spec.id }),
+          });
+          const structured = await client.callJson({
+            role, system: "Restate the action report below as structured data.",
+            prompt: result.text, schema: P().ACTION_SCHEMA,
+          });
+          state.actions.push({
+            id: spec.id, description: spec.description, kind: spec.kind,
+            mode: config.action_mode, tool_calls: result.toolCalls, ...structured,
+          });
+          emit({ type: "agent", stage, id: spec.id, status: "done", label,
+                 summary: (structured.detail || "").slice(0, 400),
+                 action_status: structured.status });
+        } catch (err) {
+          if (err instanceof BudgetExceeded) throw err;
+          state.actions.push({
+            id: spec.id, description: spec.description, status: "failed",
+            detail: err.message, artifacts: [],
+          });
+          emit({ type: "agent", stage, id: spec.id, status: "error", label,
+                 summary: err.message });
+        }
+      });
+    }
+  }
+
+  /* One cheap call, so a visitor finds out immediately whether their key works
+     rather than after a full fan-out. */
+  async function testKey(apiKey, model) {
+    const message = await request(apiKey, {
+      model: model || "claude-opus-5",
+      max_tokens: 16,
+      messages: [{ role: "user", content: "Reply with the single word: ready" }],
+    });
+    return textOf(message) || "(empty reply)";
+  }
+
+  return { run, testKey, calculate, ApiError, Refusal, BudgetExceeded };
+})();
+
+/* Agent Graph — configuration UI + live run view. */
+(() => {
+  "use strict";
+
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => {
+    const node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+  };
+
+  const STAGES = ["lead", "research", "worker", "compiler", "action"];
+  const STORAGE_KEY = "agent-graph.config.v1";
+
+  let META = null;          // schema payload: models, presets, tools, defaults
+  let ABORT = null;         // AbortController for a live run
+  const NODES = new Map();  // agent id -> { stage, status, el }
+
+  /* ── transports ───────────────────────────────────────────────────────────
+     The served app talks to the Python backend. The published single-file
+     build has no backend, so it runs the simulator in the page instead. Both
+     expose the same two methods, and everything below is written against them
+     rather than against fetch. */
+
+  const ServerTransport = {
+    isStatic: false,
+
+    async schema() {
+      return (await fetch("/api/schema")).json();
+    },
+
+    async run(config, onEvent) {
+      ABORT = new AbortController();
+      try {
+        const response = await fetch("/api/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(config),
+          signal: ABORT.signal,
+        });
+
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          throw new Error("Config rejected: " +
+            JSON.stringify(body.errors || body));
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const chunks = buffer.split("\n\n");
+          buffer = chunks.pop();
+          for (const chunk of chunks) {
+            const line = chunk.split("\n").find((l) => l.startsWith("data: "));
+            if (!line) continue;
+            try { onEvent(JSON.parse(line.slice(6))); }
+            catch (err) { log("bad event: " + err.message, "err"); }
+          }
+        }
+      } finally {
+        ABORT = null;
+      }
+    },
+  };
+
+  /* The published build has no backend. `provider: anthropic` runs the graph in
+     the page against the visitor's own key; `provider: mock` runs the simulator,
+     which touches the network not at all. */
+  const StaticTransport = {
+    isStatic: true,
+    cancelled: false,
+
+    async schema() {
+      return window.__AGENT_GRAPH_STATIC__.schema;
+    },
+
+    async run(config, onEvent) {
+      StaticTransport.cancelled = false;
+      ABORT = { abort: () => { StaticTransport.cancelled = true; } };
+      const guard = (event) => {
+        if (!StaticTransport.cancelled) onEvent(event);
+      };
+      try {
+        if (config.provider === "mock") {
+          await window.AgentGraphSimulator.run(config, guard);
+          return;
+        }
+        const apiKey = readKey();
+        if (!apiKey) {
+          throw new Error(
+            "This page has no server, so a real run needs your own Anthropic " +
+            "API key — add one at the top of the panel, or switch the provider " +
+            "to Mock to watch a simulated run instead.");
+        }
+        await window.AgentGraphEngine.run(config, guard, { apiKey });
+      } finally {
+        ABORT = null;
+      }
+    },
+  };
+
+  const TRANSPORT = window.__AGENT_GRAPH_STATIC__ ? StaticTransport : ServerTransport;
+  const RUN_LABEL = "Run graph";
+
+  /* ── key handling (static build only) ─────────────────────────────────── */
+
+  const KEY_NAME = "agent-graph.api-key";
+  let MEMORY_KEY = "";  // default home for the key: this tab, this session
+
+  function readKey() {
+    return (MEMORY_KEY || localStorage.getItem(KEY_NAME) || "").trim();
+  }
+
+  function storeKey(value, remember) {
+    MEMORY_KEY = value;
+    if (remember && value) localStorage.setItem(KEY_NAME, value);
+    else localStorage.removeItem(KEY_NAME);
+  }
+
+  function forgetKey() {
+    MEMORY_KEY = "";
+    localStorage.removeItem(KEY_NAME);
+    $("api-key").value = "";
+    $("remember-key").checked = false;
+    setKeyStatus("Key forgotten.", "");
+  }
+
+  function setKeyStatus(message, kind) {
+    const node = $("key-status");
+    node.textContent = message;
+    node.style.color = kind === "ok" ? "var(--ok)"
+      : kind === "err" ? "var(--err)" : "";
+  }
+
+  /* ── config <-> form ──────────────────────────────────────────────────── */
+
+  const segValue = (id) => $(id).querySelector("button.on")?.dataset.value;
+  const setSeg = (id, value) => {
+    $(id).querySelectorAll("button").forEach((b) =>
+      b.classList.toggle("on", b.dataset.value === value));
+  };
+
+  function readConfig() {
+    const format = $("deliverable-format").value;
+    let schema = null;
+    const raw = $("deliverable-schema").value.trim();
+    if (format === "json" && raw) {
+      try { schema = JSON.parse(raw); }
+      catch (err) { throw new Error("The JSON Schema is not valid JSON: " + err.message); }
+    }
+
+    const roles = {};
+    for (const role of META.roles) {
+      roles[role] = {
+        model: $(`role-${role}-model`).value,
+        effort: $(`role-${role}-effort`).value,
+        max_tokens: Number($(`role-${role}-tokens`).value),
+        thinking: $(`role-${role}-thinking`).checked,
+      };
+    }
+
+    const tools = {
+      workspace: $("workspace").value || ".",
+      max_web_searches: Number($("max_web_searches").value),
+    };
+    for (const name of [...META.tools.server, ...META.tools.local]) {
+      tools[name] = $(`tool-${name}`).checked;
+    }
+
+    return {
+      task: $("task").value,
+      context: $("context").value,
+      preset: segValue("preset"),
+      effort: $("effort").value,
+      action_mode: segValue("action_mode"),
+      provider: segValue("provider"),
+      prompt_caching: $("prompt_caching").checked,
+      deliverable: {
+        format,
+        audience: $("deliverable-audience").value,
+        template: $("deliverable-template").value,
+        json_schema: schema,
+        instructions: $("deliverable-instructions").value,
+      },
+      limits: {
+        max_research_agents: Number($("max_research_agents").value),
+        max_worker_agents: Number($("max_worker_agents").value),
+        max_action_agents: Number($("max_action_agents").value),
+        max_rounds: Number($("max_rounds").value),
+        max_llm_calls: Number($("max_llm_calls").value),
+        max_tool_iterations: Number($("max_tool_iterations").value),
+        quality_bar: Number($("quality_bar").value),
+      },
+      tools,
+      roles,
+    };
+  }
+
+  function writeConfig(cfg) {
+    $("task").value = cfg.task || "";
+    $("context").value = cfg.context || "";
+    setSeg("preset", cfg.preset);
+    setSeg("action_mode", cfg.action_mode);
+    setSeg("provider", cfg.provider);
+    $("effort").value = cfg.effort;
+    $("prompt_caching").checked = cfg.prompt_caching !== false;
+
+    const d = cfg.deliverable || {};
+    $("deliverable-format").value = d.format || "report";
+    $("deliverable-audience").value = d.audience || "";
+    $("deliverable-template").value = d.template || "";
+    $("deliverable-instructions").value = d.instructions || "";
+    $("deliverable-schema").value = d.json_schema
+      ? JSON.stringify(d.json_schema, null, 2) : "";
+
+    for (const [key, value] of Object.entries(cfg.limits || {})) {
+      if ($(key)) $(key).value = value;
+    }
+    $("quality_bar_out").textContent = Number(cfg.limits?.quality_bar ?? 0.8).toFixed(2);
+
+    const tools = cfg.tools || {};
+    for (const name of [...META.tools.server, ...META.tools.local]) {
+      if ($(`tool-${name}`)) $(`tool-${name}`).checked = !!tools[name];
+    }
+    $("workspace").value = tools.workspace ?? ".";
+    $("max_web_searches").value = tools.max_web_searches ?? 8;
+
+    for (const role of META.roles) {
+      const r = (cfg.roles || {})[role] || {};
+      $(`role-${role}-model`).value = r.model || META.defaults.roles[role].model;
+      $(`role-${role}-effort`).value = r.effort || cfg.effort;
+      $(`role-${role}-tokens`).value = r.max_tokens || 16000;
+      $(`role-${role}-thinking`).checked = r.thinking !== false;
+    }
+
+    syncDeliverableFields();
+    syncHints();
+  }
+
+  /* ── form construction ────────────────────────────────────────────────── */
+
+  function buildForm() {
+    fillSelect($("effort"), META.efforts);
+    fillSelect($("deliverable-format"), META.formats);
+
+    const toolsHost = $("tools");
+    const describe = {
+      web_search: "Web search — Claude searches and cites live sources",
+      web_fetch: "Web fetch — retrieve a page named in the conversation",
+      read_file: "Read files inside the workspace",
+      list_dir: "List workspace directories",
+      write_file: "Write files (action agents in execute mode only)",
+      calculator: "Arithmetic evaluator",
+    };
+    for (const name of [...META.tools.server, ...META.tools.local]) {
+      const label = el("label", "check");
+      const input = el("input");
+      input.type = "checkbox";
+      input.id = `tool-${name}`;
+      label.append(input, el("span", null, describe[name] || name));
+      toolsHost.append(label);
+    }
+
+    const rolesHost = $("roles");
+    const roleNote = {
+      lead: "Plans the run. Benefits most from a strong model.",
+      research: "Fans out. Reading-heavy — a cheaper model here saves the most.",
+      worker: "Transforms findings into artifacts.",
+      compiler: "Assembles the deliverable and judges coverage.",
+      action: "Executes or proposes the follow-up actions.",
+    };
+    for (const role of META.roles) {
+      const card = el("div", "role");
+      card.append(el("h4", null, role));
+      const row = el("div", "row");
+
+      const model = el("select");
+      model.id = `role-${role}-model`;
+      fillSelect(model, META.models);
+
+      const effort = el("select");
+      effort.id = `role-${role}-effort`;
+      fillSelect(effort, META.efforts);
+
+      const tokens = el("input");
+      tokens.type = "number";
+      tokens.id = `role-${role}-tokens`;
+      tokens.min = 256; tokens.max = 128000; tokens.step = 1024;
+      tokens.title = "max output tokens";
+
+      row.append(model, effort, tokens);
+      card.append(row);
+
+      const think = el("label", "check");
+      think.style.marginTop = "8px";
+      const box = el("input");
+      box.type = "checkbox";
+      box.id = `role-${role}-thinking`;
+      think.append(box, el("span", null, "adaptive thinking"));
+      card.append(think);
+      card.append(el("p", "hint", roleNote[role] || ""));
+      rolesHost.append(card);
+    }
+  }
+
+  function fillSelect(select, values) {
+    select.innerHTML = "";
+    for (const value of values) {
+      const option = el("option", null, value);
+      option.value = value;
+      select.append(option);
+    }
+  }
+
+  function syncDeliverableFields() {
+    const format = $("deliverable-format").value;
+    $("wrap-template").hidden = format !== "template";
+    $("wrap-schema").hidden = format !== "json";
+    $("wrap-instructions").hidden = format !== "custom";
+  }
+
+  function syncHints() {
+    const preset = META.presets[segValue("preset")];
+    if (preset) {
+      const l = preset.limits;
+      $("preset-hint").textContent =
+        `${l.max_research_agents} research · ${l.max_worker_agents} workers · ` +
+        `${l.max_rounds} round(s) · up to ${l.max_llm_calls} model calls · ` +
+        `${preset.effort} effort`;
+    }
+    const mode = segValue("action_mode");
+    $("action-hint").textContent = {
+      off: "No action agents run. The deliverable is the end of the graph.",
+      propose: "Action agents describe what they would do. Nothing is executed.",
+      execute: "Action agents may write files inside the workspace root.",
+    }[mode] || "";
+  }
+
+  function applyPreset(name) {
+    const preset = META.presets[name];
+    if (!preset) return;
+    for (const [key, value] of Object.entries(preset.limits)) {
+      if ($(key)) $(key).value = value;
+    }
+    $("quality_bar_out").textContent = Number(preset.limits.quality_bar).toFixed(2);
+    $("effort").value = preset.effort;
+    for (const role of META.roles) $(`role-${role}-effort`).value = preset.effort;
+    syncHints();
+  }
+
+  /* ── graph rendering ──────────────────────────────────────────────────── */
+
+  function resetGraph() {
+    NODES.clear();
+    for (const stage of STAGES) {
+      const lane = $(`lane-${stage}`);
+      lane.innerHTML = "";
+      lane.closest(".lane").dataset.active = "0";
+    }
+    drawWires();
+  }
+
+  function laneEmpty(stage, text) {
+    const lane = $(`lane-${stage}`);
+    if (!lane || lane.children.length) return;
+    lane.append(el("div", "lane-empty", text));
+    drawWires();
+  }
+
+  function upsertNode(event) {
+    const { stage, id, status } = event;
+    const lane = $(`lane-${stage}`);
+    if (!lane) return;
+    lane.querySelectorAll(".lane-empty").forEach((n) => n.remove());
+    lane.closest(".lane").dataset.active = "1";
+
+    let entry = NODES.get(id);
+    if (!entry) {
+      const node = el("div", "node");
+      const top = el("div", "node-top");
+      top.append(el("span", "dot"), el("span", "node-id", id));
+      node.append(top, el("div", "node-label"), el("div", "node-sub"));
+      lane.append(node);
+      entry = { stage, el: node };
+      NODES.set(id, entry);
+    }
+    entry.status = status;
+    entry.el.className = `node ${status}`;
+    entry.el.querySelector(".dot").className = `dot ${status}`;
+    if (event.label) entry.el.querySelector(".node-label").textContent = event.label;
+    const sub = entry.el.querySelector(".node-sub");
+    if (event.summary) sub.textContent = event.summary;
+    else if (status === "running") sub.textContent = "working…";
+    drawWires();
+  }
+
+  function seedPending(stage, agents) {
+    const lane = $(`lane-${stage}`);
+    if (!lane) return;
+    lane.querySelectorAll(".lane-empty").forEach((n) => n.remove());
+    for (const agent of agents || []) {
+      if (NODES.has(agent.id)) continue;
+      upsertNode({ stage, id: agent.id, status: "pending", label: agent.label });
+    }
+  }
+
+  /* Connectors between adjacent populated lanes.
+     Every source converges on one hub between the lanes and every target
+     diverges from it, so an N-to-M stage draws N+M curves rather than N×M. */
+  function drawWires() {
+    const svg = $("wires");
+    const graph = $("graph");
+    if (!svg || !graph) return;
+    svg.innerHTML = "";
+    const origin = graph.getBoundingClientRect();
+    const SVGNS = "http://www.w3.org/2000/svg";
+
+    const port = (node, side) => {
+      const box = node.getBoundingClientRect();
+      return {
+        x: (side === "right" ? box.right : box.left) - origin.left,
+        y: box.top + box.height / 2 - origin.top,
+      };
+    };
+    const mean = (values) => values.reduce((a, b) => a + b, 0) / values.length;
+
+    const curve = (from, to, live) => {
+      const bend = Math.max(18, Math.abs(to.x - from.x) * 0.5);
+      const path = document.createElementNS(SVGNS, "path");
+      path.setAttribute("d",
+        `M ${from.x} ${from.y} C ${from.x + bend} ${from.y}, ` +
+        `${to.x - bend} ${to.y}, ${to.x} ${to.y}`);
+      if (live) path.classList.add("live");
+      svg.append(path);
+    };
+
+    const laneNodes = STAGES.map((stage) =>
+      [...$(`lane-${stage}`).querySelectorAll(".node, .lane-empty")]);
+
+    for (let i = 0; i < laneNodes.length - 1; i++) {
+      const sources = laneNodes[i];
+      const targets = laneNodes[i + 1];
+      if (!sources.length || !targets.length) continue;
+
+      const outs = sources.map((n) => port(n, "right"));
+      const ins = targets.map((n) => port(n, "left"));
+      const hub = {
+        x: (Math.max(...outs.map((p) => p.x)) + Math.min(...ins.map((p) => p.x))) / 2,
+        y: (mean(outs.map((p) => p.y)) + mean(ins.map((p) => p.y))) / 2,
+      };
+
+      // A single source and a single target needs no hub — draw it straight.
+      if (outs.length === 1 && ins.length === 1) {
+        curve(outs[0], ins[0], targets[0].classList.contains("running"));
+        continue;
+      }
+      const anyLive = targets.some((n) => n.classList.contains("running"));
+      outs.forEach((p) => curve(p, hub, false));
+      ins.forEach((p, idx) =>
+        curve(hub, p, targets[idx].classList.contains("running") && anyLive));
+    }
+  }
+
+  /* ── output rendering ─────────────────────────────────────────────────── */
+
+  /* Minimal, escape-first Markdown. Enough for headings, lists, code, links. */
+  function markdown(src) {
+    const esc = (s) => s.replace(/[&<>]/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+
+    const blocks = [];
+    let text = esc(src).replace(/```(\w*)\n([\s\S]*?)```/g, (_m, _lang, code) => {
+      blocks.push(code);
+      return ` BLOCK${blocks.length - 1} `;
+    });
+
+    const inline = (s) => s
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/(^|[\s(])\*([^*\n]+)\*/g, "$1<em>$2</em>")
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+      .replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,
+        '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>');
+
+    const out = [];
+    let list = null;
+    let para = [];   // consecutive prose lines form one paragraph
+
+    const flushPara = () => {
+      if (para.length) {
+        out.push(`<p>${inline(para.join(" "))}</p>`);
+        para = [];
+      }
+    };
+    const closeList = () => {
+      if (list) { out.push(`</${list}>`); list = null; }
+    };
+
+    for (const line of text.split("\n")) {
+      const heading = /^(#{1,4})\s+(.*)$/.exec(line);
+      const bullet = /^\s*[-*+]\s+(.*)$/.exec(line);
+      const numbered = /^\s*\d+[.)]\s+(.*)$/.exec(line);
+
+      if (heading) {
+        flushPara(); closeList();
+        const level = Math.min(heading[1].length, 4);
+        out.push(`<h${level}>${inline(heading[2])}</h${level}>`);
+      } else if (bullet || numbered) {
+        flushPara();
+        const want = bullet ? "ul" : "ol";
+        if (list && list !== want) closeList();
+        if (!list) { out.push(`<${want}>`); list = want; }
+        out.push(`<li>${inline((bullet || numbered)[1])}</li>`);
+      } else if (!line.trim()) {
+        flushPara(); closeList();
+      } else if (list) {
+        // A continuation line inside a list item.
+        out.push(out.pop().replace(/<\/li>$/, " " + inline(line.trim()) + "</li>"));
+      } else {
+        para.push(line.trim());
+      }
+    }
+    flushPara();
+    closeList();
+
+    return out.join("\n").replace(/ BLOCK(\d+) /g,
+      (_m, i) => `<pre><code>${blocks[Number(i)]}</code></pre>`);
+  }
+
+  function renderResult(result) {
+    $("deliverable-empty").hidden = true;
+    const host = $("deliverable-out");
+    host.innerHTML = markdown(result.report || "(no deliverable produced)");
+
+    const critique = result.critique || {};
+    if (critique.caveats?.length || critique.unmet_criteria?.length) {
+      const card = el("div", "card");
+      card.append(el("h4", null, "Caveats and gaps"));
+      const list = el("ul");
+      for (const item of [...(critique.unmet_criteria || []),
+                          ...(critique.caveats || [])]) {
+        list.append(el("li", null, item));
+      }
+      card.append(list);
+      card.append(el("p", null,
+        `Coverage: ${critique.coverage || "unknown"} · ${result.rounds} round(s)`));
+      host.append(card);
+    }
+
+    renderFindings(result);
+    renderPlan(result);
+  }
+
+  function renderFindings(result) {
+    const host = $("tab-findings");
+    host.innerHTML = "";
+    const findings = result.findings || [];
+    const artifacts = result.artifacts || [];
+    const actions = result.actions || [];
+
+    if (!findings.length && !artifacts.length && !actions.length) {
+      host.append(el("div", "empty", "No research findings or worker artifacts yet."));
+      return;
+    }
+
+    for (const finding of findings) {
+      const card = el("div", "card");
+      card.append(el("h4", null, finding.question || finding.id));
+      card.append(el("p", null, finding.summary || ""));
+      if (finding.key_points?.length) {
+        const list = el("ul");
+        finding.key_points.forEach((p) => list.append(el("li", null, p)));
+        card.append(list);
+      }
+      const meta = el("div", "meta");
+      meta.append(el("span", `tag ${finding.confidence || ""}`,
+        `confidence: ${finding.confidence || "?"}`));
+      if (finding.gaps?.length) meta.append(el("span", "tag", `${finding.gaps.length} gap(s)`));
+      card.append(meta);
+      if (finding.sources?.length) {
+        const list = el("ul", "sources");
+        for (const source of finding.sources.slice(0, 8)) {
+          const li = el("li");
+          if (source.url) {
+            const a = el("a", null, source.title || source.url);
+            a.href = source.url;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            li.append(a);
+          } else {
+            li.textContent = source.title || "";
+          }
+          list.append(li);
+        }
+        card.append(list);
+      }
+      host.append(card);
+    }
+
+    for (const artifact of artifacts) {
+      const card = el("div", "card");
+      card.append(el("h4", null, artifact.instruction || artifact.id));
+      card.append(el("p", null, (artifact.output || "").slice(0, 1200)));
+      if (artifact.assumptions?.length) {
+        const meta = el("div", "meta");
+        artifact.assumptions.forEach((a) => meta.append(el("span", "tag", a.slice(0, 60))));
+        card.append(meta);
+      }
+      host.append(card);
+    }
+
+    for (const action of actions) {
+      const card = el("div", "card");
+      card.append(el("h4", null, action.description || action.id));
+      card.append(el("p", null, action.detail || ""));
+      const meta = el("div", "meta");
+      meta.append(el("span", "tag", `status: ${action.status}`));
+      meta.append(el("span", "tag", `mode: ${action.mode || "?"}`));
+      (action.artifacts || []).forEach((a) => meta.append(el("span", "tag", a)));
+      card.append(meta);
+      host.append(card);
+    }
+  }
+
+  function renderPlan(result) {
+    const host = $("tab-plan");
+    host.innerHTML = "";
+    const plan = result.plan || {};
+    if (!plan.objective) {
+      host.append(el("div", "empty", "The lead agent's plan appears here once it runs."));
+      return;
+    }
+    const card = el("div", "card");
+    card.append(el("h4", null, plan.objective));
+    card.append(el("p", null, plan.reasoning || ""));
+    const meta = el("div", "meta");
+    meta.append(el("span", "tag", `type: ${plan.task_type}`));
+    meta.append(el("span", "tag", `complexity: ${plan.complexity}/5`));
+    card.append(meta);
+    host.append(card);
+
+    const criteria = el("div", "card");
+    criteria.append(el("h4", null, "Success criteria"));
+    const list = el("ul");
+    (plan.success_criteria || []).forEach((c) => list.append(el("li", null, c)));
+    criteria.append(list);
+    host.append(criteria);
+
+    const pre = el("pre");
+    pre.style.cssText = "font:11.5px var(--mono);overflow-x:auto;white-space:pre-wrap";
+    pre.textContent = JSON.stringify(plan, null, 2);
+    const raw = el("div", "card");
+    raw.append(el("h4", null, "Raw plan"), pre);
+    host.append(raw);
+  }
+
+  function log(message, kind) {
+    const host = $("tab-log");
+    const line = el("div", `logline ${kind || ""}`);
+    line.append(el("span", "t", new Date().toLocaleTimeString()));
+    line.append(el("span", null, message));
+    host.append(line);
+    host.scrollTop = host.scrollHeight;
+  }
+
+  function setStatus(text, kind) {
+    $("run-meta").innerHTML = "";
+    $("run-meta").append(el("span", `dot ${kind}`), document.createTextNode(" " + text));
+  }
+
+  function renderUsage(usage, extra) {
+    const strip = $("usage");
+    strip.innerHTML = "";
+    const rows = [
+      ["calls", usage.calls],
+      ["in", usage.input_tokens?.toLocaleString()],
+      ["out", usage.output_tokens?.toLocaleString()],
+      ["cache read", usage.cache_read_tokens?.toLocaleString()],
+      ["searches", usage.web_searches],
+    ];
+    if (extra) rows.push(...extra);
+    for (const [name, value] of rows) {
+      const item = el("span");
+      item.append(el("b", null, name + " "), document.createTextNode(String(value ?? 0)));
+      strip.append(item);
+    }
+  }
+
+  /* ── run ──────────────────────────────────────────────────────────────── */
+
+  async function runGraph() {
+    let config;
+    try { config = readConfig(); }
+    catch (err) { log(err.message, "err"); switchTab("log"); return; }
+
+    if (!config.task.trim()) {
+      log("Add a task before running.", "err");
+      $("task").focus();
+      return;
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+    resetGraph();
+    $("tab-log").innerHTML = "";
+    $("deliverable-out").innerHTML = "";
+    $("deliverable-empty").hidden = false;
+    $("deliverable-empty").textContent = "Running…";
+    setStatus("running", "running");
+    // Stays enabled: a second click stops the run (see the click handler).
+    $("btn-run").textContent = "Stop";
+    $("btn-run").title = TRANSPORT.isStatic
+      ? "Stop the simulation."
+      : "Stop watching. The server finishes the round it is in.";
+
+    try {
+      await TRANSPORT.run(config, handleEvent);
+    } catch (err) {
+      if (err.name === "AbortError") {
+        log("Stopped watching. The server finishes the round it is in.", "err");
+        setStatus("detached", "error");
+      } else {
+        log(err.message, "err");
+        switchTab("log");
+        setStatus("error", "error");
+      }
+    } finally {
+      ABORT = null;
+      $("btn-run").textContent = RUN_LABEL;
+      $("btn-run").title = "";
+      if ($("deliverable-empty").textContent === "Running…") {
+        $("deliverable-empty").textContent = "The run produced no deliverable.";
+      }
+    }
+  }
+
+  function handleEvent(event) {
+    switch (event.type) {
+      case "run":
+        if (event.status === "started") {
+          log("run started", "ok");
+        } else {
+          const result = event.result || {};
+          const ok = event.status === "complete";
+          setStatus(event.status, ok ? "done" : "error");
+          log("run " + event.status + (event.error ? ": " + event.error : ""),
+            ok ? "ok" : "err");
+          if (result.usage) {
+            renderUsage(result.usage, [["seconds", result.elapsed_seconds]]);
+          }
+          if (result.report || result.findings?.length) renderResult(result);
+        }
+        break;
+
+      case "stage":
+        // `revise` is a routing decision, not a lane — it only gets logged.
+        if (event.stage === "revise") {
+          log(`another round: ${event.reason || "coverage below the bar"}`);
+          break;
+        }
+        if (event.status === "fanout") {
+          log(`${event.stage}: ${event.count} agent(s) ${event.reason || ""}`.trim());
+          seedPending(event.stage, event.agents);
+        } else {
+          log(`${event.stage}: skipped`);
+          laneEmpty(event.stage, "no agents needed");
+        }
+        break;
+
+      case "agent":
+        upsertNode(event);
+        if (event.status !== "running") {
+          log(`[${event.stage}] ${event.id} ${event.status}`,
+            event.status === "error" ? "err" : "");
+        }
+        break;
+
+      case "tool":
+        log(`  ↳ ${event.stage || ""} ${event.id || ""} used ${event.name}`);
+        break;
+
+      case "log":
+        log(event.message, event.level === "error" ? "err" : "");
+        break;
+    }
+  }
+
+  function switchTab(name) {
+    document.querySelectorAll("#tabs button").forEach((b) =>
+      b.classList.toggle("on", b.dataset.tab === name));
+    for (const tab of ["deliverable", "findings", "plan", "log"]) {
+      $(`tab-${tab}`).hidden = tab !== name;
+    }
+  }
+
+  /* ── wiring ───────────────────────────────────────────────────────────── */
+
+  function bind() {
+    for (const id of ["preset", "action_mode", "provider"]) {
+      $(id).addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button) return;
+        setSeg(id, button.dataset.value);
+        if (id === "preset") applyPreset(button.dataset.value);
+        syncHints();
+      });
+    }
+
+    $("deliverable-format").addEventListener("change", syncDeliverableFields);
+    $("quality_bar").addEventListener("input", (e) => {
+      $("quality_bar_out").textContent = Number(e.target.value).toFixed(2);
+    });
+
+    $("btn-run").addEventListener("click", () => {
+      if (ABORT) ABORT.abort();
+      else runGraph();
+    });
+
+    document.querySelectorAll("#tabs button").forEach((b) =>
+      b.addEventListener("click", () => switchTab(b.dataset.tab)));
+
+    $("btn-theme").addEventListener("click", () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      localStorage.setItem("agent-graph.theme", next);
+      requestAnimationFrame(drawWires);
+    });
+
+    $("btn-export").addEventListener("click", () => {
+      let config;
+      try { config = readConfig(); }
+      catch (err) { log(err.message, "err"); switchTab("log"); return; }
+      const blob = new Blob([JSON.stringify(config, null, 2)],
+        { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = el("a");
+      a.href = url;
+      a.download = "agent-graph.config.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    $("btn-import").addEventListener("click", () => $("file-import").click());
+    $("file-import").addEventListener("change", async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        writeConfig(JSON.parse(await file.text()));
+        log("config imported", "ok");
+      } catch (err) {
+        log("import failed: " + err.message, "err");
+        switchTab("log");
+      }
+      event.target.value = "";
+    });
+
+    window.addEventListener("resize", drawWires);
+
+    if (!TRANSPORT.isStatic) return;
+
+    const syncKeyPill = () => {
+      $("cred-pill").textContent = readKey()
+        ? "Live — your key, straight to Anthropic"
+        : "Add a key to run for real";
+    };
+
+    $("api-key").addEventListener("input", (event) => {
+      storeKey(event.target.value.trim(), $("remember-key").checked);
+      setKeyStatus("");
+      syncKeyPill();
+      if (readKey()) setSeg("provider", "anthropic");
+    });
+
+    $("remember-key").addEventListener("change", (event) => {
+      storeKey(readKey(), event.target.checked);
+      setKeyStatus(event.target.checked
+        ? "Stored in this browser until you clear it."
+        : "Held for this tab only.", "");
+    });
+
+    $("btn-clear-key").addEventListener("click", () => {
+      forgetKey();
+      setSeg("provider", "mock");
+      syncKeyPill();
+    });
+
+    $("btn-test-key").addEventListener("click", async () => {
+      const apiKey = readKey();
+      if (!apiKey) { setKeyStatus("Paste a key first.", "err"); return; }
+      const button = $("btn-test-key");
+      button.disabled = true;
+      setKeyStatus("Checking…", "");
+      try {
+        const reply = await window.AgentGraphEngine.testKey(
+          apiKey, $("role-lead-model").value);
+        setKeyStatus(`Working — the model replied "${reply.slice(0, 40)}".`, "ok");
+        setSeg("provider", "anthropic");
+        syncKeyPill();
+      } catch (err) {
+        setKeyStatus(err.message, "err");
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  async function init() {
+    const saved = localStorage.getItem("agent-graph.theme");
+    if (saved) document.documentElement.dataset.theme = saved;
+
+    META = await TRANSPORT.schema();
+    buildForm();
+    bind();
+
+    let config = META.defaults;
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try { config = { ...config, ...JSON.parse(stored) }; } catch { /* ignore */ }
+    }
+
+    const pill = $("cred-pill");
+    pill.hidden = false;
+
+    if (TRANSPORT.isStatic) {
+      $("keyring").hidden = false;
+      // "Mock" is the Python provider's name; in the browser it is the
+      // in-page simulator, and execute mode has no filesystem to act on.
+      $("provider").querySelector('[data-value="mock"]').textContent = "Simulate";
+      $("action_mode").querySelector('[data-value="execute"]').hidden = true;
+      $("wrap-workspace").hidden = true;
+      const remembered = localStorage.getItem(KEY_NAME);
+      if (remembered) {
+        MEMORY_KEY = remembered;
+        $("api-key").value = remembered;
+        $("remember-key").checked = true;
+      }
+      // Without a key there is nothing to run against, so default to the
+      // simulator rather than failing on the first click.
+      config.provider = readKey() ? "anthropic" : "mock";
+      pill.textContent = readKey()
+        ? "Live — your key, straight to Anthropic"
+        : "Add a key to run for real";
+    } else if (!META.credentials) {
+      config.provider = "mock";
+      pill.textContent = "No credentials — mock mode";
+    } else {
+      pill.textContent = "Claude credentials detected";
+    }
+
+    writeConfig(config);
+
+    for (const stage of STAGES) laneEmpty(stage, "—");
+    setStatus("idle", "idle");
+    renderUsage({});
+  }
+
+  init().catch((err) => {
+    document.body.innerHTML =
+      `<pre style="padding:24px;font:13px monospace">Failed to start: ${err.message}</pre>`;
+  });
+})();
+
+</script>
+</body>
+</html>
