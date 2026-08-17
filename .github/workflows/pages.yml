@@ -34,6 +34,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # A second working tree for the publish branch. Checking it out this way
+      # rather than switching branches in place keeps the build tree intact and
+      # lets the action set up push credentials for us.
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: .gh-pages
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -61,19 +69,14 @@ jobs:
         run: python -m agent_graph.bundle
 
       - name: Publish to gh-pages
+        working-directory: .gh-pages
         run: |
           set -euo pipefail
-          bundle="$(mktemp -d)/agent-graph.html"
-          cp agent_graph/dist/agent-graph.html "$bundle"
+          mkdir -p agent-graph
+          cp ../agent_graph/dist/agent-graph.html agent-graph/index.html
 
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git fetch origin gh-pages
-          git checkout gh-pages
-
-          mkdir -p agent-graph
-          cp "$bundle" agent-graph/index.html
 
           # Only ever stage this one path — everything else on gh-pages,
           # rngdle's index.html included, is published by hand.
@@ -83,4 +86,4 @@ jobs:
             exit 0
           fi
           git commit -m "Publish agent graph from ${GITHUB_SHA::7}"
-          git push origin gh-pages
+          git push origin HEAD:gh-pages

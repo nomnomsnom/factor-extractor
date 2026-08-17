@@ -25,3 +25,6 @@ financial-data-quality-skill*.zip
 
 # Local dev venv for agent_graph
 .venv-dev/
+
+# CI worktree for the gh-pages publish branch
+.gh-pages/
