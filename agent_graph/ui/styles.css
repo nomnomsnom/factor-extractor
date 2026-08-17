@@ -7,7 +7,7 @@
   --line-strong: #cfcfc9;
   --text: #16181d;
   --text-2: #5c6169;
-  --text-3: #8b9098;
+  --text-3: #63686f;
   --accent: #2f6f6a;
   --accent-soft: #d8ebe8;
   --accent-text: #ffffff;
@@ -29,7 +29,7 @@
   --line-strong: #363b43;
   --text: #e8eaed;
   --text-2: #9aa1ab;
-  --text-3: #6b727c;
+  --text-3: #858c96;
   --accent: #6fd6c4;
   --accent-soft: #14312e;
   --accent-text: #06201d;
@@ -40,6 +40,17 @@
 }
 
 * { box-sizing: border-box; }
+
+/* Honour a stated preference for less motion: the pulsing status dot and the
+   flowing connectors are decoration, not information. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .wires path.live { stroke-dasharray: none; }
+}
 
 /* Our own display rules outrank the UA's [hidden] rule, so restate it. */
 [hidden] { display: none !important; }
@@ -399,10 +410,139 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
 .logline.err { color: var(--err); }
 .logline.ok { color: var(--ok); }
 
-@media (max-width: 1180px) {
-  .layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto; overflow: auto; }
-  .panel { overflow: visible; }
-  .canvas, .output { max-height: 70vh; }
+/* ── narrow desktop / tablet landscape ──────────────────────────────────── */
+@media (max-width: 1180px) and (min-width: 861px) {
+  .layout { grid-template-columns: minmax(260px, 300px) 1fr; }
+  /* The output panel moves under the graph rather than being squeezed to a
+     column too narrow to read a report in. */
+  .canvas { grid-row: 1; }
+  .output { grid-column: 1 / -1; max-height: 46vh; }
+}
+
+/* ── phones and small tablets ───────────────────────────────────────────────
+   Three stacked scroll areas do not work on a phone: you lose your place, and
+   the graph gets a viewport slice too short to read. So below this width the
+   panels become three views and a bottom bar switches between them — one
+   thing on screen, one scrollbar, thumb-reachable controls. */
+.mobile-nav { display: none; }
+.config-file { display: none; }
+
+@media (max-width: 860px) {
+  body { overflow: auto; }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding: 10px 14px;
+    padding-top: max(10px, env(safe-area-inset-top));
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .brand-sub { display: none; }          /* the bottom bar names the stages */
+  .topbar h1 { font-size: 15px; }
+  .topbar-actions { flex: 1 1 auto; justify-content: flex-end; }
+  /* Export/Import/theme are rare on a phone; the run button is not. */
+  #btn-export, #btn-import { display: none; }
+  #btn-run { flex: 0 0 auto; white-space: nowrap; padding-inline: 18px; }
+  /* The pill would push the header onto a second row, and it is redundant
+     here: Setup carries the full key explanation, and the bottom bar's Graph
+     dot carries the run state. */
+  .pill { display: none; }
+
+  .layout {
+    display: block;
+    gap: 0;
+    background: var(--bg);
+  }
+
+  .panel {
+    display: none;
+    height: calc(100dvh - var(--chrome, 124px));
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .layout[data-view="setup"]  .config { display: block; }
+  .layout[data-view="graph"]  .canvas { display: flex; }
+  .layout[data-view="output"] .output { display: flex; }
+
+  .config { padding-bottom: 24px; }
+  .config-file { display: block; }
+  .group { padding: 16px 14px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .role .row { grid-template-columns: 1fr; gap: 8px; }
+  .field.inline { display: block; }
+  .field.inline .label { margin-bottom: 6px; }
+  .field.inline select, .field.inline input { max-width: none; }
+
+  .canvas-head, .tabs { padding-left: 14px; padding-right: 14px; }
+  .tab-body { padding: 16px 14px; }
+  .usage-strip { gap: 12px; padding: 10px 14px; font-size: 11px; }
+
+  /* Stages read top-to-bottom on a phone — no sideways scrolling to follow a
+     run, and each stage gets the full width for its labels. */
+  .graph-scroll { padding: 16px 14px 24px; }
+  .graph {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    min-width: 0;
+  }
+  .lane-head { margin-bottom: 8px; }
+  .lane-body { gap: 8px; }
+  .node .node-label { -webkit-line-clamp: 4; }
+
+  .tabs { overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button { flex: 0 0 auto; }
+
+  /* Bottom bar: within thumb reach, and clear of the home indicator. */
+  .mobile-nav {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mobile-nav button {
+    flex: 1;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-3);
+    font-size: 12px;
+    font-weight: 550;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 9px 4px;
+    min-height: 56px;
+    border-top: 2px solid transparent;
+    margin-top: -1px;
+  }
+  .mobile-nav button[aria-selected="true"] {
+    color: var(--text);
+    border-top-color: var(--accent);
+    background: var(--surface-2);
+  }
+  .mobile-nav .nav-mark {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--line-strong);
+  }
+  .mobile-nav button[aria-selected="true"] .nav-mark { background: var(--accent); }
+  .mobile-nav .nav-mark.running { background: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+  .mobile-nav .nav-mark.done { background: var(--ok); }
+  .mobile-nav .nav-mark.error { background: var(--err); }
+}
+
+/* Very small phones: keep the header to one line of controls. */
+@media (max-width: 380px) {
+  .topbar { padding-left: 10px; padding-right: 10px; }
+  .topbar h1 { font-size: 14px; }
+  #btn-theme { display: none; }
 }
 
 /* ── API key panel (published single-file build only) ───────────────────── */
@@ -419,3 +559,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; bord
 .keyrow button { flex: 0 0 auto; }
 .keyring .check { margin: 10px 0 4px; }
 .keyring #btn-clear-key { margin-top: 10px; }
+
+/* ── accessibility overrides ────────────────────────────────────────────
+   Last in the file on purpose: these have to beat the component rules
+   above, which are more specific than a bare element selector. */
+/* 44px targets and 16px fields — below 16px, iOS Safari zooms the page on
+   focus and the user has to pinch back out.
+   Keyed on width as well as pointer type: `pointer: coarse` is the honest
+   signal but browsers report it inconsistently under emulation and on hybrid
+   devices, and at phone widths the sizing is right either way. */
+@media (max-width: 860px), (pointer: coarse) {
+  button, .segmented button, summary { min-height: 44px; }
+  input[type="text"], input[type="number"], input[type="password"],
+  textarea, select,
+  .role select, .role input, .keyrow input,
+  .field.inline select, .field.inline input { font-size: 16px; min-height: 44px; }
+  textarea { min-height: 88px; }
+  .check, .role .check { min-height: 44px; align-items: center; }
+  .check input, .role .check input { width: 22px; height: 22px; flex: 0 0 auto; }
+  .tabs button { min-height: 48px; }
+  /* A 16px-tall slider is hard to grab; pad the hit area without moving it. */
+  input[type="range"] { height: 44px; }
+  input[type="range"]::-webkit-slider-thumb { width: 22px; height: 22px; }
+  input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; }
+}

@@ -70,6 +70,21 @@ the unmerged `claude/rngdle-research-build-4inh1j` branch. Switching Pages to
 the live rngdle*. To go that route, merge the rngdle branch to `main` first,
 then flip the setting.
 
+### On a phone
+
+Below 860px the three panels become three views — Setup, Graph, Output — with a
+bottom bar to switch between them, so there is one thing on screen and one
+scroll area rather than three stacked ones. The graph turns vertical there:
+stages read top to bottom instead of scrolling sideways. Pressing Run jumps to
+the Graph view, and the bar's Graph dot carries the run status so it stays
+readable from any view.
+
+Controls are sized for touch (44px targets, 16px fields so iOS does not zoom on
+focus), the segmented controls and tabs expose real `radiogroup`/`tablist`
+semantics with arrow-key support, run status and the log are announced via
+`aria-live`, all text meets WCAG AA contrast in both themes, and the animated
+status dot and connectors stop under `prefers-reduced-motion`.
+
 ## Quick start
 
 ```bash
