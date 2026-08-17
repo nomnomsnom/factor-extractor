@@ -1,42 +1,46 @@
-name: Deploy sites to GitHub Pages
+name: Publish the agent graph
 
-# Publishes two static sites from this repo:
+# Publishes the agent graph to
+# https://nomnomsnom.github.io/factor-extractor/agent-graph/
 #
-#   https://nomnomsnom.github.io/factor-extractor/              rngdle
-#   https://nomnomsnom.github.io/factor-extractor/agent-graph/  agent graph
+# This repo's Pages source is "Deploy from a branch" -> gh-pages, which holds a
+# hand-published index.html (rngdle). So this workflow writes into that branch
+# rather than using actions/deploy-pages, which only works when the source is
+# set to "GitHub Actions".
 #
-# One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
-# Until that is switched on, this workflow deploys nothing.
-#
-# GitHub restricts Pages deployments to the default branch, so this runs on
-# main. Use the "Run workflow" button (workflow_dispatch) to republish without
-# pushing a commit.
+# It touches agent-graph/ and nothing else. rngdle's index.html on gh-pages is
+# currently ahead of rngdle/ on main, so rebuilding and republishing it from
+# here would downgrade the live game — see the note in agent_graph/README.md.
 
 on:
   push:
     branches: [main]
     paths:
-      - 'rngdle/**'
       - 'agent_graph/**'
       - 'tests/test_agent_graph.py'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Never let two deploys race; a queued run supersedes an in-flight one.
 concurrency:
-  group: pages
+  group: publish-agent-graph
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # A second working tree for the publish branch. Checking it out this way
+      # rather than switching branches in place keeps the build tree intact and
+      # lets the action set up push credentials for us.
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: .gh-pages
 
       - uses: actions/setup-node@v4
         with:
@@ -50,47 +54,36 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r agent_graph/requirements.txt
 
-      # Don't publish a broken game: the suite covers the scoring rules and the
-      # page's own default settings.
-      - name: Test rngdle
-        working-directory: rngdle
-        run: node --test "test/**/*.test.mjs"
-
-      # Likewise for the graph: the topology, the guardrails, and the arithmetic
-      # the browser build evaluates without a server.
-      - name: Test agent graph
+      # Don't publish a broken graph: the topology and guardrails, plus the
+      # arithmetic the browser build evaluates without a server.
+      - name: Test
         run: |
           python -m pytest tests/test_agent_graph.py -q
           node --test agent_graph/ui/engine.test.mjs
-
-      # Inlines CSS, the four ES modules and the generated EP table into one
-      # self-contained HTML file with no imports and no network requests.
-      - name: Bundle rngdle
-        working-directory: rngdle
-        run: node tools/bundle.mjs
+          node --test rngdle/test/*.test.mjs
 
       # Inlines the stylesheet, the three scripts, and the schema and prompts
       # read straight out of config.py and prompts.py, so the published page
       # cannot drift from the Python implementation.
-      - name: Bundle agent graph
+      - name: Bundle
         run: python -m agent_graph.bundle
 
-      - name: Assemble site
+      - name: Publish to gh-pages
+        working-directory: .gh-pages
         run: |
-          mkdir -p _site/agent-graph
-          cp rngdle/dist/rngdle.html _site/index.html
-          cp agent_graph/dist/agent-graph.html _site/agent-graph/index.html
+          set -euo pipefail
+          mkdir -p agent-graph
+          cp ../agent_graph/dist/agent-graph.html agent-graph/index.html
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          # Only ever stage this one path — everything else on gh-pages,
+          # rngdle's index.html included, is published by hand.
+          git add agent-graph/index.html
+          if git diff --cached --quiet; then
+            echo "no change to publish"
+            exit 0
+          fi
+          git commit -m "Publish agent graph from ${GITHUB_SHA::7}"
+          git push origin HEAD:gh-pages

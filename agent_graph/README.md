@@ -56,6 +56,20 @@ Open that file straight off the filesystem, mail it, or drop it on any static
 host. CI rebuilds it from `ui/`, `config.py` and `prompts.py` on every push to
 `main`, so the published page cannot drift from the source.
 
+### How it gets published
+
+This repo's Pages source is **"Deploy from a branch" → `gh-pages`**, not
+"GitHub Actions". `gh-pages` holds a hand-published `index.html` (rngdle), so
+the workflow writes `agent-graph/index.html` into that branch and touches
+nothing else.
+
+That is deliberate. `gh-pages`' rngdle is **ahead of** `rngdle/` on `main` —
+the live game has 230 badges, `main` builds 169, and the newer version sits on
+the unmerged `claude/rngdle-research-build-4inh1j` branch. Switching Pages to
+"GitHub Actions" and building both sites from source would therefore *downgrade
+the live rngdle*. To go that route, merge the rngdle branch to `main` first,
+then flip the setting.
+
 ## Quick start
 
 ```bash
