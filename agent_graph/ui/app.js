@@ -13,9 +13,129 @@
   const STAGES = ["lead", "research", "worker", "compiler", "action"];
   const STORAGE_KEY = "agent-graph.config.v1";
 
-  let META = null;          // /api/schema payload
-  let ABORT = null;         // AbortController for the live run
+  let META = null;          // schema payload: models, presets, tools, defaults
+  let ABORT = null;         // AbortController for a live run
   const NODES = new Map();  // agent id -> { stage, status, el }
+
+  /* ── transports ───────────────────────────────────────────────────────────
+     The served app talks to the Python backend. The published single-file
+     build has no backend, so it runs the simulator in the page instead. Both
+     expose the same two methods, and everything below is written against them
+     rather than against fetch. */
+
+  const ServerTransport = {
+    isStatic: false,
+
+    async schema() {
+      return (await fetch("/api/schema")).json();
+    },
+
+    async run(config, onEvent) {
+      ABORT = new AbortController();
+      try {
+        const response = await fetch("/api/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(config),
+          signal: ABORT.signal,
+        });
+
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          throw new Error("Config rejected: " +
+            JSON.stringify(body.errors || body));
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const chunks = buffer.split("\n\n");
+          buffer = chunks.pop();
+          for (const chunk of chunks) {
+            const line = chunk.split("\n").find((l) => l.startsWith("data: "));
+            if (!line) continue;
+            try { onEvent(JSON.parse(line.slice(6))); }
+            catch (err) { log("bad event: " + err.message, "err"); }
+          }
+        }
+      } finally {
+        ABORT = null;
+      }
+    },
+  };
+
+  /* The published build has no backend. `provider: anthropic` runs the graph in
+     the page against the visitor's own key; `provider: mock` runs the simulator,
+     which touches the network not at all. */
+  const StaticTransport = {
+    isStatic: true,
+    cancelled: false,
+
+    async schema() {
+      return window.__AGENT_GRAPH_STATIC__.schema;
+    },
+
+    async run(config, onEvent) {
+      StaticTransport.cancelled = false;
+      ABORT = { abort: () => { StaticTransport.cancelled = true; } };
+      const guard = (event) => {
+        if (!StaticTransport.cancelled) onEvent(event);
+      };
+      try {
+        if (config.provider === "mock") {
+          await window.AgentGraphSimulator.run(config, guard);
+          return;
+        }
+        const apiKey = readKey();
+        if (!apiKey) {
+          throw new Error(
+            "This page has no server, so a real run needs your own Anthropic " +
+            "API key — add one at the top of the panel, or switch the provider " +
+            "to Mock to watch a simulated run instead.");
+        }
+        await window.AgentGraphEngine.run(config, guard, { apiKey });
+      } finally {
+        ABORT = null;
+      }
+    },
+  };
+
+  const TRANSPORT = window.__AGENT_GRAPH_STATIC__ ? StaticTransport : ServerTransport;
+  const RUN_LABEL = "Run graph";
+
+  /* ── key handling (static build only) ─────────────────────────────────── */
+
+  const KEY_NAME = "agent-graph.api-key";
+  let MEMORY_KEY = "";  // default home for the key: this tab, this session
+
+  function readKey() {
+    return (MEMORY_KEY || localStorage.getItem(KEY_NAME) || "").trim();
+  }
+
+  function storeKey(value, remember) {
+    MEMORY_KEY = value;
+    if (remember && value) localStorage.setItem(KEY_NAME, value);
+    else localStorage.removeItem(KEY_NAME);
+  }
+
+  function forgetKey() {
+    MEMORY_KEY = "";
+    localStorage.removeItem(KEY_NAME);
+    $("api-key").value = "";
+    $("remember-key").checked = false;
+    setKeyStatus("Key forgotten.", "");
+  }
+
+  function setKeyStatus(message, kind) {
+    const node = $("key-status");
+    node.textContent = message;
+    node.style.color = kind === "ok" ? "var(--ok)"
+      : kind === "err" ? "var(--err)" : "";
+  }
 
   /* ── config <-> form ──────────────────────────────────────────────────── */
 
@@ -247,7 +367,7 @@
 
   function laneEmpty(stage, text) {
     const lane = $(`lane-${stage}`);
-    if (lane.children.length) return;
+    if (!lane || lane.children.length) return;
     lane.append(el("div", "lane-empty", text));
     drawWires();
   }
@@ -281,6 +401,7 @@
 
   function seedPending(stage, agents) {
     const lane = $(`lane-${stage}`);
+    if (!lane) return;
     lane.querySelectorAll(".lane-empty").forEach((n) => n.remove());
     for (const agent of agents || []) {
       if (NODES.has(agent.id)) continue;
@@ -369,28 +490,44 @@
 
     const out = [];
     let list = null;
+    let para = [];   // consecutive prose lines form one paragraph
+
+    const flushPara = () => {
+      if (para.length) {
+        out.push(`<p>${inline(para.join(" "))}</p>`);
+        para = [];
+      }
+    };
+    const closeList = () => {
+      if (list) { out.push(`</${list}>`); list = null; }
+    };
+
     for (const line of text.split("\n")) {
       const heading = /^(#{1,4})\s+(.*)$/.exec(line);
       const bullet = /^\s*[-*+]\s+(.*)$/.exec(line);
       const numbered = /^\s*\d+[.)]\s+(.*)$/.exec(line);
 
       if (heading) {
-        if (list) { out.push(`</${list}>`); list = null; }
+        flushPara(); closeList();
         const level = Math.min(heading[1].length, 4);
         out.push(`<h${level}>${inline(heading[2])}</h${level}>`);
       } else if (bullet || numbered) {
+        flushPara();
         const want = bullet ? "ul" : "ol";
-        if (list && list !== want) { out.push(`</${list}>`); list = null; }
+        if (list && list !== want) closeList();
         if (!list) { out.push(`<${want}>`); list = want; }
         out.push(`<li>${inline((bullet || numbered)[1])}</li>`);
       } else if (!line.trim()) {
-        if (list) { out.push(`</${list}>`); list = null; }
+        flushPara(); closeList();
+      } else if (list) {
+        // A continuation line inside a list item.
+        out.push(out.pop().replace(/<\/li>$/, " " + inline(line.trim()) + "</li>"));
       } else {
-        if (list) { out.push(`</${list}>`); list = null; }
-        out.push(`<p>${inline(line)}</p>`);
+        para.push(line.trim());
       }
     }
-    if (list) out.push(`</${list}>`);
+    flushPara();
+    closeList();
 
     return out.join("\n").replace(/ BLOCK(\d+) /g,
       (_m, i) => `<pre><code>${blocks[Number(i)]}</code></pre>`);
@@ -575,54 +712,26 @@
     $("deliverable-empty").hidden = false;
     $("deliverable-empty").textContent = "Running…";
     setStatus("running", "running");
-    // Stays enabled: a second click aborts the stream (see the click handler).
+    // Stays enabled: a second click stops the run (see the click handler).
     $("btn-run").textContent = "Stop";
-    $("btn-run").title = "Stop watching. The server finishes the round it is in.";
+    $("btn-run").title = TRANSPORT.isStatic
+      ? "Stop the simulation."
+      : "Stop watching. The server finishes the round it is in.";
 
-    ABORT = new AbortController();
     try {
-      const response = await fetch("/api/run", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(config),
-        signal: ABORT.signal,
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        log("Config rejected: " + JSON.stringify(body.errors || body), "err");
-        switchTab("log");
-        setStatus("invalid config", "error");
-        return;
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const chunks = buffer.split("\n\n");
-        buffer = chunks.pop();
-        for (const chunk of chunks) {
-          const line = chunk.split("\n").find((l) => l.startsWith("data: "));
-          if (!line) continue;
-          try { handleEvent(JSON.parse(line.slice(6))); }
-          catch (err) { log("bad event: " + err.message, "err"); }
-        }
-      }
+      await TRANSPORT.run(config, handleEvent);
     } catch (err) {
       if (err.name === "AbortError") {
         log("Stopped watching. The server finishes the round it is in.", "err");
         setStatus("detached", "error");
       } else {
-        log("Transport error: " + err.message, "err");
+        log(err.message, "err");
+        switchTab("log");
         setStatus("error", "error");
       }
     } finally {
       ABORT = null;
-      $("btn-run").textContent = "Run graph";
+      $("btn-run").textContent = RUN_LABEL;
       $("btn-run").title = "";
       if ($("deliverable-empty").textContent === "Running…") {
         $("deliverable-empty").textContent = "The run produced no deliverable.";
@@ -649,6 +758,11 @@
         break;
 
       case "stage":
+        // `revise` is a routing decision, not a lane — it only gets logged.
+        if (event.stage === "revise") {
+          log(`another round: ${event.reason || "coverage below the bar"}`);
+          break;
+        }
         if (event.status === "fanout") {
           log(`${event.stage}: ${event.count} agent(s) ${event.reason || ""}`.trim());
           seedPending(event.stage, event.agents);
@@ -747,13 +861,60 @@
     });
 
     window.addEventListener("resize", drawWires);
+
+    if (!TRANSPORT.isStatic) return;
+
+    const syncKeyPill = () => {
+      $("cred-pill").textContent = readKey()
+        ? "Live — your key, straight to Anthropic"
+        : "Add a key to run for real";
+    };
+
+    $("api-key").addEventListener("input", (event) => {
+      storeKey(event.target.value.trim(), $("remember-key").checked);
+      setKeyStatus("");
+      syncKeyPill();
+      if (readKey()) setSeg("provider", "anthropic");
+    });
+
+    $("remember-key").addEventListener("change", (event) => {
+      storeKey(readKey(), event.target.checked);
+      setKeyStatus(event.target.checked
+        ? "Stored in this browser until you clear it."
+        : "Held for this tab only.", "");
+    });
+
+    $("btn-clear-key").addEventListener("click", () => {
+      forgetKey();
+      setSeg("provider", "mock");
+      syncKeyPill();
+    });
+
+    $("btn-test-key").addEventListener("click", async () => {
+      const apiKey = readKey();
+      if (!apiKey) { setKeyStatus("Paste a key first.", "err"); return; }
+      const button = $("btn-test-key");
+      button.disabled = true;
+      setKeyStatus("Checking…", "");
+      try {
+        const reply = await window.AgentGraphEngine.testKey(
+          apiKey, $("role-lead-model").value);
+        setKeyStatus(`Working — the model replied "${reply.slice(0, 40)}".`, "ok");
+        setSeg("provider", "anthropic");
+        syncKeyPill();
+      } catch (err) {
+        setKeyStatus(err.message, "err");
+      } finally {
+        button.disabled = false;
+      }
+    });
   }
 
   async function init() {
     const saved = localStorage.getItem("agent-graph.theme");
     if (saved) document.documentElement.dataset.theme = saved;
 
-    META = await (await fetch("/api/schema")).json();
+    META = await TRANSPORT.schema();
     buildForm();
     bind();
 
@@ -762,14 +923,37 @@
     if (stored) {
       try { config = { ...config, ...JSON.parse(stored) }; } catch { /* ignore */ }
     }
-    if (!META.credentials) config.provider = "mock";
-    writeConfig(config);
 
     const pill = $("cred-pill");
     pill.hidden = false;
-    pill.textContent = META.credentials
-      ? "Claude credentials detected"
-      : "No credentials — mock mode";
+
+    if (TRANSPORT.isStatic) {
+      $("keyring").hidden = false;
+      // "Mock" is the Python provider's name; in the browser it is the
+      // in-page simulator, and execute mode has no filesystem to act on.
+      $("provider").querySelector('[data-value="mock"]').textContent = "Simulate";
+      $("action_mode").querySelector('[data-value="execute"]').hidden = true;
+      $("wrap-workspace").hidden = true;
+      const remembered = localStorage.getItem(KEY_NAME);
+      if (remembered) {
+        MEMORY_KEY = remembered;
+        $("api-key").value = remembered;
+        $("remember-key").checked = true;
+      }
+      // Without a key there is nothing to run against, so default to the
+      // simulator rather than failing on the first click.
+      config.provider = readKey() ? "anthropic" : "mock";
+      pill.textContent = readKey()
+        ? "Live — your key, straight to Anthropic"
+        : "Add a key to run for real";
+    } else if (!META.credentials) {
+      config.provider = "mock";
+      pill.textContent = "No credentials — mock mode";
+    } else {
+      pill.textContent = "Claude credentials detected";
+    }
+
+    writeConfig(config);
 
     for (const stage of STAGES) laneEmpty(stage, "—");
     setStatus("idle", "idle");

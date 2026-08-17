@@ -18,6 +18,44 @@ agents, and a pure-retrieval task commissions zero workers.
 
 LangGraph owns the topology; the model layer talks to the Claude API directly.
 
+## The published page
+
+**<https://nomnomsnom.github.io/factor-extractor/agent-graph/>**
+
+The same interface as one self-contained HTML file — no imports, no stylesheet
+links, no backend. Two ways to run it there:
+
+- **Simulate** needs nothing. The graph fans out, revises and compiles against
+  your real settings with placeholder content, so the topology is explorable
+  offline. It makes no network request at all.
+- **Claude** runs the graph for real against **your own** Anthropic key, pasted
+  into the page. Requests go straight from your browser to
+  `api.anthropic.com` — there is no server in between to send them to.
+  Research agents get web search, so a real run does reach the internet.
+
+Because the page is static, a few things only exist in the Python build: the
+file tools (a browser has no filesystem), `action_mode: execute`, and output
+budgets above 16K tokens (the browser build does not stream).
+
+**About the key.** It is yours, not the site's, and nothing here can bill you
+for someone else's run. It lives in memory for the tab unless you tick *Keep
+it in this browser*, which moves it to `localStorage` where anything with
+access to the browser profile can read it. The page ships a
+Content-Security-Policy whose `connect-src` is `https://api.anthropic.com` and
+nothing else, so even script injected into the page could not post the key
+elsewhere. Still: use a key you can rotate, and prefer one scoped to a
+workspace with a spend limit.
+
+Building it locally:
+
+```bash
+python -m agent_graph.bundle     # writes dist/agent-graph.html
+```
+
+Open that file straight off the filesystem, mail it, or drop it on any static
+host. CI rebuilds it from `ui/`, `config.py` and `prompts.py` on every push to
+`main`, so the published page cannot drift from the source.
+
 ## Quick start
 
 ```bash
@@ -109,6 +147,7 @@ rather than merely looking like JSON. `custom` takes free-form instructions.
 
 ```
 config.py    the run configuration and its presets
+bundle.py    packs ui/ + the schema and prompts into one static HTML file
 llm.py       every call to Claude: JSON calls, the tool-use loop, budgets
 tools.py     server-tool specs, the local tools, the filesystem sandbox
 prompts.py   system prompts and the JSON schemas each stage returns
@@ -118,15 +157,24 @@ runner.py    run() and stream()
 server.py    FastAPI app
 mock.py      deterministic stand-in provider
 ui/          the frontend
+  app.js       config form, live topology, output panes; transport-agnostic
+  engine.js    the graph again, in JS, for the published page's real runs
+  simulate.js  the offline stand-in that needs no key
 ```
+
+`engine.js` re-implements the orchestration that `nodes.py` and `graph.py` do,
+because the published page has no Python behind it. The prompts and schemas are
+*not* duplicated — `bundle.py` injects them from `prompts.py`, so only the
+orchestration exists twice, and both sides are tested.
 
 ## Tests
 
 ```bash
-python -m pytest tests/test_agent_graph.py
+python -m pytest tests/test_agent_graph.py     # the Python graph
+node --test agent_graph/ui/engine.test.mjs     # the browser engine's arithmetic
 ```
 
-They run entirely against the mock provider and stubbed clients — no API key,
-no network. They cover the zero-agent stages, the fan-out ceilings, the
-revision loop, the budget stop, the sandbox escapes, and the shape of the
-requests sent to the API.
+Both run offline — no API key, no network. Between them they cover the
+zero-agent stages, the fan-out ceilings, the revision loop, the budget stop,
+the sandbox escapes, the shape of the requests sent to the API, and the
+expression evaluator the browser build uses in place of Python's.

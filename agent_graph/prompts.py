@@ -276,20 +276,25 @@ happened, including failures.
 """.strip()
 
 
+# Hoisted so the browser build can reuse the exact wording rather than keeping
+# its own copy (see tools/bundle.py).
+DELIVERABLE_FORMATS = {
+    "report": "A structured prose report with headings. Depth over breadth.",
+    "brief": "A short brief: the answer up front, then the reasoning that supports it.",
+    "bullets": "A bulleted summary. Every bullet a complete, standalone statement.",
+    "json": "A single JSON object and nothing else — no prose, no code fences.",
+    "template": "The supplied template with every placeholder filled in. Preserve its structure and wording exactly; replace only the placeholders.",
+    "code": "Working code with a brief note on how to run it. No placeholder bodies.",
+    "custom": "Follow the format instructions below.",
+}
+
+
 def deliverable_brief(deliverable: Deliverable) -> str:
     """Render the deliverable spec into instructions for the compiler."""
     parts: list[str] = []
     fmt = deliverable.format
 
-    described = {
-        "report": "A structured prose report with headings. Depth over breadth.",
-        "brief": "A short brief: the answer up front, then the reasoning that supports it.",
-        "bullets": "A bulleted summary. Every bullet a complete, standalone statement.",
-        "json": "A single JSON object and nothing else — no prose, no code fences.",
-        "template": "The supplied template with every placeholder filled in. Preserve its structure and wording exactly; replace only the placeholders.",
-        "code": "Working code with a brief note on how to run it. No placeholder bodies.",
-        "custom": "Follow the format instructions below.",
-    }
+    described = DELIVERABLE_FORMATS
     parts.append(f"Format: {described.get(fmt, described['report'])}")
 
     if deliverable.audience:

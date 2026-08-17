@@ -36,6 +36,34 @@
   <main class="layout">
     <!-- ─────────────────────────── configuration ─────────────────────────── -->
     <aside class="panel config" aria-label="Configuration">
+      <!-- Shown only in the published single-file build, which has no backend
+           and so needs the visitor's own key to make real calls. -->
+      <section class="group keyring" id="keyring" hidden>
+        <span class="label">Anthropic API key</span>
+        <p class="hint">
+          This page is static — there is no server behind it. Your key is sent
+          only to <code>api.anthropic.com</code>, straight from this tab, and is
+          never transmitted anywhere else. Use a key you can rotate.
+        </p>
+        <div class="keyrow">
+          <input id="api-key" type="password" placeholder="sk-ant-…"
+                 autocomplete="off" spellcheck="false" />
+          <button class="ghost" id="btn-test-key" type="button">Test</button>
+        </div>
+        <p class="hint" id="key-status"></p>
+        <label class="check">
+          <input id="remember-key" type="checkbox" />
+          <span>Keep it in this browser</span>
+        </label>
+        <p class="hint">
+          Off by default: the key lives in memory for this tab only and is gone
+          when you close it. Ticking this stores it in
+          <code>localStorage</code>, where anything with access to this browser
+          profile can read it.
+        </p>
+        <button class="ghost" id="btn-clear-key" type="button">Forget key</button>
+      </section>
+
       <section class="group">
         <label class="field">
           <span class="label">Task</span>
@@ -118,7 +146,7 @@
       <details class="group">
         <summary>Tools</summary>
         <div class="checks" id="tools"></div>
-        <label class="field">
+        <label class="field" id="wrap-workspace">
           <span class="label">Workspace root</span>
           <input id="workspace" type="text" placeholder="." />
           <span class="hint">File tools are sandboxed to this directory.</span>
@@ -204,6 +232,8 @@
     </section>
   </main>
 
+  <script src="/static/simulate.js"></script>
+  <script src="/static/engine.js"></script>
   <script src="/static/app.js"></script>
 </body>
 </html>
