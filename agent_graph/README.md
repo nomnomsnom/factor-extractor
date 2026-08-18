@@ -102,6 +102,46 @@ python -m agent_graph.cli --stream --preset deep \
 python -m agent_graph.cli --mock --stream "anything"
 ```
 
+## Running on a Claude subscription instead of an API key
+
+A Pro or Max subscription does **not** include API access — Anthropic bills the
+subscription and the developer API separately, so nothing that calls
+`api.anthropic.com` with a key can run on it. The supported bridge is the
+**Claude Agent SDK**, which authenticates with the subscription and carries a
+monthly Agent SDK credit ($20 on Pro).
+
+```bash
+pip install claude-agent-sdk
+claude setup-token                    # signs in with your Claude subscription
+python -m agent_graph.cli --agent-sdk --stream "your task"
+```
+
+`--serve` picks it up too: the provider control gains a **Subscription** option
+whenever the CLI and the SDK are both present, and selects it automatically
+when there is no API key.
+
+**This is for your own local use only.** Anthropic does not permit offering
+claude.ai login or a subscription's rate limits to third parties, so the
+published page cannot use it — and could not anyway, being a browser: the Agent
+SDK drives the Claude Code CLI as a local process.
+
+What differs from the API provider:
+
+| | API key | Subscription |
+|---|---|---|
+| Tool loop | ours, over the Messages API | the Claude Code harness |
+| Tools | our own, sandboxed by `Workspace` | Claude Code built-ins, gated by `can_use_tool` |
+| Calculator | available | dropped — no built-in equivalent, and granting Bash to get one is a bad trade |
+| Usage | token counts | token counts **and** a dollar figure |
+| Per call | one HTTP request | one Claude Code process, so slower |
+
+The safety rails carry over: the same write-needs-both-gates rule, the same
+workspace confinement (enforced in the permission callback rather than by our
+own executor), and the same call ceiling. `setting_sources` is left unset so
+the ambient `CLAUDE.md`, settings and skills stay out of the graph's prompts.
+Because the run is headless, the permission callback always returns a decision
+— it never leaves the harness waiting on a prompt nobody will answer.
+
 ## The five stages
 
 | Stage | What it does | Tools |
@@ -185,6 +225,7 @@ graph.py     topology, dynamic fan-out, the revision route
 runner.py    run() and stream()
 server.py    FastAPI app
 mock.py      deterministic stand-in provider
+agent_sdk.py the same primitives over the Claude Agent SDK, for subscriptions
 ui/          the frontend
   app.js       config form, live topology, output panes; transport-agnostic
   engine.js    the graph again, in JS, for the published page's real runs
@@ -199,7 +240,7 @@ orchestration exists twice, and both sides are tested.
 ## Tests
 
 ```bash
-python -m pytest tests/test_agent_graph.py     # the Python graph
+python -m pytest tests/                        # the graph and both providers
 node --test agent_graph/ui/engine.test.mjs     # the browser engine's arithmetic
 ```
 

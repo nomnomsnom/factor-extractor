@@ -179,9 +179,11 @@
         <p class="hint" id="action-hint"></p>
         <span class="label">Provider</span>
         <div class="segmented" id="provider" role="radiogroup" aria-label="Provider">
-          <button type="button" role="radio" data-value="anthropic" aria-checked="true" class="on">Claude</button>
+          <button type="button" role="radio" data-value="anthropic" aria-checked="true" class="on">API key</button>
+          <button type="button" role="radio" data-value="agent_sdk" aria-checked="false" hidden>Subscription</button>
           <button type="button" role="radio" data-value="mock" aria-checked="false">Mock</button>
         </div>
+        <p class="hint" id="provider-hint"></p>
         <label class="check">
           <input id="prompt_caching" type="checkbox" checked />
           <span>Cache system prompts across the run</span>

@@ -338,6 +338,19 @@
         `${l.max_rounds} round(s) · up to ${l.max_llm_calls} model calls · ` +
         `${preset.effort} effort`;
     }
+    const provider = segValue("provider");
+    const providerHint = $("provider-hint");
+    if (providerHint) {
+      providerHint.textContent = {
+        anthropic: TRANSPORT.isStatic
+          ? "Calls Anthropic directly from this page with the key above."
+          : "Billed to your Anthropic API credits.",
+        agent_sdk: "Runs on your Claude subscription through the Agent SDK — "
+                 + "no API key, and it draws on your monthly Agent SDK credit.",
+        mock: "No model is called and nothing is fetched.",
+      }[provider] || "";
+    }
+
     const mode = segValue("action_mode");
     $("action-hint").textContent = {
       off: "No action agents run. The deliverable is the end of the graph.",
@@ -716,6 +729,8 @@
       ["cache read", usage.cache_read_tokens?.toLocaleString()],
       ["searches", usage.web_searches],
     ];
+    // Only the Agent SDK provider prices a run; the others report 0.
+    if (usage.cost_usd) rows.push(["cost", `$${usage.cost_usd.toFixed(4)}`]);
     if (extra) rows.push(...extra);
     for (const [name, value] of rows) {
       const item = el("span");
@@ -1052,11 +1067,19 @@
       pill.textContent = readKey()
         ? "Live — your key, straight to Anthropic"
         : "Add a key to run for real";
-    } else if (!META.credentials) {
-      config.provider = "mock";
-      pill.textContent = "No credentials — mock mode";
     } else {
-      pill.textContent = "Claude credentials detected";
+      // The served app may also offer the Agent SDK route, which runs on a
+      // Claude subscription rather than an API key.
+      const providers = META.providers || ["anthropic", "mock"];
+      if (providers.includes("agent_sdk")) {
+        $("provider").querySelector('[data-value="agent_sdk"]').hidden = false;
+      }
+      if (!META.credentials) {
+        config.provider = providers.includes("agent_sdk") ? "agent_sdk" : "mock";
+      }
+      pill.textContent = META.credentials ? "API key detected"
+        : providers.includes("agent_sdk") ? "Using your Claude subscription"
+        : "No credentials — mock mode";
     }
 
     writeConfig(config);

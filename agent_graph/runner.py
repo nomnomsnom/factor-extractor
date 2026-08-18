@@ -25,6 +25,10 @@ _SENTINEL = object()
 def make_provider(config: GraphConfig) -> Provider:
     if config.provider == "mock":
         return MockProvider(config)
+    if config.provider == "agent_sdk":
+        from .agent_sdk import AgentSDKProvider
+
+        return AgentSDKProvider(config)
     return Provider(config)
 
 

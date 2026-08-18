@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 from dataclasses import dataclass, field
 from typing import Any, Callable, Iterable, Optional
 
@@ -48,6 +49,8 @@ class Usage:
     cache_write_tokens: int = 0
     calls: int = 0
     web_searches: int = 0
+    # Only the Agent SDK provider reports a price; the API provider leaves it 0.
+    cost_usd: float = 0.0
 
     def add(self, other: "Usage") -> None:
         self.input_tokens += other.input_tokens
@@ -56,6 +59,7 @@ class Usage:
         self.cache_write_tokens += other.cache_write_tokens
         self.calls += other.calls
         self.web_searches += other.web_searches
+        self.cost_usd += other.cost_usd
 
     def as_dict(self) -> dict:
         return {
@@ -65,6 +69,7 @@ class Usage:
             "cache_write_tokens": self.cache_write_tokens,
             "calls": self.calls,
             "web_searches": self.web_searches,
+            "cost_usd": round(self.cost_usd, 4),
         }
 
 
@@ -374,7 +379,7 @@ def _collect_sources(response: Any) -> list[dict]:
 
 
 def has_credentials() -> bool:
-    """True when a live run is plausible.
+    """True when an API-key run is plausible.
 
     An unset ANTHROPIC_API_KEY is not proof of no credentials — the SDK also
     reads ANTHROPIC_AUTH_TOKEN and `ant auth login` profiles — so this only
@@ -386,3 +391,19 @@ def has_credentials() -> bool:
         "~/.config/anthropic"
     )
     return os.path.isdir(os.path.join(config_dir, "credentials"))
+
+
+def has_subscription() -> bool:
+    """True when the Agent SDK route looks set up.
+
+    A Claude subscription is not an API key: it cannot call the Messages API,
+    only the Agent SDK, which drives the Claude Code CLI. Both halves have to
+    be present, so check for both.
+    """
+    if shutil.which("claude") is None:
+        return False
+    try:
+        import claude_agent_sdk  # noqa: F401
+    except ImportError:
+        return False
+    return True

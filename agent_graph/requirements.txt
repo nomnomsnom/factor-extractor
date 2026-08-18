@@ -6,5 +6,9 @@ fastapi>=0.115
 uvicorn[standard]>=0.30
 python-dotenv>=1.0
 
+# Optional: run the graph on a Claude subscription instead of an API key.
+# Also needs the Claude Code CLI (`claude setup-token` to authenticate).
+# pip install claude-agent-sdk
+
 # Tests
 pytest>=8.0

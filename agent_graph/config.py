@@ -52,6 +52,9 @@ class Limits(BaseModel):
     max_llm_calls: int = Field(default=80, ge=1, le=1000)
     max_tool_iterations: int = Field(default=12, ge=1, le=60)
     quality_bar: float = Field(default=0.8, ge=0.0, le=1.0)
+    # Dollar ceiling per model call, honoured by the Agent SDK provider only —
+    # the API provider has no price to check against. 0 disables it.
+    max_cost_usd: float = Field(default=0.0, ge=0.0, le=100.0)
 
 
 class Deliverable(BaseModel):
@@ -158,7 +161,10 @@ class GraphConfig(BaseModel):
 
     # "mock" runs the whole graph with a deterministic fake model. Useful for
     # exercising the UI and the topology without an API key.
-    provider: Literal["anthropic", "mock"] = "anthropic"
+    #   anthropic  the Messages API, billed to an API key
+    #   agent_sdk  the Claude Agent SDK, billed to a Claude subscription
+    #   mock       deterministic stand-in, no network
+    provider: Literal["anthropic", "agent_sdk", "mock"] = "anthropic"
 
     # Cache the (large, stable) system prompts across the run.
     prompt_caching: bool = True

@@ -79,6 +79,10 @@ def schema_payload() -> dict:
         "efforts": ["low", "medium", "high", "xhigh", "max"],
         "formats": list(prompts.DELIVERABLE_FORMATS),
         "action_modes": ["off", "propose"],
+        # No agent_sdk here: it drives the Claude Code CLI as a local process,
+        # which a browser cannot do — and offering a subscription's limits to
+        # third parties is not permitted regardless.
+        "providers": ["anthropic", "mock"],
         "defaults": browser_defaults(),
         "credentials": False,
         "token_cap": BROWSER_TOKEN_CAP,

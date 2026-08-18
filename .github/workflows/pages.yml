@@ -17,7 +17,7 @@ on:
     branches: [main]
     paths:
       - 'agent_graph/**'
-      - 'tests/test_agent_graph.py'
+      - 'tests/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -58,7 +58,7 @@ jobs:
       # arithmetic the browser build evaluates without a server.
       - name: Test
         run: |
-          python -m pytest tests/test_agent_graph.py -q
+          python -m pytest tests/ -q
           node --test agent_graph/ui/engine.test.mjs
           node --test rngdle/test/*.test.mjs
 

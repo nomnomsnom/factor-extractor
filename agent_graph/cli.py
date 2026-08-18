@@ -12,7 +12,7 @@ import json
 import sys
 
 from .config import GraphConfig
-from .llm import has_credentials
+from .llm import has_credentials, has_subscription
 from .runner import run, stream
 
 _ICON = {"lead": "▣", "research": "◇", "worker": "◆", "compiler": "▤", "action": "▶"}
@@ -49,6 +49,8 @@ def build_config(args: argparse.Namespace) -> GraphConfig:
         payload["preset"] = args.preset
     if args.mock:
         payload["provider"] = "mock"
+    if args.agent_sdk:
+        payload["provider"] = "agent_sdk"
     if args.workspace:
         payload.setdefault("tools", {})["workspace"] = args.workspace
     if args.action_mode:
@@ -65,8 +67,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--action-mode", choices=["off", "propose", "execute"])
     parser.add_argument("--workspace", help="sandbox root for the file tools")
-    parser.add_argument("--mock", action="store_true",
-                        help="run with the deterministic mock model")
+    # Contradictory together, so let argparse say so rather than having the
+    # order they are applied in silently decide.
+    providers = parser.add_mutually_exclusive_group()
+    providers.add_argument("--mock", action="store_true",
+                           help="run with the deterministic mock model")
+    providers.add_argument("--agent-sdk", action="store_true",
+                           help="run on your Claude subscription via the Agent "
+                                "SDK instead of an API key")
     parser.add_argument("--stream", action="store_true",
                         help="print progress events to stderr")
     parser.add_argument("--json", action="store_true",
@@ -88,9 +96,25 @@ def main(argv: list[str] | None = None) -> int:
 
     config = build_config(args)
     if config.provider == "anthropic" and not has_credentials():
+        hint = (
+            "  --agent-sdk    run on your Claude subscription instead\n"
+            if has_subscription() else
+            "  pip install claude-agent-sdk && claude setup-token, then "
+            "--agent-sdk to use a Claude subscription\n"
+        )
         print(
-            "No Anthropic credentials found. Set ANTHROPIC_API_KEY, run "
-            "`ant auth login`, or pass --mock for a dry run.",
+            "No Anthropic API credentials found. Options:\n"
+            "  ANTHROPIC_API_KEY=...   or `ant auth login`\n"
+            + hint +
+            "  --mock         dry run, no model calls",
+            file=sys.stderr,
+        )
+        return 2
+    if config.provider == "agent_sdk" and not has_subscription():
+        print(
+            "The Agent SDK route needs both halves:\n"
+            "  pip install claude-agent-sdk\n"
+            "  claude setup-token        (signs in with your Claude subscription)",
             file=sys.stderr,
         )
         return 2

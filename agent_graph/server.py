@@ -24,7 +24,7 @@ from .config import (
     SERVER_TOOLS,
     GraphConfig,
 )
-from .llm import has_credentials
+from .llm import has_credentials, has_subscription
 from .runner import stream
 
 UI_DIR = Path(__file__).parent / "ui"
@@ -47,6 +47,12 @@ def schema() -> dict:
         "action_modes": ["off", "propose", "execute"],
         "defaults": GraphConfig().model_dump(mode="json"),
         "credentials": has_credentials(),
+        # The Agent SDK route runs on a Claude subscription instead of an API
+        # key, but only where the CLI and the SDK are both installed.
+        "subscription": has_subscription(),
+        "providers": ["anthropic"]
+                     + (["agent_sdk"] if has_subscription() else [])
+                     + ["mock"],
     }
 
 
