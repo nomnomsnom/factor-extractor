@@ -79,15 +79,37 @@ do not extend it mechanically.
 real and not in the future, `cat` is one of `mkt`/`ai`/`flag`, URLs are absolute,
 and no format placeholder survived into prose.
 
+## The page
+
+`dashboard.html` is the published artifact's source, kept here so the page and the
+job that feeds it stay in one place.
+
+The page holds **no market data of its own**. A published artifact cannot reach
+Yahoo, FRED or any other host — the viewer's CSP blocks outbound `fetch`/XHR
+entirely — so a page that appeared to quote a live price would be quoting a number
+somebody typed into it. Instead it subscribes to `market/latest` with
+`onSnapshot`, renders whatever is there, and renders nothing at all when the
+document is missing. There is no seeded fallback: a stale number shown
+confidently is the failure this design exists to prevent.
+
+Consequences worth knowing:
+
+- The brief appears as soon as the page opens. No button press.
+- A brief written while a tab is open replaces what is on screen, live.
+- Past `STALE_HOURS` (72, which survives a normal weekend) the page says how old
+  the brief is in a banner rather than letting it pass as this morning's.
+- `snap.data()` is a **call**, not a property. Reading it as a property yields the
+  function and every `Array.isArray(d.instruments)` check fails, which silently
+  reports a full feed as empty. The first version of this page had that bug.
+
 ## Scheduling
 
-Run it by hand and confirm the dashboard updates before automating anything.
+It runs as a Routine: `0 22 * * 1-5` UTC, which is 06:00 SGT Tuesday to Saturday,
+about two hours after the US close. Each firing starts a fresh session that clones
+this branch, runs the pipeline, rewrites the news by hand, validates, and writes
+`market/latest`.
 
-```
-# 08:00 SGT Tue-Sat, covering the previous US close
-0 0 * * 2-6  cd /path/to/market_brief && ./run.sh >> run.log 2>&1
-```
-
-Log every run. A silent failure that leaves a stale `asOf` is worse than a
-visible error, because the page will look current while showing old numbers. If a
-run fails, write the failure into `gaps` so the page says so out loud.
+A silent failure that leaves a stale `asOf` is worse than a visible error, because
+the page would look current while showing old numbers. Two things guard against
+that: the job is told to write any failure into `gaps`, and the page itself puts up
+a banner once a brief passes 72 hours old.

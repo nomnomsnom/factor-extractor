@@ -400,6 +400,10 @@ gaps = [
 
 doc = {
   "asOf": NOW.strftime("%-d %b %Y, %H:%M SGT"),
+  # Machine-readable twin of asOf. The page computes the feed's age from this
+  # and says out loud when a scheduled run has not landed.
+  "asOfISO": NOW.astimezone(datetime.timezone.utc)
+               .strftime("%Y-%m-%dT%H:%M:%SZ"),
   "origin": "Live feed: Yahoo Finance daily closes + FRED DGS10/DGS2/DGS20",
   "instruments": I,
   "movers": movers,

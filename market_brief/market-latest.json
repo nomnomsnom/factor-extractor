@@ -1,5 +1,6 @@
 {
- "asOf": "11 Sep 2026, 14:30 SGT",
+ "asOf": "11 Sep 2026, 14:47 SGT",
+ "asOfISO": "2026-09-11T06:47:21Z",
  "origin": "Live feed: Yahoo Finance daily closes + FRED DGS10/DGS2/DGS20",
  "instruments": [
   {
@@ -360,7 +361,7 @@
      "pct": 6.34
     }
    ],
-   "note": "ICE Brent front-month futures settlements from Yahoo Finance. The 9 Sep settle of 101.21 matches the figure Reuters and Al-Monitor reported for that session, so level and percent reconcile against the press. Up 12.6% over five sessions. Note that FRED's DCOILBRENTEU, which is the EIA Europe Brent spot assessment rather than the futures contract, showed 109.51 for 9 Sep; the futures settle is used here because it is what the market traded. Today's session is still open and is not charted: Brent was around 106.17 at 14:30 SGT today, an intraday reading, not a close."
+   "note": "ICE Brent front-month futures settlements from Yahoo Finance. The 9 Sep settle of 101.21 matches the figure Reuters and Al-Monitor reported for that session, so level and percent reconcile against the press. Up 12.6% over five sessions. Note that FRED's DCOILBRENTEU, which is the EIA Europe Brent spot assessment rather than the futures contract, showed 109.51 for 9 Sep; the futures settle is used here because it is what the market traded. Today's session is still open and is not charted: Brent was around 106.17 at 14:47 SGT today, an intraday reading, not a close."
   },
   {
    "id": "vix",
@@ -1200,7 +1201,7 @@
      "pct": 0.2
     }
    ],
-   "note": "Closes only. Tokyo actually rose 0.20% on 10 Sep; the shock is landing today instead, and today is not on this chart. Japan is the cleanest expression of it: near-total oil import dependence plus a Bank of Japan the market now expects to move on 18 Sep. The intraday reading at 14:30 SGT today was about 63,938.18, roughly -2.0% below the 10 Sep close, but an unsettled session is not a close and is not charted."
+   "note": "Closes only. Tokyo actually rose 0.20% on 10 Sep; the shock is landing today instead, and today is not on this chart. Japan is the cleanest expression of it: near-total oil import dependence plus a Bank of Japan the market now expects to move on 18 Sep. The intraday reading at 14:47 SGT today was about 63,938.18, roughly -2.0% below the 10 Sep close, but an unsettled session is not a close and is not charted."
   },
   {
    "id": "hsi",
@@ -1320,7 +1321,7 @@
      "pct": -1.27
     }
    ],
-   "note": "Closes only. Down 1.27% on 10 Sep and 1.03% over five sessions, so most of the damage is recent rather than cumulative. Hong Kong was still open when this ran, so today is omitted rather than shown as a close; the intraday level at 14:30 SGT was about 24,833.67."
+   "note": "Closes only. Down 1.27% on 10 Sep and 1.03% over five sessions, so most of the damage is recent rather than cumulative. Hong Kong was still open when this ran, so today is omitted rather than shown as a close; the intraday level at 14:47 SGT was about 24,833.67."
   },
   {
    "id": "sti",
@@ -1440,7 +1441,7 @@
      "pct": -0.7
     }
    ],
-   "note": "Singapore closes. Down 0.70% on 10 Sep and 1.01% over five sessions, against 1.03% for the Hang Seng over the same five. Today is omitted because the session was still open; the intraday level at 14:30 SGT was about 5,678.71."
+   "note": "Singapore closes. Down 0.70% on 10 Sep and 1.01% over five sessions, against 1.03% for the Hang Seng over the same five. Today is omitted because the session was still open; the intraday level at 14:47 SGT was about 5,678.71."
   },
   {
    "id": "nvda",
@@ -1804,7 +1805,7 @@
  ],
  "gaps": [
   "<b>Every level on this page is a Yahoo Finance daily close, except the yields.</b> Percent changes are computed from the close series shipped alongside them, never lifted from a second provider, so a level and its change always reconcile. Yields are FRED, which is the primary source for them.",
-  "<b>Today, 11 September, is deliberately missing.</b> Asian and commodity sessions were still open or still settling when this ran at 14:30 SGT. Intraday readings appear in the notes, clearly labelled, and in nothing else. An intraday level charted as a close is the single easiest way to make a dashboard lie.",
+  "<b>Today, 11 September, is deliberately missing.</b> Asian and commodity sessions were still open or still settling when this ran at 14:47 SGT. Intraday readings appear in the notes, clearly labelled, and in nothing else. An intraday level charted as a close is the single easiest way to make a dashboard lie.",
   "<b>The 10-year yield series stops one session short.</b> FRED DGS10 publishes with a lag and its latest observation is 9 Sep. The CBOE 10-year yield index printed 4.944% for 10 September and that figure is quoted in the note, attributed, rather than spliced onto the end of the FRED series.",
   "<b>CSI 300 was dropped this run.</b> Yahoo's series for 000300.SS has a hole running from 17 July to today, and the alternative Shenzhen symbol returned a single bar. Rather than chart two months of stale data as if it were current, the instrument is omitted. China exposure is therefore not represented on this page.",
   "<b>Sources that could not be dated were left out.</b> The Jane Street and SEBI proceeding before the Securities Appellate Tribunal is live and directly relevant to quant market-making, but no report found this run could be pinned to a confirmed 2026 date rather than a 2025 one, so it is absent rather than approximated.",
