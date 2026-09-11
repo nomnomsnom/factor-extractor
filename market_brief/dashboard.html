@@ -70,10 +70,11 @@ h1,h2,h3{font-family:Newsreader,Georgia,serif;font-weight:500;text-wrap:balance;
   grid-template-columns:16px minmax(0,1fr);gap:3px 10px;align-content:start}
 .wi .mk{grid-row:1/3;font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
   line-height:1.5;text-align:center;user-select:none}
-.wi.up   .mk{color:var(--pos)}
-.wi.down .mk{color:var(--neg)}
-.wi.flat .mk{color:var(--ink-3)}
-.wi h3{font-family:"Source Sans 3",sans-serif;font-size:14.5px;font-weight:600;line-height:1.35}
+.wi-up   .mk{color:var(--pos)}
+.wi-down .mk{color:var(--neg)}
+.wi-flat .mk{color:var(--ink-3)}
+.wi h3{font-family:"Source Sans 3",sans-serif;font-size:14.5px;font-weight:600;
+  line-height:1.35;color:var(--ink)}
 .wi p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.5;max-width:62ch}
 
 /* feed banner */
@@ -307,7 +308,7 @@ function renderWhy(){
   $("why").hidden = list.length === 0;
   $("whylist").innerHTML = list.map(w=>{
     const dir = WHY_MARK[w.d] ? w.d : "flat";
-    return '<div class="wi '+dir+'">'+
+    return '<div class="wi wi-'+dir+'">'+
       '<span class="mk" aria-hidden="true">'+WHY_MARK[dir]+'</span>'+
       '<h3><span class="sr-only">'+WHY_WORD[dir]+': </span>'+esc(w.t)+'</h3>'+
       '<p>'+esc(w.b)+'</p>'+
