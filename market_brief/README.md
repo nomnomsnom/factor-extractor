@@ -68,13 +68,26 @@ month), `FRED_START` sets how far back FRED is pulled.
 
 ## What is not automated
 
-**The `why`, `news` and `gaps` arrays are written by hand each run.**
+**The `news` and `gaps` arrays are written by hand each run.**
 
-`why` is the read at the top of the page: 4-8 bullets on what is moving and what
-is driving it, each tagged `up`, `down` or `flat`. Write the reasoning, but pull
-every figure inside it from the series via an f-string, exactly as the instrument
-notes do — then the prose cannot drift away from the numbers the charts plot when
-the data changes underneath it.
+`why` is not. It is the read at the top of the page — 4-8 bullets tagged `up`,
+`down` or `flat` — and `why_from_doc.py` derives it from the assembled document
+rather than from the fetch. Every figure in a bullet is read back out of the very
+series the charts plot, so the prose cannot drift from the numbers, and the
+bullets can be regenerated for any document, including one written by an older
+pipeline. Contextual clauses (a central-bank meeting date, a shipping-lane
+disruption) are text, and come from the same verified research as the news.
+
+`build.py` refuses to write a document with no bullets, because a missing `why`
+is invisible rather than loud: the page simply hides the panel. That is exactly
+what happened to the 11 Sep 15:05 document, written by a run whose checkout
+predated the field.
+
+To repair a document that lost its read:
+
+```sh
+python3 why_from_doc.py market-latest.json --in-place
+```
  They are the point
 of the dashboard, and they are the part a script cannot do: the headlines have to
 be read, the figures checked against a primary source where one exists, and

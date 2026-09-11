@@ -241,65 +241,6 @@ def pct_on(t, day):
     i = next((k for k, x in enumerate(b) if x["d"] == day), None)
     return (b[i]["c"] / b[i-1]["c"] - 1) * 100
 
-# ----------------------------------------------------------------------- why
-# The read, as bullets, at the top of the page. Authored each run like the news,
-# but every figure inside is interpolated from the same series the charts plot,
-# so the prose cannot drift away from the numbers underneath it.
-# `d` is the direction of the thing being explained: "up", "down" or "flat".
-
-why = [
- {"d":"up",
-  "t":"Oil is the origin, not a symptom",
-  "b":(f"Brent {chg(brent,5):+0.1f}% over five sessions to {brent[-1]['c']:0.2f} and WTI "
-       f"{chg(wti,5):+0.1f}% to {wti[-1]['c']:0.2f} — both benchmarks moving together, which "
-       f"is a global supply premium rather than a regional dislocation. Iran struck ten ships "
-       f"near the Strait of Hormuz and the US sank five Iranian tankers; transit has fallen "
-       f"below 2m barrels a day against 8-9m before 30 August. Every other line below is "
-       f"downstream of this one.")},
-
- {"d":"up",
-  "t":"Yields are how it reaches everything else",
-  "b":(f"The 10-year printed {tnx[-1]['c']:0.3f}% on 10 Sep, +{(tnx[-1]['c']-tnx[-2]['c'])*100:0.1f}bp "
-       f"in a session; the 2-year is {d02[-1]['c']:0.2f}%. August PPI ran 5.4% on the year "
-       f"with energy +4.2% and diesel +24.1%. Both ends of the curve are rising together, "
-       f"which says policy and inflation rather than term premium alone.")},
-
- {"d":"down",
-  "t":"Small caps are worst because they are the most rate-exposed",
-  "b":(f"Russell 2000 {chg(rut,4):0.2f}% over four sessions against {chg(spx,4):0.2f}% for the "
-       f"S&P 500. Domestic revenue, floating-rate debt and thinner margins mean a funding-cost "
-       f"shock lands on them first. This ordering is the clearest evidence the move is about "
-       f"the discount rate.")},
-
- {"d":"down",
-  "t":"Semis fell on duration, not on demand",
-  "b":(f"Intel {pct_on('INTC','2026-09-10'):0.1f}%, Micron {pct_on('MU','2026-09-10'):0.1f}%, "
-       f"AMD {pct_on('AMD','2026-09-10'):0.1f}%, Nvidia {pct_on('NVDA','2026-09-10'):0.1f}% on "
-       f"10 Sep with nothing in the session questioning AI orders. They hold the "
-       f"longest-dated cash flows in the index, so a higher discount rate marks them down "
-       f"hardest. A semi selloff with an order-book story attached would be a different event.")},
-
- {"d":"up",
-  "t":"Apple rose in the same session, which is the point",
-  "b":(f"+{pct_on('AAPL','2026-09-10'):0.1f}% on product news while the semis fell. Shorter-duration, "
-       f"cash-generative, less sensitive to the discount rate. The market is discriminating by "
-       f"duration rather than selling equities indiscriminately.")},
-
- {"d":"down",
-  "t":"Japan is the worst-placed market in this shock",
-  "b":(f"The Nikkei closed {chg(n225):+0.2f}% on 10 Sep but is around "
-       f"{((intraday('^N225') or n225[-1]['c'])/n225[-1]['c']-1)*100:0.1f}% intraday today. Near-total "
-       f"oil import dependence, a 30-year JGB at 4.055%, and a Bank of Japan that 97% of "
-       f"surveyed economists expect to raise to 1.25% on 18 September. The shock hits the "
-       f"currency, the cost base and the policy rate at once.")},
-
- {"d":"flat",
-  "t":"The VIX says repricing, not panic",
-  "b":(f"At {vix[-1]['c']:0.2f} after +{chg(vix,5):0.1f}% over five sessions: higher, but nowhere "
-       f"near stressed. This is the strongest single argument against reading the selloff as "
-       f"disorderly. Above roughly 25 that read would need revisiting.")},
-]
-
 # ---------------------------------------------------------------------- news
 
 news = [
@@ -465,12 +406,19 @@ doc = {
   "asOfISO": NOW.astimezone(datetime.timezone.utc)
                .strftime("%Y-%m-%dT%H:%M:%SZ"),
   "origin": "Live feed: Yahoo Finance daily closes + FRED DGS10/DGS2/DGS20",
-  "why": why,
   "instruments": I,
   "movers": movers,
   "news": news,
   "gaps": gaps,
 }
+
+# Derived from the assembled document, not from the fetch, so the bullets always
+# quote the same series the charts plot. See why_from_doc.py.
+from why_from_doc import build_why
+doc["why"] = build_why(doc)
+if not doc["why"]:
+    raise SystemExit("refusing to write: no `why` bullets could be derived, "
+                     "which would leave the page's top panel empty")
 
 out = os.path.join(SP, "market-latest.json")
 with open(out, "w") as f:
