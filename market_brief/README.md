@@ -1,0 +1,93 @@
+# market_brief
+
+Fills the `market/latest` document that the **Tape and Signal** dashboard reads.
+
+The dashboard's HTML is never touched by this job. It renders whatever is in that
+one document, and it is built to render partial data and to say what it is
+missing. A hole is correct; a guess is not.
+
+## The rules this pipeline enforces in code
+
+1. **No invented numbers.** If a source fails, the instrument or the session is
+   omitted. `validate.py` fails the run rather than let a hole be filled.
+2. **No interpolation, no back-fill.** A missing session is a missing row.
+   Holidays simply are not there — 7 September 2026 is absent everywhere because
+   US markets were shut for Labor Day.
+3. **Levels and percent changes come from the same series.** Every `pct` is
+   computed from the closes shipped next to it, and `validate.py` re-derives
+   each one and fails on a mismatch beyond a rounding step.
+4. **Intraday is never a close.** `build.py` drops every bar dated on or after
+   the session in progress. Intraday readings appear in `note` text, labelled,
+   and nowhere else.
+5. **Yields carry `pct: null`.** A yield move is basis points; the page renders
+   an em dash rather than a misleading percentage, and the basis-point move goes
+   in the note.
+
+## Sources
+
+| what | where | why |
+|---|---|---|
+| index, commodity and single-name closes | Yahoo Finance `v8/finance/chart` | the brief's primary price source |
+| same, if the JSON API rate-limits | Yahoo `/quote/<sym>/history/` table | same provider, same numbers, different door |
+| Treasury constant-maturity yields | FRED `fredgraph.csv` (`DGS10`, `DGS2`, `DGS20`) | the primary series for yields, and needs no API key |
+
+Yahoo's `query1`/`query2` hosts return `429` from some egress IPs. `fetch_yahoo.py`
+falls back to the history page automatically and records which door it used in
+each raw file's `source` field.
+
+Two things are deliberately *not* sources: a model's recollection of a price, and
+a percent change lifted from a provider other than the one that supplied the level.
+
+## Running it
+
+```sh
+python3 fetch_yahoo.py '%5EGSPC' '%5EIXIC' '%5EDJI' '%5ERUT' '%5EVIX' \
+                       'BZ%3DF' 'CL%3DF' '%5EN225' '%5EHSI' '%5ESTI' '%5ETNX' \
+                       NVDA AMD MU INTC AAPL META GOOGL AMZN MRVL TSM AVGO
+python3 fetch_fred.py DGS10 DGS2 DGS20
+python3 build.py        # -> market-latest.json
+python3 validate.py     # must print RESULT: PASS before anything is published
+```
+
+Then write it, and verify by reading it straight back:
+
+```
+Artifact(action: "write_db",
+         url: "https://claude.ai/code/artifact/7191ed69-823c-4496-ae40-c00cea762c1b",
+         db_op: "set", collection: "market", doc_id: "latest",
+         file_path: "./market-latest.json")
+```
+
+Optionally archive the same file at `collection: "market/latest/archive"`,
+`doc_id: <YYYY-MM-DD>`, so the history is ours rather than the provider's if a
+figure is later revised.
+
+Environment knobs: `BRIEF_TODAY` overrides the session-in-progress date when
+back-filling, `BRIEF_SESSIONS` sets the series length (default 22, about a
+month), `FRED_START` sets how far back FRED is pulled.
+
+## What is not automated
+
+**The `news` and `gaps` arrays are written by hand each run.** They are the point
+of the dashboard, and they are the part a script cannot do: the headlines have to
+be read, the figures checked against a primary source where one exists, and
+anything that cannot be dated to a confirmed source has to be left out and said
+out loud in `gaps`. `build.py` holds the current text inline; rewrite that block,
+do not extend it mechanically.
+
+`validate.py` does check the mechanical properties of what you write: dates are
+real and not in the future, `cat` is one of `mkt`/`ai`/`flag`, URLs are absolute,
+and no format placeholder survived into prose.
+
+## Scheduling
+
+Run it by hand and confirm the dashboard updates before automating anything.
+
+```
+# 08:00 SGT Tue-Sat, covering the previous US close
+0 0 * * 2-6  cd /path/to/market_brief && ./run.sh >> run.log 2>&1
+```
+
+Log every run. A silent failure that leaves a stale `asOf` is worse than a
+visible error, because the page will look current while showing old numbers. If a
+run fails, write the failure into `gaps` so the page says so out loud.

@@ -1,0 +1,4 @@
+# Fetched provider data. Re-fetch rather than trust a stale copy.
+raw/
+fred_*.csv
+*.log

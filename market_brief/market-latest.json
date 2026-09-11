@@ -1,0 +1,1814 @@
+{
+ "asOf": "11 Sep 2026, 14:30 SGT",
+ "origin": "Live feed: Yahoo Finance daily closes + FRED DGS10/DGS2/DGS20",
+ "instruments": [
+  {
+   "id": "spx",
+   "name": "S&P 500",
+   "unit": "index",
+   "kind": "eq",
+   "kpi": true,
+   "series": [
+    {
+     "d": "2026-08-11",
+     "v": 7728.2,
+     "pct": -0.32
+    },
+    {
+     "d": "2026-08-12",
+     "v": 7748.5,
+     "pct": 0.26
+    },
+    {
+     "d": "2026-08-13",
+     "v": 7798.99,
+     "pct": 0.65
+    },
+    {
+     "d": "2026-08-14",
+     "v": 7785.76,
+     "pct": -0.17
+    },
+    {
+     "d": "2026-08-17",
+     "v": 7745.06,
+     "pct": -0.52
+    },
+    {
+     "d": "2026-08-18",
+     "v": 7691.76,
+     "pct": -0.69
+    },
+    {
+     "d": "2026-08-19",
+     "v": 7707.98,
+     "pct": 0.21
+    },
+    {
+     "d": "2026-08-20",
+     "v": 7641.16,
+     "pct": -0.87
+    },
+    {
+     "d": "2026-08-21",
+     "v": 7674.37,
+     "pct": 0.43
+    },
+    {
+     "d": "2026-08-24",
+     "v": 7652.86,
+     "pct": -0.28
+    },
+    {
+     "d": "2026-08-25",
+     "v": 7677.28,
+     "pct": 0.32
+    },
+    {
+     "d": "2026-08-26",
+     "v": 7675.7,
+     "pct": -0.02
+    },
+    {
+     "d": "2026-08-27",
+     "v": 7730.99,
+     "pct": 0.72
+    },
+    {
+     "d": "2026-08-28",
+     "v": 7711.76,
+     "pct": -0.25
+    },
+    {
+     "d": "2026-08-31",
+     "v": 7686.14,
+     "pct": -0.33
+    },
+    {
+     "d": "2026-09-01",
+     "v": 7631.47,
+     "pct": -0.71
+    },
+    {
+     "d": "2026-09-02",
+     "v": 7666.6,
+     "pct": 0.46
+    },
+    {
+     "d": "2026-09-03",
+     "v": 7747.71,
+     "pct": 1.06
+    },
+    {
+     "d": "2026-09-04",
+     "v": 7718.6,
+     "pct": -0.38
+    },
+    {
+     "d": "2026-09-08",
+     "v": 7673.52,
+     "pct": -0.58
+    },
+    {
+     "d": "2026-09-09",
+     "v": 7636.36,
+     "pct": -0.48
+    },
+    {
+     "d": "2026-09-10",
+     "v": 7591.7,
+     "pct": -0.58
+    }
+   ],
+   "note": "Yahoo Finance daily closes. Fourth consecutive down session into 10 Sep, -2.01% over those four days. The index is 2.7% below its 13 Aug close of 7,798.99, the highest in this window. Nothing here is back-filled: 7 Sep is absent because US markets were shut for Labor Day."
+  },
+  {
+   "id": "ust10",
+   "name": "US 10-year yield",
+   "unit": "percent",
+   "kind": "rate",
+   "kpi": true,
+   "series": [
+    {
+     "d": "2026-08-10",
+     "v": 4.72,
+     "pct": null
+    },
+    {
+     "d": "2026-08-11",
+     "v": 4.7,
+     "pct": null
+    },
+    {
+     "d": "2026-08-12",
+     "v": 4.68,
+     "pct": null
+    },
+    {
+     "d": "2026-08-13",
+     "v": 4.63,
+     "pct": null
+    },
+    {
+     "d": "2026-08-14",
+     "v": 4.68,
+     "pct": null
+    },
+    {
+     "d": "2026-08-17",
+     "v": 4.72,
+     "pct": null
+    },
+    {
+     "d": "2026-08-18",
+     "v": 4.71,
+     "pct": null
+    },
+    {
+     "d": "2026-08-19",
+     "v": 4.65,
+     "pct": null
+    },
+    {
+     "d": "2026-08-20",
+     "v": 4.69,
+     "pct": null
+    },
+    {
+     "d": "2026-08-21",
+     "v": 4.74,
+     "pct": null
+    },
+    {
+     "d": "2026-08-24",
+     "v": 4.7,
+     "pct": null
+    },
+    {
+     "d": "2026-08-25",
+     "v": 4.64,
+     "pct": null
+    },
+    {
+     "d": "2026-08-26",
+     "v": 4.66,
+     "pct": null
+    },
+    {
+     "d": "2026-08-27",
+     "v": 4.67,
+     "pct": null
+    },
+    {
+     "d": "2026-08-28",
+     "v": 4.73,
+     "pct": null
+    },
+    {
+     "d": "2026-08-31",
+     "v": 4.75,
+     "pct": null
+    },
+    {
+     "d": "2026-09-01",
+     "v": 4.79,
+     "pct": null
+    },
+    {
+     "d": "2026-09-02",
+     "v": 4.79,
+     "pct": null
+    },
+    {
+     "d": "2026-09-03",
+     "v": 4.77,
+     "pct": null
+    },
+    {
+     "d": "2026-09-04",
+     "v": 4.78,
+     "pct": null
+    },
+    {
+     "d": "2026-09-08",
+     "v": 4.8,
+     "pct": null
+    },
+    {
+     "d": "2026-09-09",
+     "v": 4.83,
+     "pct": null
+    }
+   ],
+   "note": "FRED DGS10, the primary series, which publishes with a lag. Its latest observation is 9 Sep at 4.83%, which is +3.0bp on the session and +4.0bp since 1 Sep. FRED has not yet published 10 Sep. A separate source, the CBOE 10-year yield index on Yahoo, printed 4.944% for 10 Sep against 4.837% the day before, so +10.7bp on its own series. That figure is quoted here, attributed, rather than spliced onto the end of the FRED series: a basis-point move computed across two providers is not a real move. 7 Sep is blank in FRED because the market was shut."
+  },
+  {
+   "id": "brent",
+   "name": "Brent crude",
+   "unit": "USD per barrel",
+   "kind": "oil",
+   "kpi": true,
+   "series": [
+    {
+     "d": "2026-08-11",
+     "v": 88.91,
+     "pct": 1.36
+    },
+    {
+     "d": "2026-08-12",
+     "v": 88.98,
+     "pct": 0.08
+    },
+    {
+     "d": "2026-08-13",
+     "v": 87.07,
+     "pct": -2.15
+    },
+    {
+     "d": "2026-08-14",
+     "v": 88.52,
+     "pct": 1.67
+    },
+    {
+     "d": "2026-08-17",
+     "v": 90.87,
+     "pct": 2.65
+    },
+    {
+     "d": "2026-08-18",
+     "v": 91.02,
+     "pct": 0.17
+    },
+    {
+     "d": "2026-08-19",
+     "v": 91.62,
+     "pct": 0.66
+    },
+    {
+     "d": "2026-08-20",
+     "v": 93.78,
+     "pct": 2.36
+    },
+    {
+     "d": "2026-08-21",
+     "v": 94.39,
+     "pct": 0.65
+    },
+    {
+     "d": "2026-08-24",
+     "v": 92.17,
+     "pct": -2.35
+    },
+    {
+     "d": "2026-08-25",
+     "v": 88.58,
+     "pct": -3.89
+    },
+    {
+     "d": "2026-08-26",
+     "v": 87.84,
+     "pct": -0.84
+    },
+    {
+     "d": "2026-08-27",
+     "v": 89.7,
+     "pct": 2.12
+    },
+    {
+     "d": "2026-08-28",
+     "v": 89.31,
+     "pct": -0.43
+    },
+    {
+     "d": "2026-08-31",
+     "v": 90.49,
+     "pct": 1.32
+    },
+    {
+     "d": "2026-09-01",
+     "v": 94.65,
+     "pct": 4.6
+    },
+    {
+     "d": "2026-09-02",
+     "v": 95.63,
+     "pct": 1.04
+    },
+    {
+     "d": "2026-09-03",
+     "v": 95.52,
+     "pct": -0.12
+    },
+    {
+     "d": "2026-09-04",
+     "v": 96.28,
+     "pct": 0.8
+    },
+    {
+     "d": "2026-09-08",
+     "v": 97.92,
+     "pct": 1.7
+    },
+    {
+     "d": "2026-09-09",
+     "v": 101.21,
+     "pct": 3.36
+    },
+    {
+     "d": "2026-09-10",
+     "v": 107.63,
+     "pct": 6.34
+    }
+   ],
+   "note": "ICE Brent front-month futures settlements from Yahoo Finance. The 9 Sep settle of 101.21 matches the figure Reuters and Al-Monitor reported for that session, so level and percent reconcile against the press. Up 12.6% over five sessions. Note that FRED's DCOILBRENTEU, which is the EIA Europe Brent spot assessment rather than the futures contract, showed 109.51 for 9 Sep; the futures settle is used here because it is what the market traded. Today's session is still open and is not charted: Brent was around 106.17 at 14:30 SGT today, an intraday reading, not a close."
+  },
+  {
+   "id": "vix",
+   "name": "VIX",
+   "unit": "index",
+   "kind": "rate",
+   "kpi": true,
+   "series": [
+    {
+     "d": "2026-08-12",
+     "v": 14.55,
+     "pct": -4.78
+    },
+    {
+     "d": "2026-08-13",
+     "v": 14.63,
+     "pct": 0.55
+    },
+    {
+     "d": "2026-08-14",
+     "v": 14.25,
+     "pct": -2.6
+    },
+    {
+     "d": "2026-08-17",
+     "v": 15.19,
+     "pct": 6.6
+    },
+    {
+     "d": "2026-08-18",
+     "v": 15.84,
+     "pct": 4.28
+    },
+    {
+     "d": "2026-08-19",
+     "v": 14.89,
+     "pct": -6.0
+    },
+    {
+     "d": "2026-08-20",
+     "v": 16.01,
+     "pct": 7.52
+    },
+    {
+     "d": "2026-08-21",
+     "v": 15.13,
+     "pct": -5.5
+    },
+    {
+     "d": "2026-08-24",
+     "v": 15.85,
+     "pct": 4.76
+    },
+    {
+     "d": "2026-08-25",
+     "v": 15.45,
+     "pct": -2.52
+    },
+    {
+     "d": "2026-08-26",
+     "v": 15.21,
+     "pct": -1.55
+    },
+    {
+     "d": "2026-08-27",
+     "v": 14.51,
+     "pct": -4.6
+    },
+    {
+     "d": "2026-08-28",
+     "v": 14.43,
+     "pct": -0.55
+    },
+    {
+     "d": "2026-08-31",
+     "v": 14.92,
+     "pct": 3.4
+    },
+    {
+     "d": "2026-09-01",
+     "v": 16.34,
+     "pct": 9.52
+    },
+    {
+     "d": "2026-09-02",
+     "v": 15.2,
+     "pct": -6.98
+    },
+    {
+     "d": "2026-09-03",
+     "v": 14.32,
+     "pct": -5.79
+    },
+    {
+     "d": "2026-09-04",
+     "v": 14.53,
+     "pct": 1.47
+    },
+    {
+     "d": "2026-09-07",
+     "v": 15.3,
+     "pct": 5.3
+    },
+    {
+     "d": "2026-09-08",
+     "v": 15.72,
+     "pct": 2.75
+    },
+    {
+     "d": "2026-09-09",
+     "v": 16.46,
+     "pct": 4.71
+    },
+    {
+     "d": "2026-09-10",
+     "v": 17.84,
+     "pct": 8.38
+    }
+   ],
+   "note": "Up 24.6% over five sessions but still at 17.84. This remains the strongest single argument against reading the selloff as disorderly: a rates-and-oil repricing, not a liquidity event. Above roughly 25 that reading would need revisiting."
+  },
+  {
+   "id": "ndx",
+   "name": "Nasdaq Composite",
+   "unit": "index",
+   "kind": "eq",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-11",
+     "v": 26445.45,
+     "pct": -0.6
+    },
+    {
+     "d": "2026-08-12",
+     "v": 26588.49,
+     "pct": 0.54
+    },
+    {
+     "d": "2026-08-13",
+     "v": 26803.03,
+     "pct": 0.81
+    },
+    {
+     "d": "2026-08-14",
+     "v": 26729.16,
+     "pct": -0.28
+    },
+    {
+     "d": "2026-08-17",
+     "v": 26644.91,
+     "pct": -0.32
+    },
+    {
+     "d": "2026-08-18",
+     "v": 26289.71,
+     "pct": -1.33
+    },
+    {
+     "d": "2026-08-19",
+     "v": 26331.09,
+     "pct": 0.16
+    },
+    {
+     "d": "2026-08-20",
+     "v": 26067.17,
+     "pct": -1.0
+    },
+    {
+     "d": "2026-08-21",
+     "v": 26180.46,
+     "pct": 0.43
+    },
+    {
+     "d": "2026-08-24",
+     "v": 25980.19,
+     "pct": -0.76
+    },
+    {
+     "d": "2026-08-25",
+     "v": 26151.3,
+     "pct": 0.66
+    },
+    {
+     "d": "2026-08-26",
+     "v": 26130.2,
+     "pct": -0.08
+    },
+    {
+     "d": "2026-08-27",
+     "v": 26541.35,
+     "pct": 1.57
+    },
+    {
+     "d": "2026-08-28",
+     "v": 26402.42,
+     "pct": -0.52
+    },
+    {
+     "d": "2026-08-31",
+     "v": 26370.89,
+     "pct": -0.12
+    },
+    {
+     "d": "2026-09-01",
+     "v": 26099.77,
+     "pct": -1.03
+    },
+    {
+     "d": "2026-09-02",
+     "v": 26217.83,
+     "pct": 0.45
+    },
+    {
+     "d": "2026-09-03",
+     "v": 26584.06,
+     "pct": 1.4
+    },
+    {
+     "d": "2026-09-04",
+     "v": 26506.99,
+     "pct": -0.29
+    },
+    {
+     "d": "2026-09-08",
+     "v": 26421.41,
+     "pct": -0.32
+    },
+    {
+     "d": "2026-09-09",
+     "v": 26253.34,
+     "pct": -0.64
+    },
+    {
+     "d": "2026-09-10",
+     "v": 26081.72,
+     "pct": -0.65
+    }
+   ],
+   "note": "Yahoo Finance daily closes. Down 0.65% on 10 Sep and 1.89% over four sessions. The long-duration end of the equity market is doing more of the work than the headline index, which is what a rates-led move looks like."
+  },
+  {
+   "id": "dji",
+   "name": "Dow Jones Industrial",
+   "unit": "index",
+   "kind": "eq",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-11",
+     "v": 53791.85,
+     "pct": -0.34
+    },
+    {
+     "d": "2026-08-12",
+     "v": 53770.27,
+     "pct": -0.04
+    },
+    {
+     "d": "2026-08-13",
+     "v": 53839.99,
+     "pct": 0.13
+    },
+    {
+     "d": "2026-08-14",
+     "v": 53732.41,
+     "pct": -0.2
+    },
+    {
+     "d": "2026-08-17",
+     "v": 53459.78,
+     "pct": -0.51
+    },
+    {
+     "d": "2026-08-18",
+     "v": 53343.4,
+     "pct": -0.22
+    },
+    {
+     "d": "2026-08-19",
+     "v": 53463.05,
+     "pct": 0.22
+    },
+    {
+     "d": "2026-08-20",
+     "v": 52759.21,
+     "pct": -1.32
+    },
+    {
+     "d": "2026-08-21",
+     "v": 53277.01,
+     "pct": 0.98
+    },
+    {
+     "d": "2026-08-24",
+     "v": 53417.16,
+     "pct": 0.26
+    },
+    {
+     "d": "2026-08-25",
+     "v": 53577.4,
+     "pct": 0.3
+    },
+    {
+     "d": "2026-08-26",
+     "v": 53463.88,
+     "pct": -0.21
+    },
+    {
+     "d": "2026-08-27",
+     "v": 53569.44,
+     "pct": 0.2
+    },
+    {
+     "d": "2026-08-28",
+     "v": 53559.99,
+     "pct": -0.02
+    },
+    {
+     "d": "2026-08-31",
+     "v": 53185.9,
+     "pct": -0.7
+    },
+    {
+     "d": "2026-09-01",
+     "v": 52766.88,
+     "pct": -0.79
+    },
+    {
+     "d": "2026-09-02",
+     "v": 53061.95,
+     "pct": 0.56
+    },
+    {
+     "d": "2026-09-03",
+     "v": 53686.11,
+     "pct": 1.18
+    },
+    {
+     "d": "2026-09-04",
+     "v": 53414.25,
+     "pct": -0.51
+    },
+    {
+     "d": "2026-09-08",
+     "v": 52786.07,
+     "pct": -1.18
+    },
+    {
+     "d": "2026-09-09",
+     "v": 52380.66,
+     "pct": -0.77
+    },
+    {
+     "d": "2026-09-10",
+     "v": 52064.1,
+     "pct": -0.6
+    }
+   ],
+   "note": "The 10 Sep close of 52,064.10 is a fall of 316.56 points on the day, which matches the 316.56-point decline reported for the session by CNBC, so the level and the change reconcile against an independent account. No session is missing from this series."
+  },
+  {
+   "id": "rut",
+   "name": "Russell 2000",
+   "unit": "index",
+   "kind": "eq",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-11",
+     "v": 3027.12,
+     "pct": 0.32
+    },
+    {
+     "d": "2026-08-12",
+     "v": 3045.48,
+     "pct": 0.61
+    },
+    {
+     "d": "2026-08-13",
+     "v": 3052.85,
+     "pct": 0.24
+    },
+    {
+     "d": "2026-08-14",
+     "v": 3068.42,
+     "pct": 0.51
+    },
+    {
+     "d": "2026-08-17",
+     "v": 3057.54,
+     "pct": -0.35
+    },
+    {
+     "d": "2026-08-18",
+     "v": 3017.89,
+     "pct": -1.3
+    },
+    {
+     "d": "2026-08-19",
+     "v": 3032.94,
+     "pct": 0.5
+    },
+    {
+     "d": "2026-08-20",
+     "v": 2992.43,
+     "pct": -1.34
+    },
+    {
+     "d": "2026-08-21",
+     "v": 3017.87,
+     "pct": 0.85
+    },
+    {
+     "d": "2026-08-24",
+     "v": 2995.08,
+     "pct": -0.76
+    },
+    {
+     "d": "2026-08-25",
+     "v": 3010.02,
+     "pct": 0.5
+    },
+    {
+     "d": "2026-08-26",
+     "v": 3005.9,
+     "pct": -0.14
+    },
+    {
+     "d": "2026-08-27",
+     "v": 3014.34,
+     "pct": 0.28
+    },
+    {
+     "d": "2026-08-28",
+     "v": 2972.37,
+     "pct": -1.39
+    },
+    {
+     "d": "2026-08-31",
+     "v": 2956.45,
+     "pct": -0.54
+    },
+    {
+     "d": "2026-09-01",
+     "v": 2920.13,
+     "pct": -1.23
+    },
+    {
+     "d": "2026-09-02",
+     "v": 2953.17,
+     "pct": 1.13
+    },
+    {
+     "d": "2026-09-03",
+     "v": 2968.27,
+     "pct": 0.51
+    },
+    {
+     "d": "2026-09-04",
+     "v": 2975.65,
+     "pct": 0.25
+    },
+    {
+     "d": "2026-09-08",
+     "v": 2960.2,
+     "pct": -0.52
+    },
+    {
+     "d": "2026-09-09",
+     "v": 2921.24,
+     "pct": -1.32
+    },
+    {
+     "d": "2026-09-10",
+     "v": 2890.95,
+     "pct": -1.04
+    }
+   ],
+   "note": "Small caps have led the decline throughout: -2.60% over four sessions against -2.01% for the S&P 500. Domestic, rate-sensitive and more levered, which fits a rates-driven move rather than a growth scare."
+  },
+  {
+   "id": "ust2",
+   "name": "US 2-year yield",
+   "unit": "percent",
+   "kind": "rate",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-10",
+     "v": 4.25,
+     "pct": null
+    },
+    {
+     "d": "2026-08-11",
+     "v": 4.22,
+     "pct": null
+    },
+    {
+     "d": "2026-08-12",
+     "v": 4.2,
+     "pct": null
+    },
+    {
+     "d": "2026-08-13",
+     "v": 4.15,
+     "pct": null
+    },
+    {
+     "d": "2026-08-14",
+     "v": 4.17,
+     "pct": null
+    },
+    {
+     "d": "2026-08-17",
+     "v": 4.19,
+     "pct": null
+    },
+    {
+     "d": "2026-08-18",
+     "v": 4.19,
+     "pct": null
+    },
+    {
+     "d": "2026-08-19",
+     "v": 4.19,
+     "pct": null
+    },
+    {
+     "d": "2026-08-20",
+     "v": 4.19,
+     "pct": null
+    },
+    {
+     "d": "2026-08-21",
+     "v": 4.24,
+     "pct": null
+    },
+    {
+     "d": "2026-08-24",
+     "v": 4.24,
+     "pct": null
+    },
+    {
+     "d": "2026-08-25",
+     "v": 4.17,
+     "pct": null
+    },
+    {
+     "d": "2026-08-26",
+     "v": 4.19,
+     "pct": null
+    },
+    {
+     "d": "2026-08-27",
+     "v": 4.2,
+     "pct": null
+    },
+    {
+     "d": "2026-08-28",
+     "v": 4.34,
+     "pct": null
+    },
+    {
+     "d": "2026-08-31",
+     "v": 4.34,
+     "pct": null
+    },
+    {
+     "d": "2026-09-01",
+     "v": 4.39,
+     "pct": null
+    },
+    {
+     "d": "2026-09-02",
+     "v": 4.39,
+     "pct": null
+    },
+    {
+     "d": "2026-09-03",
+     "v": 4.34,
+     "pct": null
+    },
+    {
+     "d": "2026-09-04",
+     "v": 4.37,
+     "pct": null
+    },
+    {
+     "d": "2026-09-08",
+     "v": 4.39,
+     "pct": null
+    },
+    {
+     "d": "2026-09-09",
+     "v": 4.43,
+     "pct": null
+    }
+   ],
+   "note": "FRED DGS2, same lag as the 10-year. 4.43% on 9 Sep: +4.0bp on the session and +26.0bp since 25 Aug. The 2-year is the cleanest read available here on what the market thinks the Fed does on 16 Sep, and it has been rising with the 10-year rather than against it, which says the move is about policy and inflation rather than term premium alone. The 10s2s spread is 0.40 percentage points. FRED DGS20 was 5.28% on the same date."
+  },
+  {
+   "id": "wti",
+   "name": "WTI crude",
+   "unit": "USD per barrel",
+   "kind": "oil",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-11",
+     "v": 83.2,
+     "pct": 1.3
+    },
+    {
+     "d": "2026-08-12",
+     "v": 83.27,
+     "pct": 0.08
+    },
+    {
+     "d": "2026-08-13",
+     "v": 81.25,
+     "pct": -2.43
+    },
+    {
+     "d": "2026-08-14",
+     "v": 82.4,
+     "pct": 1.42
+    },
+    {
+     "d": "2026-08-17",
+     "v": 84.5,
+     "pct": 2.55
+    },
+    {
+     "d": "2026-08-18",
+     "v": 84.94,
+     "pct": 0.52
+    },
+    {
+     "d": "2026-08-19",
+     "v": 85.83,
+     "pct": 1.05
+    },
+    {
+     "d": "2026-08-20",
+     "v": 87.83,
+     "pct": 2.33
+    },
+    {
+     "d": "2026-08-21",
+     "v": 87.06,
+     "pct": -0.88
+    },
+    {
+     "d": "2026-08-24",
+     "v": 85.01,
+     "pct": -2.35
+    },
+    {
+     "d": "2026-08-25",
+     "v": 82.36,
+     "pct": -3.12
+    },
+    {
+     "d": "2026-08-26",
+     "v": 82.23,
+     "pct": -0.16
+    },
+    {
+     "d": "2026-08-27",
+     "v": 83.53,
+     "pct": 1.58
+    },
+    {
+     "d": "2026-08-28",
+     "v": 83.4,
+     "pct": -0.16
+    },
+    {
+     "d": "2026-08-31",
+     "v": 85.76,
+     "pct": 2.83
+    },
+    {
+     "d": "2026-09-01",
+     "v": 90.22,
+     "pct": 5.2
+    },
+    {
+     "d": "2026-09-02",
+     "v": 91.01,
+     "pct": 0.88
+    },
+    {
+     "d": "2026-09-03",
+     "v": 91.3,
+     "pct": 0.32
+    },
+    {
+     "d": "2026-09-04",
+     "v": 91.48,
+     "pct": 0.2
+    },
+    {
+     "d": "2026-09-08",
+     "v": 93.03,
+     "pct": 1.69
+    },
+    {
+     "d": "2026-09-09",
+     "v": 96.05,
+     "pct": 3.25
+    },
+    {
+     "d": "2026-09-10",
+     "v": 102.48,
+     "pct": 6.69
+    }
+   ],
+   "note": "NYMEX WTI front-month settlements from Yahoo Finance. The 9 Sep settle of 96.05 matches the press figure for that session. Brent's premium to WTI on 10 Sep is 5.15 a barrel. Today is still trading and is not charted."
+  },
+  {
+   "id": "nikkei",
+   "name": "Nikkei 225",
+   "unit": "index",
+   "kind": "eq",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-12",
+     "v": 67524.06,
+     "pct": 0.83
+    },
+    {
+     "d": "2026-08-13",
+     "v": 68308.59,
+     "pct": 1.16
+    },
+    {
+     "d": "2026-08-14",
+     "v": 68713.8,
+     "pct": 0.59
+    },
+    {
+     "d": "2026-08-17",
+     "v": 69220.25,
+     "pct": 0.74
+    },
+    {
+     "d": "2026-08-18",
+     "v": 67460.73,
+     "pct": -2.54
+    },
+    {
+     "d": "2026-08-19",
+     "v": 65326.42,
+     "pct": -3.16
+    },
+    {
+     "d": "2026-08-20",
+     "v": 66216.79,
+     "pct": 1.36
+    },
+    {
+     "d": "2026-08-21",
+     "v": 66016.36,
+     "pct": -0.3
+    },
+    {
+     "d": "2026-08-24",
+     "v": 65528.09,
+     "pct": -0.74
+    },
+    {
+     "d": "2026-08-25",
+     "v": 65856.43,
+     "pct": 0.5
+    },
+    {
+     "d": "2026-08-26",
+     "v": 66262.16,
+     "pct": 0.62
+    },
+    {
+     "d": "2026-08-27",
+     "v": 66131.98,
+     "pct": -0.2
+    },
+    {
+     "d": "2026-08-28",
+     "v": 66405.56,
+     "pct": 0.41
+    },
+    {
+     "d": "2026-08-31",
+     "v": 66311.93,
+     "pct": -0.14
+    },
+    {
+     "d": "2026-09-01",
+     "v": 66215.34,
+     "pct": -0.15
+    },
+    {
+     "d": "2026-09-02",
+     "v": 64325.64,
+     "pct": -2.85
+    },
+    {
+     "d": "2026-09-03",
+     "v": 64214.48,
+     "pct": -0.17
+    },
+    {
+     "d": "2026-09-04",
+     "v": 65020.94,
+     "pct": 1.26
+    },
+    {
+     "d": "2026-09-07",
+     "v": 66399.84,
+     "pct": 2.12
+    },
+    {
+     "d": "2026-09-08",
+     "v": 65269.33,
+     "pct": -1.7
+    },
+    {
+     "d": "2026-09-09",
+     "v": 65142.78,
+     "pct": -0.19
+    },
+    {
+     "d": "2026-09-10",
+     "v": 65270.95,
+     "pct": 0.2
+    }
+   ],
+   "note": "Closes only. Tokyo actually rose 0.20% on 10 Sep; the shock is landing today instead, and today is not on this chart. Japan is the cleanest expression of it: near-total oil import dependence plus a Bank of Japan the market now expects to move on 18 Sep. The intraday reading at 14:30 SGT today was about 63,938.18, roughly -2.0% below the 10 Sep close, but an unsettled session is not a close and is not charted."
+  },
+  {
+   "id": "hsi",
+   "name": "Hang Seng",
+   "unit": "index",
+   "kind": "eq",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-12",
+     "v": 25440.17,
+     "pct": -0.83
+    },
+    {
+     "d": "2026-08-13",
+     "v": 25396.51,
+     "pct": -0.17
+    },
+    {
+     "d": "2026-08-14",
+     "v": 25116.85,
+     "pct": -1.1
+    },
+    {
+     "d": "2026-08-17",
+     "v": 25453.23,
+     "pct": 1.34
+    },
+    {
+     "d": "2026-08-18",
+     "v": 25471.15,
+     "pct": 0.07
+    },
+    {
+     "d": "2026-08-19",
+     "v": 25495.07,
+     "pct": 0.09
+    },
+    {
+     "d": "2026-08-20",
+     "v": 25698.49,
+     "pct": 0.8
+    },
+    {
+     "d": "2026-08-21",
+     "v": 26009.46,
+     "pct": 1.21
+    },
+    {
+     "d": "2026-08-24",
+     "v": 25517.33,
+     "pct": -1.89
+    },
+    {
+     "d": "2026-08-25",
+     "v": 25511.1,
+     "pct": -0.02
+    },
+    {
+     "d": "2026-08-26",
+     "v": 25652.97,
+     "pct": 0.56
+    },
+    {
+     "d": "2026-08-27",
+     "v": 25565.74,
+     "pct": -0.34
+    },
+    {
+     "d": "2026-08-28",
+     "v": 25584.79,
+     "pct": 0.07
+    },
+    {
+     "d": "2026-08-31",
+     "v": 25566.99,
+     "pct": -0.07
+    },
+    {
+     "d": "2026-09-01",
+     "v": 25329.73,
+     "pct": -0.93
+    },
+    {
+     "d": "2026-09-02",
+     "v": 25311.21,
+     "pct": -0.07
+    },
+    {
+     "d": "2026-09-03",
+     "v": 25213.31,
+     "pct": -0.39
+    },
+    {
+     "d": "2026-09-04",
+     "v": 25650.87,
+     "pct": 1.74
+    },
+    {
+     "d": "2026-09-07",
+     "v": 25413.12,
+     "pct": -0.93
+    },
+    {
+     "d": "2026-09-08",
+     "v": 25317.18,
+     "pct": -0.38
+    },
+    {
+     "d": "2026-09-09",
+     "v": 25274.96,
+     "pct": -0.17
+    },
+    {
+     "d": "2026-09-10",
+     "v": 24954.47,
+     "pct": -1.27
+    }
+   ],
+   "note": "Closes only. Down 1.27% on 10 Sep and 1.03% over five sessions, so most of the damage is recent rather than cumulative. Hong Kong was still open when this ran, so today is omitted rather than shown as a close; the intraday level at 14:30 SGT was about 24,833.67."
+  },
+  {
+   "id": "sti",
+   "name": "Straits Times Index",
+   "unit": "index",
+   "kind": "eq",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-12",
+     "v": 5720.75,
+     "pct": -0.58
+    },
+    {
+     "d": "2026-08-13",
+     "v": 5720.05,
+     "pct": -0.01
+    },
+    {
+     "d": "2026-08-14",
+     "v": 5743.59,
+     "pct": 0.41
+    },
+    {
+     "d": "2026-08-17",
+     "v": 5768.46,
+     "pct": 0.43
+    },
+    {
+     "d": "2026-08-18",
+     "v": 5701.4,
+     "pct": -1.16
+    },
+    {
+     "d": "2026-08-19",
+     "v": 5694.24,
+     "pct": -0.13
+    },
+    {
+     "d": "2026-08-20",
+     "v": 5671.91,
+     "pct": -0.39
+    },
+    {
+     "d": "2026-08-21",
+     "v": 5688.96,
+     "pct": 0.3
+    },
+    {
+     "d": "2026-08-24",
+     "v": 5680.46,
+     "pct": -0.15
+    },
+    {
+     "d": "2026-08-25",
+     "v": 5735.68,
+     "pct": 0.97
+    },
+    {
+     "d": "2026-08-26",
+     "v": 5721.59,
+     "pct": -0.25
+    },
+    {
+     "d": "2026-08-27",
+     "v": 5684.12,
+     "pct": -0.65
+    },
+    {
+     "d": "2026-08-28",
+     "v": 5699.93,
+     "pct": 0.28
+    },
+    {
+     "d": "2026-08-31",
+     "v": 5755.36,
+     "pct": 0.97
+    },
+    {
+     "d": "2026-09-01",
+     "v": 5710.37,
+     "pct": -0.78
+    },
+    {
+     "d": "2026-09-02",
+     "v": 5744.11,
+     "pct": 0.59
+    },
+    {
+     "d": "2026-09-03",
+     "v": 5747.71,
+     "pct": 0.06
+    },
+    {
+     "d": "2026-09-04",
+     "v": 5801.96,
+     "pct": 0.94
+    },
+    {
+     "d": "2026-09-07",
+     "v": 5792.28,
+     "pct": -0.17
+    },
+    {
+     "d": "2026-09-08",
+     "v": 5767.45,
+     "pct": -0.43
+    },
+    {
+     "d": "2026-09-09",
+     "v": 5729.63,
+     "pct": -0.66
+    },
+    {
+     "d": "2026-09-10",
+     "v": 5689.75,
+     "pct": -0.7
+    }
+   ],
+   "note": "Singapore closes. Down 0.70% on 10 Sep and 1.01% over five sessions, against 1.03% for the Hang Seng over the same five. Today is omitted because the session was still open; the intraday level at 14:30 SGT was about 5,678.71."
+  },
+  {
+   "id": "nvda",
+   "name": "Nvidia, USD per share",
+   "unit": "index",
+   "kind": "eq",
+   "kpi": false,
+   "series": [
+    {
+     "d": "2026-08-11",
+     "v": 217.5,
+     "pct": -0.02
+    },
+    {
+     "d": "2026-08-12",
+     "v": 224.09,
+     "pct": 3.03
+    },
+    {
+     "d": "2026-08-13",
+     "v": 225.3,
+     "pct": 0.54
+    },
+    {
+     "d": "2026-08-14",
+     "v": 225.16,
+     "pct": -0.06
+    },
+    {
+     "d": "2026-08-17",
+     "v": 225.01,
+     "pct": -0.07
+    },
+    {
+     "d": "2026-08-18",
+     "v": 219.74,
+     "pct": -2.34
+    },
+    {
+     "d": "2026-08-19",
+     "v": 217.56,
+     "pct": -0.99
+    },
+    {
+     "d": "2026-08-20",
+     "v": 216.85,
+     "pct": -0.33
+    },
+    {
+     "d": "2026-08-21",
+     "v": 214.72,
+     "pct": -0.98
+    },
+    {
+     "d": "2026-08-24",
+     "v": 208.48,
+     "pct": -2.91
+    },
+    {
+     "d": "2026-08-25",
+     "v": 213.05,
+     "pct": 2.19
+    },
+    {
+     "d": "2026-08-26",
+     "v": 209.66,
+     "pct": -1.59
+    },
+    {
+     "d": "2026-08-27",
+     "v": 227.98,
+     "pct": 8.74
+    },
+    {
+     "d": "2026-08-28",
+     "v": 217.55,
+     "pct": -4.57
+    },
+    {
+     "d": "2026-08-31",
+     "v": 220.78,
+     "pct": 1.48
+    },
+    {
+     "d": "2026-09-01",
+     "v": 217.44,
+     "pct": -1.51
+    },
+    {
+     "d": "2026-09-02",
+     "v": 224.41,
+     "pct": 3.21
+    },
+    {
+     "d": "2026-09-03",
+     "v": 228.45,
+     "pct": 1.8
+    },
+    {
+     "d": "2026-09-04",
+     "v": 230.36,
+     "pct": 0.84
+    },
+    {
+     "d": "2026-09-08",
+     "v": 225.73,
+     "pct": -2.01
+    },
+    {
+     "d": "2026-09-09",
+     "v": 223.67,
+     "pct": -0.91
+    },
+    {
+     "d": "2026-09-10",
+     "v": 218.36,
+     "pct": -2.37
+    }
+   ],
+   "note": "Promoted out of the percent chips into a full close series. The unit chip reads index because the feed contract allows only three unit values; these are US dollars per share. Down 2.37% on 10 Sep and 2.70% over five sessions. The AI-complex bellwether: if the selloff were about AI demand rather than the discount rate, this is where it would show first."
+  }
+ ],
+ "movers": [
+  {
+   "d": "10 Sep close",
+   "items": [
+    {
+     "t": "AAPL",
+     "p": 3.56
+    },
+    {
+     "t": "GOOGL",
+     "p": 0.59
+    },
+    {
+     "t": "AMZN",
+     "p": -0.2
+    },
+    {
+     "t": "AVGO",
+     "p": -0.97
+    },
+    {
+     "t": "META",
+     "p": -1.42
+    },
+    {
+     "t": "TSM",
+     "p": -1.68
+    },
+    {
+     "t": "NVDA",
+     "p": -2.37
+    },
+    {
+     "t": "AMD",
+     "p": -3.36
+    },
+    {
+     "t": "MRVL",
+     "p": -3.43
+    },
+    {
+     "t": "MU",
+     "p": -4.9
+    },
+    {
+     "t": "INTC",
+     "p": -5.57
+    }
+   ]
+  },
+  {
+   "d": "9 Sep close",
+   "items": [
+    {
+     "t": "META",
+     "p": 6.55
+    },
+    {
+     "t": "MRVL",
+     "p": 4.26
+    },
+    {
+     "t": "AMD",
+     "p": 3.04
+    },
+    {
+     "t": "MU",
+     "p": 2.75
+    },
+    {
+     "t": "INTC",
+     "p": 1.69
+    },
+    {
+     "t": "AAPL",
+     "p": -0.28
+    },
+    {
+     "t": "TSM",
+     "p": -0.83
+    },
+    {
+     "t": "NVDA",
+     "p": -0.91
+    },
+    {
+     "t": "AVGO",
+     "p": -1.13
+    },
+    {
+     "t": "AMZN",
+     "p": -1.78
+    },
+    {
+     "t": "GOOGL",
+     "p": -2.28
+    }
+   ]
+  },
+  {
+   "d": "8 Sep close",
+   "items": [
+    {
+     "t": "INTC",
+     "p": 9.05
+    },
+    {
+     "t": "AMD",
+     "p": 5.9
+    },
+    {
+     "t": "AVGO",
+     "p": 2.98
+    },
+    {
+     "t": "TSM",
+     "p": 2.35
+    },
+    {
+     "t": "MRVL",
+     "p": 0.83
+    },
+    {
+     "t": "GOOGL",
+     "p": -0.03
+    },
+    {
+     "t": "META",
+     "p": -0.53
+    },
+    {
+     "t": "AMZN",
+     "p": -0.6
+    },
+    {
+     "t": "AAPL",
+     "p": -1.17
+    },
+    {
+     "t": "MU",
+     "p": -1.61
+    },
+    {
+     "t": "NVDA",
+     "p": -2.01
+    }
+   ]
+  }
+ ],
+ "news": [
+  {
+   "d": "2026-09-10",
+   "cat": "mkt",
+   "t": "August PPI +0.4% on the month, 5.4% on the year, and it is almost all energy",
+   "b": "The BLS reported final-demand PPI up 0.4% in August and 5.4% over twelve months. Energy did the damage, advancing 4.2% with diesel fuel up 24.1%, more than three-quarters of the goods increase. Core final demand, excluding food, energy and trade services, rose a much calmer 0.3% and 4.7% year on year. That gap is the whole argument: this is an oil shock passing through wholesale prices, not yet a broad domestic inflation problem, and the Fed has to decide which one it is reacting to on 16 September.",
+   "u": "https://www.bls.gov/news.release/ppi.nr0.htm",
+   "un": "BLS, primary release"
+  },
+  {
+   "d": "2026-09-10",
+   "cat": "mkt",
+   "t": "Fourth straight down day; small caps and long duration take the most damage",
+   "b": "The S&P 500 closed at 7,591.70, down 0.58%, the Dow fell 316.56 points to 52,064.10 and the Nasdaq Composite lost 0.65% to 26,081.72. The Russell 2000 was the worst of them at -1.04%. Over the four sessions the S&P is down 2.01% and the Russell 2.60%. That ordering, small caps worst and the VIX still at 17.84, is what a discount-rate repricing looks like rather than a growth scare.",
+   "u": "https://finance.yahoo.com/quote/%5EGSPC/history/",
+   "un": "Yahoo Finance, daily closes"
+  },
+  {
+   "d": "2026-09-09",
+   "cat": "mkt",
+   "t": "Brent settles above $100 after the biggest wave of attacks on shipping of the war",
+   "b": "Brent settled up $3.29 at $101.21 and WTI at $96.05, both the highest closes since 22 May, after Iran struck ten ships near the Strait of Hormuz and the US sank five Iranian tankers. Hormuz flows have fallen below 2 million barrels a day against 8-9 million in the week before fighting resumed on 30 August. Brent then settled at 107.63 on 10 Sep. The EIA has raised its 2026-27 price forecasts on faster global stockpile draws.",
+   "u": "https://www.al-monitor.com/originals/2026/09/brent-settles-over-100-barrel-middle-east-conflict-intensifies",
+   "un": "Al-Monitor, citing Reuters"
+  },
+  {
+   "d": "2026-09-09",
+   "cat": "mkt",
+   "t": "HFR: macro and CTAs ran away with August, and trend beat discretionary for the first time since 2022",
+   "b": "The HFRI Fund Weighted Composite gained 1.7% in August. Macro led at +4.1%, with the Commodity index +10.0% and Systematic Diversified/CTA +3.45%. Equity Hedge managed +1.5%, Relative Value +0.3% and Event-Driven +0.15%. The read for anyone in systematic strategies is that the oil and rates trends that are hurting long equity books are precisely what trend followers are paid to capture, and the dispersion is enormous: the top decile is +65.9% over twelve months against -9.9% for the bottom.",
+   "u": "https://www.hedgeweek.com/macro-hedge-funds-lead-august-rebound-as-commodities-and-ctas-surge/",
+   "un": "Hedgeweek, citing HFR"
+  },
+  {
+   "d": "2026-09-11",
+   "cat": "mkt",
+   "t": "Asia sells the same story harder: Nikkei near -3%, JGB 30-year at 4.055%",
+   "b": "Tokyo fell close to 3% and the Topix 1.9%, Kospi -2.4% and the Hang Seng around -1.5%, with the MSCI Asia Pacific index off 1.3%. The 30-year JGB yield reached 4.055% and the 10-year 2.965%. Reporting cites 97% of surveyed economists now expecting the Bank of Japan to raise its policy rate to 1.25% on 18 September. Japan imports essentially all of its oil, so the shock lands on the currency, the cost base and the policy rate at once. These are intraday figures from a session that was still settling, and none of them are charted above.",
+   "u": "https://au.investing.com/news/stock-market-news/asia-stocks-slip-on-tech-losses-with-oil-surge-yields-in-focus-4635799",
+   "un": "Investing.com"
+  },
+  {
+   "d": "2026-09-10",
+   "cat": "mkt",
+   "t": "Semis sold off on the discount rate, not on demand",
+   "b": "Intel -5.6%, Micron -4.9%, AMD -3.4%, Nvidia -2.4%, Broadcom -1.0% and TSMC -1.7% on the session, while Apple rose 3.6%. Nothing in the day's news questioned AI capex; a ten-year yield approaching 4.95% simply repriced the longest-duration cash flows in the index. Worth watching rather than trading: if a semi selloff ever arrives with an order-book story attached, that is a different event entirely.",
+   "u": "https://finance.yahoo.com/quote/NVDA/history/",
+   "un": "Yahoo Finance, daily closes"
+  },
+  {
+   "d": "2026-09-10",
+   "cat": "mkt",
+   "t": "Existing home sales at the slowest pace in more than a year, inventory at a decade high",
+   "b": "Sales fell 2% from July to a 3.98 million annualised rate, a third straight monthly decline and 1.2% below August last year, per the National Association of Realtors. Unsold inventory rose to 1.62 million, a 4.9-months supply and the highest in over ten years. Most of these closings were contracted in June and July at 30-year mortgage rates of 6.43% to 6.66%; rates have risen since. Housing is the clearest channel through which the bond move reaches the real economy.",
+   "u": "https://wtop.com/national/2026/09/us-home-sales-weaken-to-slowest-pace-in-more-than-a-year-as-mortgage-rates-home-prices-climb",
+   "un": "AP, citing NAR"
+  },
+  {
+   "d": "2026-09-03",
+   "cat": "mkt",
+   "t": "SEC and CFTC push the Form PF compliance date out again, to 1 July 2027",
+   "b": "The further extension, effective 3 September, moves the compliance date for the February 2024 Form PF amendments from 1 October 2026 to 1 July 2027. This is the second slip. For private-fund and quant shops it buys roughly nine more months before the more granular exposure, liquidity and risk reporting bites, and it sits alongside an April joint proposal to recalibrate who files, what they report and how often.",
+   "u": "https://www.federalregister.gov/documents/2026/09/03/2026-18104/form-pf-reporting-requirements-for-all-filers-and-large-hedge-fund-advisers-further-extension-of",
+   "un": "Federal Register"
+  },
+  {
+   "d": "2026-09-10",
+   "cat": "flag",
+   "t": "The FOMC decides on 16 September and the market cannot agree on the odds",
+   "b": "The meeting runs 15-16 September with the statement and dot plot at 2pm ET on the 16th, from a current target range of 3.50-3.75%. Published estimates of the probability of a 25bp hike ranged from about 56% to near 70% across sources during the week, which is too wide a spread to report as a single number. The 2-year yield, which is the cleanest market read available here, closed at 4.43% on 9 Sep. This item is flagged rather than stated because the odds figure is genuinely contested.",
+   "u": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+   "un": "Federal Reserve calendar"
+  },
+  {
+   "d": "2026-09-02",
+   "cat": "ai",
+   "t": "Nvidia to buy Hugging Face for about $12.93bn",
+   "b": "Per the 8-K, roughly $11.9bn cash to shareholders plus up to $1.0bn in equity retention, expected to close in the first half of 2027 subject to regulatory approval. Nvidia frames it as a deconcentration platform. No regulator has commented. The practical point is that the default distribution point for open model weights now has a chip vendor as its owner.",
+   "u": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000078/nvda-20260902.htm",
+   "un": "SEC 8-K"
+  },
+  {
+   "d": "2026-09-07",
+   "cat": "flag",
+   "t": "Artificial Analysis rewrote its index three times in five days",
+   "b": "v4.1.1 had Fable at 66 and Astra at 61. v4.2 dropped a saturated GPQA Diamond and had 57 and 55. v4.3 swapped in AutomationBench-AA and put both at 53, with private test weighting raised from 20% to 45%. Scores are not comparable across those versions, so any ranking claim citing that week depends entirely on which version is quoted. A benchmark that moves this fast is a benchmark you cannot build a position on.",
+   "u": "https://www.techtimes.com/articles/327053/20260909/ai-leaderboard-rewrote-itself-three-times-last-week-same-score-half-cost.htm",
+   "un": "Tech Times"
+  }
+ ],
+ "gaps": [
+  "<b>Every level on this page is a Yahoo Finance daily close, except the yields.</b> Percent changes are computed from the close series shipped alongside them, never lifted from a second provider, so a level and its change always reconcile. Yields are FRED, which is the primary source for them.",
+  "<b>Today, 11 September, is deliberately missing.</b> Asian and commodity sessions were still open or still settling when this ran at 14:30 SGT. Intraday readings appear in the notes, clearly labelled, and in nothing else. An intraday level charted as a close is the single easiest way to make a dashboard lie.",
+  "<b>The 10-year yield series stops one session short.</b> FRED DGS10 publishes with a lag and its latest observation is 9 Sep. The CBOE 10-year yield index printed 4.944% for 10 September and that figure is quoted in the note, attributed, rather than spliced onto the end of the FRED series.",
+  "<b>CSI 300 was dropped this run.</b> Yahoo's series for 000300.SS has a hole running from 17 July to today, and the alternative Shenzhen symbol returned a single bar. Rather than chart two months of stale data as if it were current, the instrument is omitted. China exposure is therefore not represented on this page.",
+  "<b>Sources that could not be dated were left out.</b> The Jane Street and SEBI proceeding before the Securities Appellate Tribunal is live and directly relevant to quant market-making, but no report found this run could be pinned to a confirmed 2026 date rather than a 2025 one, so it is absent rather than approximated.",
+  "<b>Fed hike odds are reported as a range, not a number.</b> Estimates between roughly 56% and 70% were in circulation during the week. Picking one and presenting it as the market's view would be a fabrication dressed as precision.",
+  "<b>No trading logic lives here.</b> This page reports what printed and what moved it. It does not size, rank or recommend anything."
+ ]
+}
