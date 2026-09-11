@@ -68,7 +68,14 @@ month), `FRED_START` sets how far back FRED is pulled.
 
 ## What is not automated
 
-**The `news` and `gaps` arrays are written by hand each run.** They are the point
+**The `why`, `news` and `gaps` arrays are written by hand each run.**
+
+`why` is the read at the top of the page: 4-8 bullets on what is moving and what
+is driving it, each tagged `up`, `down` or `flat`. Write the reasoning, but pull
+every figure inside it from the series via an f-string, exactly as the instrument
+notes do — then the prose cannot drift away from the numbers the charts plot when
+the data changes underneath it.
+ They are the point
 of the dashboard, and they are the part a script cannot do: the headlines have to
 be read, the figures checked against a primary source where one exists, and
 anything that cannot be dated to a confirmed source has to be left out and said

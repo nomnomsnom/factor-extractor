@@ -42,6 +42,24 @@ for i in d["instruments"]:
     if "%%" in i["note"] or "0.2f" in i["note"] or "{" in i["note"]:
         err.append(p+" note has an unformatted placeholder")
 
+DIRS={"up","down","flat"}
+wy=d.get("why")
+if not isinstance(wy,list) or not wy:
+    err.append("why missing or empty - the page hides the panel and the read is lost")
+else:
+    if not 4<=len(wy)<=8: warn.append("why has %d bullets; 4-8 reads best"%len(wy))
+    for w in wy:
+        lab="why[%s]"%str(w.get("t"))[:34]
+        if w.get("d") not in DIRS: err.append(lab+" bad direction %r"%w.get("d"))
+        for f in ("t","b"):
+            v=w.get(f)
+            if not isinstance(v,str) or not v.strip(): err.append(lab+" empty "+f); continue
+            if "%%" in v or "{" in v or "0.1f" in v or "0.2f" in v:
+                err.append(lab+" placeholder left in "+f)
+            if "<" in v: err.append(lab+" raw markup in "+f)
+            if re.search(r"\d{4}-\d{2}-\d{2}", v): warn.append(lab+" raw ISO date in "+f)
+        if len(w.get("t",""))>90: warn.append(lab+" lead is long for a bullet")
+
 for n in d["news"]:
     if n["cat"] not in CATS: err.append("news bad cat "+n["cat"])
     if not re.match(r"^\d{4}-\d{2}-\d{2}$",n["d"]): err.append("news bad date "+n["d"])
@@ -102,8 +120,8 @@ for day in d["movers"]:
         if abs(exp-m["p"])>0.011:
             err.append("mover %s %s %.3f vs %.3f"%(m["t"],dd,m["p"],exp))
 
-print("instruments=%d kpi=%d news=%d gaps=%d movers_days=%d"%(
-    len(d["instruments"]),kpi,len(d["news"]),len(d["gaps"]),len(d["movers"])))
+print("instruments=%d kpi=%d why=%d news=%d gaps=%d movers_days=%d"%(
+    len(d["instruments"]),kpi,len(d.get("why") or []),len(d["news"]),len(d["gaps"]),len(d["movers"])))
 print("bytes=%d"%os.path.getsize(os.path.join(SP,"market-latest.json")))
 for w in warn: print("WARN:",w)
 for e in err: print("FAIL:",e)
