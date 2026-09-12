@@ -120,6 +120,56 @@ for day in d["movers"]:
         if abs(exp-m["p"])>0.011:
             err.append("mover %s %s %.3f vs %.3f"%(m["t"],dd,m["p"],exp))
 
+# ---- guard 1: an instrument silently a session behind the rest of the board.
+# The 12 Sep run shipped Nikkei, Hang Seng and STI at their 10 Sep closes while
+# every US series carried 11 Sep, and nothing complained. Correctly dated, but
+# stale, which on a daily brief is its own kind of wrong.
+newest = max((i["series"][-1]["d"] for i in d["instruments"] if i.get("series")), default=None)
+if newest:
+    lag = []
+    for i in d["instruments"]:
+        ld = i["series"][-1]["d"]
+        if ld == newest: continue
+        behind = len([x for x in (0,) if True])  # placeholder, days computed below
+        import datetime as _dt
+        days = (_dt.date.fromisoformat(newest) - _dt.date.fromisoformat(ld)).days
+        # FRED yields publish a day or two late by design and say so in their note.
+        tol = 4 if i["unit"] == "percent" else 0
+        lag.append((i["id"], ld, days, days > tol))
+    if lag:
+        print("  session lag against newest (%s):" % newest)
+        for iid, ld, days, bad in lag:
+            print("    %-8s %s  (%d day%s behind)%s" % (iid, ld, days, "" if days==1 else "s",
+                                                        "   <-- STALE" if bad else "  (expected)"))
+        for iid, ld, days, bad in lag:
+            if bad:
+                err.append("%s is %d days behind the newest session %s - refetch it or drop it, "
+                           "do not ship a stale instrument beside fresh ones" % (iid, days, newest))
+
+# ---- guard 2: a `why` that did not move when the tape did.
+# The bullets are a reading of the session, not a template with variable numbers.
+# If the newest session advanced but the leads are the same sentences as the last
+# committed brief, the read was not rewritten and the panel is lying about being new.
+import subprocess as _sp
+try:
+    prev = json.loads(_sp.run(["git","show","HEAD:market_brief/market-latest.json"],
+                              capture_output=True, text=True, check=True,
+                              cwd=os.path.dirname(SP) or ".").stdout)
+except Exception:
+    prev = None
+if prev and newest:
+    pnew = max((i["series"][-1]["d"] for i in prev.get("instruments",[]) if i.get("series")),
+               default=None)
+    pl = [w.get("t","") for w in (prev.get("why") or [])]
+    cl = [w.get("t","") for w in (d.get("why") or [])]
+    if pnew and pnew != newest and pl and cl:
+        same = sum(1 for x in cl if x in pl)
+        if same >= max(1, int(len(cl) * 0.6)):
+            err.append("the tape advanced from %s to %s but %d of %d `why` leads are the same "
+                       "sentences as the last brief - the read was not rewritten, only its "
+                       "numbers were. Rewrite the bullets to describe THIS session."
+                       % (pnew, newest, same, len(cl)))
+
 print("instruments=%d kpi=%d why=%d news=%d gaps=%d movers_days=%d"%(
     len(d["instruments"]),kpi,len(d.get("why") or []),len(d["news"]),len(d["gaps"]),len(d["movers"])))
 print("bytes=%d"%os.path.getsize(os.path.join(SP,"market-latest.json")))

@@ -70,23 +70,40 @@ month), `FRED_START` sets how far back FRED is pulled.
 
 **The `news` and `gaps` arrays are written by hand each run.**
 
-`why` is not. It is the read at the top of the page — 4-8 bullets tagged `up`,
-`down` or `flat` — and `why_from_doc.py` derives it from the assembled document
-rather than from the fetch. Every figure in a bullet is read back out of the very
-series the charts plot, so the prose cannot drift from the numbers, and the
-bullets can be regenerated for any document, including one written by an older
-pipeline. Contextual clauses (a central-bank meeting date, a shipping-lane
-disruption) are text, and come from the same verified research as the news.
+`why` is written by hand too, and this is the part that was got wrong once
+already, so it is worth stating plainly.
 
-`build.py` refuses to write a document with no bullets, because a missing `why`
-is invisible rather than loud: the page simply hides the panel. That is exactly
-what happened to the 11 Sep 15:05 document, written by a run whose checkout
-predated the field.
+**A narrative cannot be a template.** `why_from_doc.py` tried: fixed sentences
+with the numbers interpolated. On 11 September the tape reversed — equities up,
+oil down, VIX down 11% — and the bullets still led with "Oil is the origin, not
+a symptom", because only the figures were refreshing. Prices changed; the read
+did not. That module is kept only as an emergency repair for a document that
+shipped with no bullets at all.
 
-To repair a document that lost its read:
+What runs now is a split:
+
+- `why_facts.py` computes the **state of the tape** and nothing else — per
+  instrument one-, five- and twenty-session changes, the day's leaders and
+  laggards, whether each instrument reversed or confirmed its own trend, the
+  curve, the VIX band, breadth, and a list of `signals` naming what actually
+  changed this session (oil fell but yields rose; the VIX collapsed; small caps
+  lagged). Facts, never prose.
+- The person or agent running the job reads those signals and **writes the
+  bullets fresh**, quoting figures out of the facts so they cannot drift from
+  the series the charts plot.
+
+`validate.py` enforces both halves:
+
+- it fails a document whose instruments sit more than a session apart (FRED
+  yields exempted, since they publish late by design) — the 12 September run
+  shipped Asia a session stale beside fresh US closes and nothing complained;
+- it fails a document whose `why` leads are mostly the same sentences as the
+  last committed brief while the newest session has advanced. A read that did
+  not change when the tape did is not a read.
 
 ```sh
-python3 why_from_doc.py market-latest.json --in-place
+python3 why_facts.py market-latest.json        # what changed this session
+python3 why_facts.py market-latest.json --json # same, for a script
 ```
  They are the point
 of the dashboard, and they are the part a script cannot do: the headlines have to
