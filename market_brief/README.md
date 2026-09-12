@@ -92,14 +92,28 @@ What runs now is a split:
   bullets fresh**, quoting figures out of the facts so they cannot drift from
   the series the charts plot.
 
-`validate.py` enforces both halves:
+**Write for someone with no finance background.** This is a standing
+requirement, not a preference. "Brent gave back 2.8%" and "the 10-year rose
+12bp" are not English to most readers, and a bullet that assumes you already
+know why an oil price moves a bond yield has explained nothing. Say what the
+number is (`4.95%, up from 4.83%`), say what a named thing is the first time it
+appears (`the Russell 2000, an index of 2,000 smaller US companies`), and spell
+out the mechanism in everyday words — expensive oil, higher prices, a central
+bank more likely to raise rates, dearer borrowing, shares worth less.
+
+`validate.py` enforces all three halves:
 
 - it fails a document whose instruments sit more than a session apart (FRED
   yields exempted, since they publish late by design) — the 12 September run
   shipped Asia a session stale beside fresh US closes and nothing complained;
 - it fails a document whose `why` leads are mostly the same sentences as the
   last committed brief while the newest session has advanced. A read that did
-  not change when the tape did is not a read.
+  not change when the market did is not a read;
+- it fails a document whose `why` uses jargon from a fixed list, and names the
+  plain phrasing to use instead. Run it against the 11 September bullets and it
+  returns ten failures — "gave back", "12bp", "front end", "the curve", "risk
+  premium" and so on. It also warns when a named index or gauge is used without
+  saying what it is, and when a sentence runs past about forty words.
 
 ```sh
 python3 why_facts.py market-latest.json        # what changed this session

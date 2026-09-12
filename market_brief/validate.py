@@ -146,6 +146,57 @@ if newest:
                 err.append("%s is %d days behind the newest session %s - refetch it or drop it, "
                            "do not ship a stale instrument beside fresh ones" % (iid, days, newest))
 
+# ---- guard 3: the bullets are for a reader with no finance background.
+# "gave back 2.8%" and "+12bp" mean nothing to most people, and a bullet that
+# assumes you know why oil moves bond yields explains nothing at all. Each entry
+# is (regex, what to write instead).
+JARGON = [
+ (r"\bgave back\b",            "say 'fell' or 'lost'"),
+ (r"\b\d+(\.\d+)?\s*bps?\b", "write the rate itself: '4.95%, up from 4.83%'"),
+ (r"\bbasis points?\b",        "write the rate itself, not the move in hundredths"),
+ (r"\bfront end\b|\blong end\b", "say 'what the government pays to borrow for two years'"),
+ (r"\bterm premium\b",         "drop it, or explain it in a clause"),
+ (r"\bpass-?through\b",        "say 'costs being passed on to prices'"),
+ (r"\brisk premium\b",         "say 'the extra investors were paying for safety'"),
+ (r"\brepric(e|ed|ing)\b",     "say 'changed what they expect' or 'marked down'"),
+ (r"\b(long-)?duration\b",     "say 'companies whose profits are mostly far in the future'"),
+ (r"\bthe curve\b",            "compare the two- and ten-year rates in words"),
+ (r"\brisk-o(n|ff)\b",         "say what investors actually did"),
+ (r"\bdiscount rate\b",        "say 'borrowing costs' or explain the link"),
+ (r"\bfloating[- ]rate\b",     "say 'loans whose interest resets'"),
+ (r"\bdrawdown\b",             "say 'fall' or 'loss'"),
+ (r"\bdispersion\b",           "say 'the gap between the best and worst'"),
+ (r"\bbellwether\b",           "say 'the one everyone watches'"),
+ (r"\bon the board\b",         "say 'on the list'"),
+ (r"\bthe tape\b",             "say 'the market'"),
+ (r"\bround-?trip(ped)?\b",    "say 'fell and recovered'"),
+ (r"\bcash-generative\b",      "say 'makes money now rather than later'"),
+]
+# Named things a newcomer cannot be assumed to know. The first bullet that uses
+# one should say what it is, so we look for an explanatory clause beside it.
+GLOSS = ["VIX", "S&P 500", "Russell 2000", "Nikkei", "Hang Seng", "Brent", "WTI",
+         "FOMC", "Nasdaq", "Dow"]
+GLOSS_MARK = [", which", ", an ", ", a ", ", its ", ", the ", " measures", " tracks",
+              " index of", " gauge", " — ", " is a ", "(", "an index"]
+
+wtxt = [(w.get("t","") + " " + w.get("b","")) for w in (d.get("why") or [])]
+alltxt = " ".join(wtxt)
+for pat, fix in JARGON:
+    m = re.search(pat, alltxt, re.I)
+    if m:
+        err.append("`why` uses jargon %r - %s. These bullets are read by someone "
+                   "with no finance background." % (m.group(0), fix))
+for term in GLOSS:
+    hits = [x for x in wtxt if term.lower() in x.lower()]
+    if hits and not any(any(mk in h for mk in GLOSS_MARK) for h in hits):
+        warn.append("`why` names %s without explaining what it is" % term)
+# Long sentences are the other way a bullet loses a reader.
+for w in (d.get("why") or []):
+    for sent in re.split(r"(?<=[.!?])\s+", w.get("b","")):
+        n = len(sent.split())
+        if n > 42:
+            warn.append("`why` sentence of %d words in %r - split it" % (n, w.get("t","")[:34]))
+
 # ---- guard 2: a `why` that did not move when the tape did.
 # The bullets are a reading of the session, not a template with variable numbers.
 # If the newest session advanced but the leads are the same sentences as the last

@@ -1825,39 +1825,39 @@
  ],
  "why": [
   {
-   "d": "flat",
-   "t": "The session turned, and the turn is the story",
-   "b": "Eight of thirteen instruments moved against their own five-session trend. All four US indices rose, the S&P +0.86%, while oil gave back 2.8% and the VIX fell 11.2% to 15.84. After four days of selling, the risk premium came out of the tape nearly as fast as it went in."
+   "d": "up",
+   "t": "US shares bounced back after four bad days",
+   "b": "The S&P 500, which tracks the 500 largest US companies, rose 0.86%, and the other big US indexes rose with it. Oil got cheaper and the market's fear gauge dropped hard. After a week of selling, investors calmed down almost as fast as they had panicked."
   },
   {
    "d": "up",
-   "t": "Yields did not get the memo, and that is the thing to watch",
-   "b": "Brent fell 2.8% and the 10-year still rose +12bp to 4.95%, the 2-year +13bp to 4.56%. Until this session the rate move was an oil pass-through story. It has decoupled: rates are no longer following the barrel, which points at the FOMC on 16 September rather than at energy feeding through to inflation. These are FRED series and sit one session behind the equity closes."
+   "t": "But borrowing costs kept climbing, and that is the odd part",
+   "b": "Here is the chain that drove the whole week. Expensive oil makes almost everything cost more to make and ship, so prices rise, so the US central bank is more likely to raise interest rates to cool things down. All week oil and interest rates climbed together. On this day oil fell 2.8% and interest rates rose anyway \u2014 the US government now pays 4.95% to borrow for ten years, up from 4.83%. So rates are no longer following oil. They are now about what the central bank decides on 16 September."
   },
   {
    "d": "up",
-   "t": "The front end led the entire board",
-   "b": "The 2-year was the single biggest mover of the day at +2.93% in yield terms, ahead of the 10-year, leaving the curve at 0.39 points. When the front end leads on a day equities rally, the market is repricing policy rather than growth \u2014 and the front end is where a hike gets priced."
+   "t": "The rate that moved most is the one that tracks the next year or two",
+   "b": "What the government pays to borrow for two years rose more than what it pays to borrow for ten (4.56% against 4.95%). Short-term rates move on what people expect the central bank to do soon; long-term rates are about the distant future. Short moving faster means traders are betting on a decision that is close at hand."
   },
   {
    "d": "down",
-   "t": "Small caps led the fall and did not lead the bounce",
-   "b": "Russell 2000 +0.45% against +0.86% for the S&P, after being the worst of the four over five sessions at -2.17%. Rate-sensitive, floating-rate, domestic. They are the cleanest evidence that the rates constraint has not actually been relieved, whatever the index did on the day."
+   "t": "Smaller companies barely joined the rally",
+   "b": "The Russell 2000, an index of 2,000 smaller US companies, rose only 0.45% while the S&P rose 0.86%. Smaller firms borrow more and on worse terms, so dearer borrowing hurts them most. They fell hardest last week and lagged the recovery, which suggests the pressure from interest rates has not really lifted."
   },
   {
    "d": "down",
-   "t": "Asia sold what America bought",
-   "b": "The Nikkei fell 1.93% to 64,011 and the Hang Seng 0.60%, both on the same session the US rallied. Japan imports essentially all of its oil and faces a Bank of Japan that a Reuters poll has 97% of economists expecting to raise to 1.25% on 18 September. A one-day pullback in crude does not fix either."
+   "t": "Asia fell on the same day America rose",
+   "b": "Japan's Nikkei, its main share index, dropped 1.93% and Hong Kong's Hang Seng, the equivalent there, fell 0.60%, while US markets gained. Japan buys nearly all its oil from abroad, so costly oil hurts it more, and its own central bank is widely expected to raise rates on 18 September. One cheaper day for oil does not fix either problem."
   },
   {
    "d": "down",
-   "t": "Nvidia is the one that has not come back",
-   "b": "-0.03% on the session and -4.45% over five, the worst five-day performer on the board. The rest of the complex bounced \u2014 Marvell +4.0%, Intel +2.6%, AMD +2.5% \u2014 while Nvidia and Micron sat it out. A rebound that leaves the largest name behind is worth watching, though one session is not a trend."
+   "t": "Nvidia is the chip maker that did not recover",
+   "b": "It finished the day flat and is down 4.45% over the week, the worst on the list. The rest of the chip makers bounced: Marvell +4.0%, Intel +2.6%, AMD +2.5%. When the biggest name sits out a recovery it is worth watching, though one day is not a trend."
   },
   {
    "d": "flat",
-   "t": "The VIX now says the scare is over, which is its own risk",
-   "b": "15.84 after -11.2% on the session, back in the calm band and up only +9.0% across the whole episode. Brent is still +9.5% over five sessions and Hormuz is disrupted, not resolved. Cheap protection into an FOMC the market cannot agree on is a different setup from the one that opened the week. Above roughly 25 the disorderly read returns."
+   "t": "Calm came back quickly, which is its own kind of risk",
+   "b": "The VIX is a measure of how much investors are paying to protect themselves against a market fall \u2014 a fear gauge. It dropped 11.2% to 15.84, which is low. But oil is still 9.5% dearer than a week ago and the shipping disruption behind it has not been resolved. Cheap protection just before a central bank decision nobody agrees on is worth noticing. If this gauge climbs above about 25, the calm reading is wrong."
   }
  ]
 }
