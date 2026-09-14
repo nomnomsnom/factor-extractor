@@ -1,0 +1,338 @@
+{
+ "TS0U": {
+  "what": "Owns Singapore offices (OUE Bayfront, One Raffles Place), hotels (Hilton and Crowne Plaza Changi) and Mandarin Gallery retail.",
+  "rev": "Commercial (office and retail) roughly 60% of net property income, hospitality ~40%. Entirely Singapore after the Shanghai divestment.",
+  "gm": "REIT metrics: gearing around 40%, hotel income linked to RevPAR, office occupancy above 95%.",
+  "mgmt": "Managed by OUE Limited as sponsor, which is controlled by the Lippo-linked Riady family interests.",
+  "comp": "Suntec REIT, Keppel REIT and CDL Hospitality Trusts.",
+  "moat": "Prime Singapore locations - One Raffles Place and OUE Bayfront - with hotel exposure to Changi and Orchard tourism.",
+  "moatTags": [
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Singapore office is stable; hotel RevPAR has normalised after the 2023-24 events-driven peak.",
+  "risk": "Hotel income normalising lower while refinancing costs stay high.",
+  "implied": "A high yield and deep discount to book imply the market expects flat to falling distributions.",
+  "debate": "Bulls say pure Singapore assets at a large discount with a high yield. Bears note gearing, a small portfolio and sponsor-related concerns.",
+  "disprove": "Hotel RevPAR declining; office reversions turning negative; gearing above 41%; distribution cut."
+ },
+ "8C8U": {
+  "what": "Owns purpose-built worker dormitories and student accommodation, spun out of Centurion Corporation into a REIT in 2025.",
+  "rev": "Singapore worker accommodation is the majority of income, with UK and Australian student accommodation the rest.",
+  "gm": "Very high net property income margins (above 75%) - dormitories are cheap to operate with high occupancy and regulated bed supply.",
+  "mgmt": "Managed by Centurion Corporation as sponsor, which retains a substantial stake.",
+  "comp": "Other dormitory operators in Singapore, and student accommodation providers in the UK and Australia.",
+  "moat": "Singapore purpose-built dormitory licences are tightly controlled and supply is regulated after the pandemic reforms - a genuine regulatory moat.",
+  "moatTags": [
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "Singapore construction and marine sectors need migrant worker beds; supply is capped by government policy.",
+  "risk": "A construction slowdown reducing worker numbers, or policy changes on dormitory standards requiring capital spending.",
+  "implied": "The yield implies stable occupancy near 99% and continued rental growth from a constrained bed supply.",
+  "debate": "Bulls say regulated supply plus near-full occupancy makes this the most defensive niche in Singapore real estate. Bears note a short listing history and concentration in one asset class.",
+  "disprove": "Occupancy falling below 97%; bed rates declining; new dormitory supply approvals rising; construction demand slowing."
+ },
+ "CC3": {
+  "what": "Sells mobile, broadband and pay TV services plus cybersecurity solutions in Singapore.",
+  "rev": "Telecommunications (mobile, broadband, entertainment) is the majority; cybersecurity (Ensign and D Crypt) the rest and a differentiator versus peers.",
+  "gm": "Service EBITDA margin in the 20s. Singapore telecom is a four-player market with persistent price competition.",
+  "mgmt": "Nikhil Eapen is CEO. Temasek and Asia Mobile Holdings hold a controlling interest.",
+  "comp": "Singtel, M1 and Simba in Singapore mobile and broadband.",
+  "moat": "Spectrum and network infrastructure plus a customer base - but Singapore has four operators for six million people, which caps pricing power.",
+  "moatTags": [
+   "Regulation",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Singapore mobile is saturated and price-competitive; cybersecurity is growing.",
+  "risk": "Continued mobile price competition from Simba and M1 eroding average revenue per user while transformation costs remain.",
+  "implied": "A mid-teens P/E with a high dividend yield implies flat earnings and a sustained payout.",
+  "debate": "Bulls say a well-covered dividend with cybersecurity optionality. Bears point at structural price competition in a tiny, saturated market.",
+  "disprove": "Mobile service revenue declining; cybersecurity growth slowing; dividend not covered by free cash flow; market share loss."
+ },
+ "9A4U": {
+  "what": "Owns logistics and industrial properties across Singapore, Australia, Japan and South Korea after merging several ESR-linked trusts.",
+  "rev": "Singapore is the largest share, with Australia, Japan and Korea providing diversification. New Economy assets (logistics, data centres) are the strategic focus.",
+  "gm": "REIT metrics: net property income margin around 73%, gearing around 40%, occupancy in the mid 90s.",
+  "mgmt": "Managed by ESR Group as sponsor, which has itself been taken private - a change worth watching for pipeline continuity.",
+  "comp": "Mapletree Logistics Trust, CapitaLand Ascendas REIT, AIMS APAC REIT.",
+  "moat": "Portfolio scale after the mergers and a sponsor development pipeline, though individual assets are commoditised.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "Regional logistics demand is solid; Singapore industrial rents have been rising.",
+  "risk": "Sponsor instability after the ESR privatisation, plus refinancing at higher rates.",
+  "implied": "A high yield implies the market prices in execution and sponsor risk.",
+  "debate": "Bulls say a cheap, diversified industrial portfolio post-merger with rental upside. Bears note a messy merger history and uncertainty about the sponsor.",
+  "disprove": "Occupancy falling; gearing above 41%; distribution per unit declining; sponsor pipeline access unclear."
+ },
+ "CY6U": {
+  "what": "Owns IT business parks, industrial facilities and data centres in Bangalore, Chennai, Hyderabad, Pune and Mumbai, and leases them to Indian and global IT firms.",
+  "rev": "Bangalore and Chennai business parks are the largest contributors. All income is in Indian rupees, distributed in Singapore dollars.",
+  "gm": "Net property income margins above 80%. It is a business trust, so it can develop assets directly rather than only buying completed ones.",
+  "mgmt": "Managed by CapitaLand Investment as sponsor - the first Indian property trust listed in Asia.",
+  "comp": "Embassy REIT, Mindspace REIT and DLF in Indian commercial property.",
+  "moat": "Established Indian business park portfolio with multinational tenants and a development pipeline - hard for a newcomer to assemble.",
+  "moatTags": [
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Indian office demand from global capability centres has been the strongest office market in the world.",
+  "risk": "Rupee depreciation eroding Singapore dollar distributions - the structural drag on this trust.",
+  "implied": "A high yield implies continued rupee weakness and development execution risk.",
+  "debate": "Bulls say the best-performing office market in the world at a high yield. Bears say currency depreciation has eaten much of the operating growth.",
+  "disprove": "Rupee depreciating faster than rental growth; occupancy falling; development projects delayed; gearing rising above 40%."
+ },
+ "A50": {
+  "what": "Runs Thomson Medical Centre and womens and childrens clinics in Singapore, plus hospitals in Malaysia (TMC Life) and Vietnam (FV Hospital).",
+  "rev": "Singapore hospital and clinic services, Malaysian hospital operations and the Vietnamese FV Hospital acquired in 2023.",
+  "gm": "Hospital EBITDA margins in the teens to 20s. The Vietnam acquisition added debt and is the key integration question.",
+  "mgmt": "Controlled by Peter Lim, the Singapore investor. Governance and related-party matters are worth reading carefully.",
+  "comp": "Raffles Medical, IHH (Parkway) and Singapore Health Services in Singapore; local hospitals in Vietnam.",
+  "moat": "Brand in Singapore maternity care and hospital licences in three countries - real but narrow.",
+  "moatTags": [
+   "Brand",
+   "Regulation"
+  ],
+  "ind": "Regional private healthcare demand is growing, particularly in Vietnam.",
+  "risk": "Debt from the FV Hospital acquisition weighing on a business with modest earnings, plus Singapore birth rates falling.",
+  "implied": "The valuation implies successful Vietnam integration and earnings growth that has not yet appeared.",
+  "debate": "Bulls say regional private healthcare exposure with a well-known controlling shareholder. Bears point to leverage, thin profitability and declining Singapore births.",
+  "disprove": "Vietnam integration costs rising; net debt not falling; Singapore patient volumes declining; further equity fundraising."
+ },
+ "F03": {
+  "what": "Makes and sells instant coffee mixes and snacks - MacCoffee and CafePHO - mainly in Russia, Ukraine, Kazakhstan, Vietnam and India.",
+  "rev": "Russia and Eastern Europe is the largest market, Southeast Asia (Vietnam) next and growing, with South Asia and ingredient manufacturing the rest.",
+  "gm": "Gross margin around 30-35%. Brand strength in specific markets supports pricing, but coffee bean costs have been extremely volatile.",
+  "mgmt": "Sudeep Nair is CEO; founder Tan Wang Cheow is executive chairman and the family controls the company. Dividends have been generous.",
+  "comp": "Nestle and local instant coffee brands in each market; Trung Nguyen in Vietnam.",
+  "moat": "Brand leadership in specific markets - MacCoffee is a household name in Russia and Kazakhstan - plus distribution reach.",
+  "moatTags": [
+   "Brand",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Instant coffee consumption is growing in its emerging markets; Vietnam is the expansion focus.",
+  "risk": "Russia and Ukraine exposure - sanctions, currency and payment risk in the largest profit market.",
+  "implied": "A low-to-mid teens P/E implies continued growth with the Russia risk discounted.",
+  "debate": "Bulls say a genuinely growing consumer brand at a modest multiple with a strong dividend. Bears point at geopolitical concentration and coffee input cost inflation.",
+  "disprove": "Russian ruble depreciation or sanctions affecting cash repatriation; coffee bean costs compressing margins; Vietnam expansion stalling."
+ },
+ "H13": {
+  "what": "Owns and develops property - Singapore residential (Sentosa Cove), and a large portfolio of UK and European commercial buildings.",
+  "rev": "Rental income from UK and Australian commercial properties provides the recurring base; Singapore residential development is lumpy.",
+  "gm": "Watch recurring rental income, net gearing and the discount to net asset value. UK office values have fallen significantly.",
+  "mgmt": "The Chua family controls it; Chua Thian Poh is chairman. Family control, conservative but concentrated in UK offices.",
+  "comp": "Other Singapore property companies with overseas portfolios - City Developments, Wing Tai, Frasers.",
+  "moat": "Asset ownership rather than competitive advantage. The UK portfolio is the key exposure.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "UK commercial property values have fallen with higher rates; Singapore residential is constrained.",
+  "risk": "Further UK office valuation write-downs and refinancing at materially higher rates.",
+  "implied": "A very deep discount to net asset value implies the market expects more write-downs.",
+  "debate": "Bulls say assets at a fraction of book with a stable dividend. Bears note UK office exposure at exactly the wrong time and thin liquidity.",
+  "disprove": "UK portfolio revaluation losses; interest cover falling; net asset value per share declining; dividend cut."
+ },
+ "P15": {
+  "what": "A holding company whose main asset is a large stake in PCCW, the Hong Kong telecom and media group.",
+  "rev": "Essentially the equity-accounted earnings and dividends from its PCCW shareholding, plus small management services.",
+  "gm": "Not meaningful - this is a single-asset holding company. Value it by the market value of its PCCW stake against the share price.",
+  "mgmt": "Richard Li controls it. Minority shareholders are passengers in a structure built around one controlling holder.",
+  "comp": "For an investor, buying PCCW directly in Hong Kong is the alternative.",
+  "moat": "None of its own - it inherits whatever advantages PCCW has in Hong Kong telecom.",
+  "moatTags": [
+   "None"
+  ],
+  "ind": "Hong Kong telecom is mature; PCCW's data centre and insurance interests are the growth pieces.",
+  "risk": "The holding company discount persisting or widening, and dependence on PCCW dividend policy.",
+  "implied": "The price relative to the PCCW stake value tells you the discount the market applies.",
+  "debate": "Bulls say indirect PCCW exposure at a large discount. Bears say the discount has been permanent and liquidity is minimal.",
+  "disprove": "PCCW share price declining; PCCW cutting dividends; the discount widening; no buybacks or restructuring."
+ },
+ "OU8": {
+  "what": "Builds, owns and operates purpose-built worker dormitories and student accommodation in Singapore, Malaysia, the UK, Australia and Hong Kong.",
+  "rev": "Worker accommodation (Singapore and Malaysia) is the profit core; student accommodation in the UK and Australia the growth arm. It now also manages the spun-off Centurion Accommodation REIT.",
+  "gm": "Very high operating margins on dormitories (above 60% EBITDA) given regulated bed supply and near-full occupancy.",
+  "mgmt": "Kong Chee Min is CEO; the Loh and Han families control the company. The REIT spin-off in 2025 unlocked value and created a fee stream.",
+  "comp": "Other Singapore dormitory operators and international student housing providers.",
+  "moat": "Singapore dormitory licensing restricts supply, and existing operators with approved beds hold a regulated advantage.",
+  "moatTags": [
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "Migrant worker bed demand tracks construction and marine activity; student housing demand is structural.",
+  "risk": "Government policy changes on dormitory standards or foreign worker quotas.",
+  "implied": "After the REIT spin-off the price implies continued high occupancy plus growing management fees.",
+  "debate": "Bulls say regulated supply, high occupancy and a new asset-light fee business. Bears note policy dependence and concentration in Singapore.",
+  "disprove": "Occupancy falling; bed rates declining; foreign worker levies or quotas tightening; student accommodation expansion underperforming."
+ },
+ "NC2": {
+  "what": "Produces and sells natural rubber - concentrated latex, block rubber and ribbed smoked sheet - mainly from Thailand.",
+  "rev": "Natural rubber products sold to tyre manufacturers and glove makers worldwide. A Thai-primary company with an SGX secondary listing.",
+  "gm": "Gross margin is thin and tracks the spread between raw rubber purchase prices and product selling prices.",
+  "mgmt": "Controlled by the Sincharoenkul family of Thailand.",
+  "comp": "Other Thai and Indonesian rubber processors; Sri Trang Gloves is a listed subsidiary.",
+  "moat": "Scale in rubber processing and farmer sourcing networks in Thailand - cost position in a commodity.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "Natural rubber prices have been volatile; glove demand normalised after the pandemic surge.",
+  "risk": "Rubber price swings and Thai baht strength compressing already thin margins.",
+  "implied": "A low valuation implies the market expects thin, volatile margins to continue.",
+  "debate": "Bulls say leverage to any rubber price upcycle. Bears note commodity processing with no pricing power and secondary-listing illiquidity.",
+  "disprove": "Rubber prices falling; processing margins compressing; glove subsidiary losses; inventory write-downs."
+ },
+ "P40U": {
+  "what": "Owns Wisma Atria and Ngee Ann City on Orchard Road plus retail and office assets in Australia, Malaysia, China and Japan.",
+  "rev": "Singapore (Orchard Road) is roughly 60-65% of net property income, Australia ~25%, the rest smaller.",
+  "gm": "REIT metrics: gearing around 36-37%, occupancy above 96%, with the Toshin master lease at Ngee Ann City a key income anchor.",
+  "mgmt": "Managed by YTL Corporation of Malaysia as sponsor.",
+  "comp": "CapitaLand Integrated Commercial Trust and Mapletree Pan Asia in Singapore retail.",
+  "moat": "Orchard Road frontage - Singapore's premier shopping street - is genuinely scarce retail real estate.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Regulation"
+  ],
+  "ind": "Orchard Road retail has recovered with tourism; Australian retail is stable.",
+  "risk": "The Toshin master lease renewal terms, and Orchard Road losing relevance to suburban malls and online.",
+  "implied": "A high yield and discount to book imply the market expects flat distributions.",
+  "debate": "Bulls say prime Orchard Road assets at a discount with a high yield. Bears note years of flat distributions and limited growth.",
+  "disprove": "Orchard Road tenant sales declining; Toshin lease renewed on worse terms; Australian occupancy falling; distribution cut."
+ },
+ "G92": {
+  "what": "Supplies jet fuel to Chinese airports and trades oil products internationally, with a stake in the Shanghai Pudong airport refuelling joint venture.",
+  "rev": "Jet fuel supply and oil trading volumes are large, but the profit comes substantially from the equity-accounted Pudong refuelling joint venture.",
+  "gm": "Trading gross margins are razor thin - fractions of a percent. The associate income is the real earnings driver.",
+  "mgmt": "Controlled by China National Aviation Fuel Group, a Chinese state-owned enterprise.",
+  "comp": "Other jet fuel suppliers and oil traders; the Pudong joint venture is effectively a monopoly at that airport.",
+  "moat": "The Pudong airport refuelling concession is a genuine monopoly; the trading business has no moat at all.",
+  "moatTags": [
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "Chinese international air traffic is still recovering from the pandemic, which drives refuelling volumes.",
+  "risk": "Chinese international flight volumes stalling, or the parent restructuring the relationship with minority shareholders.",
+  "implied": "A low P/E with a large net cash position implies little growth is expected.",
+  "debate": "Bulls say net cash exceeds a large share of the market cap with recovering Chinese aviation. Bears note state control, thin trading margins and minority shareholder risk.",
+  "disprove": "Pudong joint venture profits declining; Chinese international flights not recovering; trading losses; cash not returned."
+ },
+ "AP4": {
+  "what": "Makes cleanroom gloves for semiconductor and electronics manufacturers, and healthcare gloves, from plants in Malaysia and Thailand.",
+  "rev": "Cleanroom gloves are the higher-margin core; healthcare gloves are a more commoditised, competitive segment. Customers are global semiconductor and medical firms.",
+  "gm": "Gross margin in the 20s-30s, much better in cleanroom than healthcare. Nitrile raw material costs and the ringgit drive swings.",
+  "mgmt": "Wong Teek Son founded and runs the company with a substantial family stake. Net cash and consistent dividends.",
+  "comp": "Top Glove, Hartalega and Kossan in Malaysia; Chinese producers competing aggressively on healthcare gloves.",
+  "moat": "Cleanroom customer qualification is a genuine barrier - semiconductor fabs audit and approve suppliers over years.",
+  "moatTags": [
+   "Switching costs",
+   "IP/Patents"
+  ],
+  "ind": "Semiconductor cleanroom demand tracks fab utilisation; healthcare gloves are oversupplied.",
+  "risk": "Chinese glove makers dumping capacity into the healthcare segment and US tariff policy shifting demand.",
+  "implied": "A low-to-mid teens P/E with a large net cash balance implies modest growth and continued dividends.",
+  "debate": "Bulls like net cash, high dividend and a defensible cleanroom niche. Bears note glove overcapacity and customer concentration in semiconductors.",
+  "disprove": "Cleanroom volumes declining; healthcare glove prices falling further; net cash being eroded; margin compression."
+ },
+ "P52": {
+  "what": "Supplies ready-mix concrete and cement to Singapore construction projects - the largest concrete supplier in the country.",
+  "rev": "Concrete and cement is essentially the whole business after exiting shipping and ports. Singapore is the dominant market.",
+  "gm": "Gross margin in the low teens. Volume and mix (specialised low-carbon concrete carries better margins) drive profitability.",
+  "mgmt": "Ng Bok Eng and family control the company. Conservative balance sheet with net cash and rising dividends.",
+  "comp": "Other Singapore ready-mix suppliers and cement importers; Hong Leong Asia in building materials.",
+  "moat": "Batching plant locations near Singapore construction sites, long-term customer relationships and technical concrete formulations.",
+  "moatTags": [
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Singapore construction demand is strong - Changi Terminal 5, HDB building programme, industrial and data centre projects.",
+  "risk": "A construction slowdown after the current infrastructure pipeline, or cement import cost spikes.",
+  "implied": "A mid-teens P/E implies the Singapore construction pipeline keeps delivering volume growth.",
+  "debate": "Bulls say a direct, debt-free play on a visible multi-year Singapore construction pipeline. Bears note it is a cyclical commodity supplier with a small market.",
+  "disprove": "Singapore construction demand forecasts falling; concrete volumes declining; cement costs rising; margins compressing."
+ },
+ "O5RU": {
+  "what": "Owns industrial, logistics and business park properties in Singapore and Australia and leases them to manufacturers and logistics firms.",
+  "rev": "Singapore is roughly 75-80% of net property income, Australia the rest. A diversified industrial portfolio with a large single-tenant exposure.",
+  "gm": "REIT metrics: net property income margin around 73%, gearing in the low-to-mid 30s (conservative for an S-REIT), occupancy in the mid 90s.",
+  "mgmt": "Managed by AIMS Financial Group. Smaller scale than the Mapletree or CapitaLand REITs, so acquisition capacity is limited.",
+  "comp": "ESR-REIT, Mapletree Industrial and Logistics Trusts, Sabana.",
+  "moat": "Portfolio of Singapore industrial assets - commoditised, but the low gearing gives more flexibility than peers.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "Singapore industrial rents have been rising for several years on limited supply.",
+  "risk": "Tenant concentration - the loss of a large single tenant would hit distributions directly.",
+  "implied": "A yield above 7% implies the market expects limited growth and some tenant risk.",
+  "debate": "Bulls like low gearing, a high yield and positive Singapore industrial reversions. Bears note small scale, tenant concentration and limited growth capacity.",
+  "disprove": "A major tenant not renewing; occupancy falling below 93%; gearing rising; distribution per unit declining."
+ },
+ "W05": {
+  "what": "Develops and invests in property in Singapore, Malaysia and Australia, and holds retail brand franchises in Singapore (Uniqlo joint venture).",
+  "rev": "Property development and investment plus a retail segment. The Uniqlo Singapore and Malaysia joint venture is a valuable but partly hidden asset.",
+  "gm": "Look at net asset value per share, net gearing (low), and the discount the shares trade at.",
+  "mgmt": "The Cheng family controls it; Cheng Wai Keung is chairman. Very conservative with a large net cash position.",
+  "comp": "UOL, City Developments, GuocoLand in Singapore property.",
+  "moat": "Asset ownership plus the Uniqlo franchise rights - the retail joint venture is the more interesting asset.",
+  "moatTags": [
+   "Brand",
+   "Scale"
+  ],
+  "ind": "Singapore residential is constrained; retail franchise sales have been solid.",
+  "risk": "The discount to book never closing and development activity remaining minimal.",
+  "implied": "Trading at a very large discount to net asset value implies the market assigns little value to the assets or to future activity.",
+  "debate": "Bulls say a net-cash property company with a valuable Uniqlo stake at a third of book. Bears say it has been cheap for a decade with no catalyst.",
+  "disprove": "Net asset value per share declining; development pipeline empty; Uniqlo joint venture profit falling; no capital return."
+ },
+ "S61": {
+  "what": "Operates public buses and the North East and Downtown MRT lines in Singapore under government contracts.",
+  "rev": "Public transport services (bus and rail fare and contract revenue) plus advertising and rental at stations. Singapore only.",
+  "gm": "Operating margins are thin and regulated. Bus operations run on a fixed-fee contracting model; rail carries more revenue risk.",
+  "mgmt": "A subsidiary of ComfortDelGro, which holds a controlling stake - free float is small.",
+  "comp": "SMRT operates the other rail lines; bus packages are competitively tendered by the Land Transport Authority.",
+  "moat": "Operating concessions granted by the government - secure while they last, but repriced at renewal.",
+  "moatTags": [
+   "Regulation",
+   "Switching costs"
+  ],
+  "ind": "Ridership has recovered above pre-pandemic levels; fare adjustments follow a regulated formula.",
+  "risk": "Rail operating costs rising faster than the fare formula allows, or losing bus packages at tender.",
+  "implied": "A low-teens P/E with a high dividend implies stable contract earnings with no growth.",
+  "debate": "Bulls say a regulated, cash-generative operator with a high payout. Bears note capped returns, parent control and minimal free float.",
+  "disprove": "Rail operating losses returning; bus packages lost at tender; fare formula adjustments unfavourable; dividend cut."
+ },
+ "B61": {
+  "what": "Develops and sells landed and high-end residential property in Singapore, from a historic land bank in the Sembawang and Seletar areas.",
+  "rev": "Residential development sales, which are lumpy and project-dependent, plus a small investment property and hospitality segment.",
+  "gm": "Development margins depend on land cost basis - the legacy land bank was acquired decades ago at very low cost, which flatters margins.",
+  "mgmt": "Controlled by the Lee family (also behind OCBC). Conservative, net cash, and content to develop slowly.",
+  "comp": "Other Singapore residential developers - UOL, GuocoLand, City Developments.",
+  "moat": "A low-cost historic land bank that cannot be replicated at today's land prices.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "Singapore landed housing is a restricted market open mainly to citizens - limited supply, resilient prices.",
+  "risk": "Cooling measures slowing sales, and earnings that appear only when projects complete.",
+  "implied": "Trading below book implies the market discounts the slow pace of development.",
+  "debate": "Bulls say cheap legacy land, net cash and special dividends when projects complete. Bears note lumpy earnings, thin liquidity and a passive controlling family.",
+  "disprove": "Project launches delayed; landed property prices falling; net asset value per share declining; dividends stopping."
+ },
+ "E28": {
+  "what": "Provides contract design and manufacturing for semiconductor equipment, medical, analytical and industrial automation customers in Europe and Asia.",
+  "rev": "Semiconductor is the largest segment (ASML is a key customer), with medical, analytical and industrial automation the rest. Netherlands, Singapore, Malaysia and China operations.",
+  "gm": "Gross margin around 14-16% - lower than Venture because more of the work is assembly than design.",
+  "mgmt": "Gooi Soon Chai is CEO. The founding families retain stakes. Conservative balance sheet.",
+  "comp": "Venture Corporation, VDL and other European contract manufacturers, plus Asian peers.",
+  "moat": "Qualified supplier status with demanding customers like ASML, where changing manufacturer requires re-qualification.",
+  "moatTags": [
+   "Switching costs"
+  ],
+  "ind": "Semiconductor equipment demand is recovering; medical and analytical markets have been soft.",
+  "risk": "Customer concentration in semiconductor equipment, and thin margins that leave little room for error.",
+  "implied": "A mid-teens P/E implies a semiconductor recovery lifting volumes and margins.",
+  "debate": "Bulls say leverage to the ASML supply chain at a modest multiple. Bears note thin margins, customer concentration and cyclicality.",
+  "disprove": "Semiconductor segment revenue declining; gross margin below 14%; medical and analytical weakness persisting; capacity underutilised."
+ }
+}

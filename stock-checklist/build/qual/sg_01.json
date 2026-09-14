@@ -1,0 +1,365 @@
+{
+ "SE": {
+  "what": "Runs Shopee (Southeast Asian e-commerce), Garena (games, chiefly Free Fire) and Monee/SeaMoney (digital lending) across Southeast Asia, Taiwan and Brazil.",
+  "rev": "E-commerce is roughly 70% of revenue, digital financial services ~15% and the most profitable, digital entertainment (Garena) ~15%. Indonesia, Brazil, Vietnam and Thailand are the key markets.",
+  "gm": "Blended gross margin is in the 40s. Shopee monetises through commissions, ads and logistics; lending carries very high margins; games are pure digital margin.",
+  "mgmt": "Co-founder Forrest Li is chairman and CEO and retains super-voting control. Singapore-headquartered, US-listed on NYSE - so you buy it in USD, not on SGX.",
+  "comp": "Lazada (Alibaba), TikTok Shop/Tokopedia, MercadoLibre in Brazil, Grab in financial services.",
+  "moat": "Marketplace network effects plus a logistics network across fragmented island geographies, and a lending book funded by marketplace data no bank has.",
+  "moatTags": [
+   "Network effects",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Southeast Asian e-commerce is still growing at double digits and online penetration is well below China or the US.",
+  "risk": "TikTok Shop reigniting a subsidy war in Indonesia, forcing Shopee to spend its way back to losses.",
+  "implied": "The valuation implies Shopee holds share while lifting take rates, and the lending book keeps compounding without a credit blow-up.",
+  "debate": "Bulls say it is the regional champion with three businesses that feed each other. Bears remember 2022, when competition and a Free Fire decline took the stock down 90%.",
+  "disprove": "Shopee take rate falling; sales and marketing expense rising as a share of GMV; lending non-performing loans above 2%; Free Fire bookings declining again."
+ },
+ "GRAB": {
+  "what": "Runs ride-hailing, food delivery and digital financial services across eight Southeast Asian countries from its Singapore base.",
+  "rev": "Deliveries roughly 50% of revenue, mobility ~35% and the most profitable, financial services the rest and growing fastest. Singapore, Indonesia, Malaysia, Thailand, Vietnam, Philippines.",
+  "gm": "Take rates run in the high teens to 20s of gross merchandise value. The unit economics work now that incentive spending has been cut - profitability arrived only recently.",
+  "mgmt": "Co-founder Anthony Tan is CEO with super-voting shares. Singapore-headquartered, Nasdaq-listed, so it trades in USD.",
+  "comp": "Gojek/GoTo in Indonesia, foodpanda, Sea Limited in financial services, and local taxi operators.",
+  "moat": "Two-sided network liquidity in each city plus a superapp bundle (rides, food, payments, lending) that raises switching costs for drivers and merchants.",
+  "moatTags": [
+   "Network effects",
+   "Scale",
+   "Brand"
+  ],
+  "ind": "On-demand services in Southeast Asia are still growing at a good double-digit pace; digital banking is the newer frontier.",
+  "risk": "A return to subsidy competition, or digital bank credit losses in an unsecured lending book across emerging markets.",
+  "implied": "The price implies continued 15-20% GMV growth with EBITDA margins expanding and the digital banks reaching breakeven.",
+  "debate": "Bulls say it is a regional duopoly finally harvesting profits. Bears note a long loss history, heavy stock-based compensation and thin net margins even now.",
+  "disprove": "Incentive spending rising as a share of GMV; monthly transacting users flat; digital bank loan losses climbing; free cash flow turning negative again."
+ },
+ "KARO": {
+  "what": "Sells Cartrack vehicle telematics subscriptions - tracking, fleet management and insurance data - mainly in South Africa and Southeast Asia.",
+  "rev": "Subscription revenue from over two million vehicles, with South Africa the largest market and Asia and Europe growing. Headquartered in Singapore, listed on Nasdaq.",
+  "gm": "Gross margin around 70%. Hardware is subsidised and recovered through multi-year subscriptions - the economics are SaaS-like once installed.",
+  "mgmt": "Founder Zak Calisto is CEO and owns a majority of the company. Capital allocation has been conservative and self-funded.",
+  "comp": "MiX Telematics/PowerFleet, Samsara in the US, Verizon Connect, and local trackers in each market.",
+  "moat": "Installed hardware plus workflow integration makes churn low, and density in each market lowers installation and service cost.",
+  "moatTags": [
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Fleet telematics penetration is still low in emerging markets, which is where Cartrack operates.",
+  "risk": "South African currency and economic weakness, given the concentration of subscribers and cash flow there.",
+  "implied": "The multiple implies continued subscriber growth in the high teens with margins maintained.",
+  "debate": "Bulls like a founder-controlled, cash-generative compounder at a reasonable multiple. Bears note emerging market currency risk and a thin free float.",
+  "disprove": "Subscriber net additions slowing; churn rising above 1% monthly; South African rand depreciation not offset by price; margins compressing."
+ },
+ "D05": {
+  "what": "Singapore's largest bank - consumer, wealth management, SME and institutional banking across Singapore, Hong Kong, China, India and Indonesia.",
+  "rev": "Consumer banking and wealth management roughly 50% of income, institutional banking ~35%, treasury markets the rest. Singapore is over 60% of income.",
+  "gm": "Banks have no gross margin. Watch net interest margin (around 2%), cost-to-income ratio (low 40s - among the best in Asia) and return on equity (high teens).",
+  "mgmt": "Tan Su Shan became CEO in 2025 after Piyush Gupta. Temasek holds roughly 28-29% - a government-linked anchor shareholder that shapes governance.",
+  "comp": "OCBC and UOB locally; HSBC, Standard Chartered and Citi in regional wealth and transaction banking.",
+  "moat": "The largest low-cost current and savings account deposit base in Singapore, a dominant wealth management franchise, and digital infrastructure peers have not matched.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Switching costs",
+   "Brand"
+  ],
+  "ind": "Singapore banking is a mature three-player oligopoly; wealth inflows into Singapore have been the growth engine.",
+  "risk": "Falling interest rates compressing net interest margin, combined with a regional property or SME credit cycle.",
+  "implied": "Around two times book value implies mid-to-high teens return on equity persists - a premium to almost every bank in Asia.",
+  "debate": "Bulls say it is the best-run bank in Asia with structural wealth inflows and a generous dividend policy. Bears say it is a peak-multiple, peak-margin bank facing rate cuts.",
+  "disprove": "Net interest margin falling below 1.8%; wealth management fee growth stalling; non-performing loans rising above 1.5%; dividend growth stopping."
+ },
+ "O39": {
+  "what": "Singapore's second-largest bank, with consumer and wholesale banking plus Great Eastern insurance and Bank of Singapore private banking.",
+  "rev": "Banking operations roughly 80% of profit, insurance (Great Eastern) ~20%. Singapore, Malaysia, Indonesia and Greater China.",
+  "gm": "Watch net interest margin (around 2%), cost-to-income (low 40s), CET1 capital (very high, above 15%) and return on equity (low-to-mid teens).",
+  "mgmt": "Tan Teck Long became CEO in 2026. The Lee family and Selat/Singapore Investments hold a substantial stake - a long-standing family-anchored bank.",
+  "comp": "DBS and UOB in Singapore, Maybank and CIMB in Malaysia.",
+  "moat": "Deposit franchise, the Greater Bay Area and Malaysia network, and an insurance arm that most banking peers do not have.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Switching costs"
+  ],
+  "ind": "Same Singapore oligopoly; OCBC has more Malaysia and Greater China exposure than DBS.",
+  "risk": "Greater China and Hong Kong commercial property exposure, plus rate cuts compressing margin.",
+  "implied": "Around 1.2-1.4 times book implies low-to-mid teens return on equity - a discount to DBS that has persisted for years.",
+  "debate": "Bulls say excess capital plus a high dividend yield and a cheaper multiple than DBS. Bears say it has consistently earned a lower return and the discount is deserved.",
+  "disprove": "Return on equity falling below 12%; Greater China loan provisions rising; insurance contributions falling; capital not returned despite very high CET1."
+ },
+ "Z74": {
+  "what": "Singapore's incumbent telecom operator, with mobile and broadband in Singapore and Australia (Optus), plus large stakes in regional mobile operators.",
+  "rev": "Optus Australia is the largest revenue contributor, Singapore consumer and NCS (IT services) the rest. Associates - Bharti Airtel in India, Telkomsel, AIS, Globe - contribute a large share of earnings.",
+  "gm": "Look at EBITDA margin by unit and, more importantly, the value of the associate stakes. A large part of Singtel's value is a portfolio of regional telecom shareholdings.",
+  "mgmt": "Yuen Kuan Moon is CEO. Temasek holds roughly 51% - this is effectively a state-controlled company.",
+  "comp": "StarHub and M1 in Singapore, Telstra and TPG in Australia, plus the associates competitive positions in their own markets.",
+  "moat": "Spectrum and infrastructure in two markets, plus irreplaceable minority stakes in the leading operators of India, Indonesia, Thailand and the Philippines.",
+  "moatTags": [
+   "Regulation",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Mature telecoms; the growth has come from Bharti Airtel in India and from data centres.",
+  "risk": "Optus suffering further network outages and regulatory penalties in Australia, or Bharti Airtel weakness removing the main earnings driver.",
+  "implied": "The price implies the associates keep contributing growing dividends and the asset recycling programme continues.",
+  "debate": "Bulls say it trades below the sum of its parts with Airtel alone worth a large share of the market cap. Bears say the Singapore and Optus businesses are structurally low-growth and the discount has persisted for a decade.",
+  "disprove": "Bharti Airtel earnings contribution falling; Optus subscriber losses; asset recycling proceeds not returned to shareholders; underlying net profit declining."
+ },
+ "U11": {
+  "what": "Singapore's third bank, focused on consumer banking and SME lending across Singapore, Malaysia, Thailand, Indonesia and Vietnam.",
+  "rev": "Group retail roughly half of income, group wholesale banking the rest. ASEAN outside Singapore is around 40% of income - the most regionally diversified of the three.",
+  "gm": "Net interest margin around 2%, cost-to-income around 42-45%, return on equity in the low-to-mid teens, CET1 above 15%.",
+  "mgmt": "Wee Ee Cheong is deputy chairman and CEO; the Wee family holds a large stake - the only one of the three Singapore banks still family-led.",
+  "comp": "DBS and OCBC at home; regional banks in each ASEAN market.",
+  "moat": "Deep SME relationships in Singapore and a genuine regional retail franchise after buying Citi's consumer businesses in four ASEAN markets.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Switching costs",
+   "Brand"
+  ],
+  "ind": "ASEAN banking growth is faster than Singapore alone, but credit quality varies by market.",
+  "risk": "ASEAN credit deterioration - Thailand and Indonesia consumer books - combined with lower rates.",
+  "implied": "Around 1.2-1.3 times book implies low-teens return on equity continuing.",
+  "debate": "Bulls say ASEAN growth plus the Citi integration at a cheaper multiple than DBS. Bears note lower returns and higher exposure to weaker credit markets.",
+  "disprove": "Regional non-performing loans rising; Citi integration costs overrunning; net interest margin compressing faster than peers; dividend not growing."
+ },
+ "K6S": {
+  "what": "Sells life and health insurance and asset management across Asia and Africa - a UK-domiciled insurer with a secondary listing on SGX.",
+  "rev": "Insurance new business profit from Hong Kong, mainland China, Indonesia, Singapore, Malaysia and India, plus Eastspring asset management fees.",
+  "gm": "Insurers report new business profit and contractual service margin instead. Watch new business profit growth and the embedded value per share.",
+  "mgmt": "Anil Wadhwani is CEO. Note this is a secondary SGX listing - the primary market is London with Hong Kong.",
+  "comp": "AIA above all, plus Manulife, Ping An and local insurers in each market.",
+  "moat": "Distribution agreements with banks, agency forces built over decades, and regulatory licences that are hard to obtain in Asian markets.",
+  "moatTags": [
+   "Regulation",
+   "Brand",
+   "Scale"
+  ],
+  "ind": "Asian life insurance penetration is low and rising - a genuine long-term growth market.",
+  "risk": "Mainland Chinese visitor demand for Hong Kong policies falling away, which has been a major source of new business.",
+  "implied": "Trading below embedded value implies the market doubts the growth or the assumptions behind it.",
+  "debate": "Bulls say a structurally growing Asian insurer at a discount to its own embedded value. Bears point to years of restructuring and inconsistent execution.",
+  "disprove": "New business profit growth below 10%; Hong Kong mainland visitor sales declining; Eastspring net outflows; embedded value assumptions revised down."
+ },
+ "S63": {
+  "what": "Sells defence systems, aircraft maintenance and conversion, urban transport and smart city technology to governments and commercial customers.",
+  "rev": "Commercial aerospace ~35%, urban solutions and satcom ~20%, defence and public security ~45%. Singapore government is an anchor customer.",
+  "gm": "Margins in the high single digits to low teens by segment. Aerospace MRO and passenger-to-freighter conversion are the higher-return activities.",
+  "mgmt": "Vincent Chong is Group President and CEO. Temasek holds roughly 50% - defence work makes state ownership structural, not incidental.",
+  "comp": "Airbus and Boeing MRO networks, Leonardo and Thales in defence electronics, Siemens in rail electronics.",
+  "moat": "Sovereign defence contracts that cannot be outsourced elsewhere, aircraft conversion certifications, and an order book stretching years ahead.",
+  "moatTags": [
+   "Regulation",
+   "Switching costs",
+   "IP/Patents",
+   "Scale"
+  ],
+  "ind": "Global defence budgets are rising and air cargo conversion demand has been strong - both tailwinds.",
+  "risk": "A public transport or smart city contract going badly wrong, or defence budget reallocation - though Singapore defence spending is stable.",
+  "implied": "A P/E in the 30s implies record order book conversion and margin expansion continuing.",
+  "debate": "Bulls say a record order book, defence spending tailwinds and a reliable dividend. Bears say the multiple has re-rated far above its own history for a mid-single-digit growth business.",
+  "disprove": "Order book declining; aerospace MRO margin compressing; urban solutions losses continuing; net debt not falling."
+ },
+ "S68": {
+  "what": "Runs Singapore's stock, derivatives and commodities exchange, and the clearing, settlement and market data services around it.",
+  "rev": "Fixed income, currencies and commodities (derivatives) roughly 40%, equities cash and derivatives ~35%, platform and data the rest.",
+  "gm": "EBITDA margin in the 50s. An exchange is a natural monopoly infrastructure business - once built, each additional trade is nearly free.",
+  "mgmt": "Loh Boon Chye is CEO. SGX is regulated by MAS and is itself the frontline regulator of listed companies - an unusual dual role.",
+  "comp": "Hong Kong Exchanges and other Asian venues for listings; CME and ICE for some derivative contracts; the FTSE China A50 contract faces direct competition.",
+  "moat": "A regulated monopoly on Singapore listings and clearing, plus derivative contracts where liquidity begets liquidity - the hardest kind of moat to attack.",
+  "moatTags": [
+   "Regulation",
+   "Network effects",
+   "Scale"
+  ],
+  "ind": "Singapore cash equity turnover has been structurally weak for years; derivatives and currency products have been the growth.",
+  "risk": "The equities franchise continuing to shrink as companies delist and few list - a slow erosion of the core.",
+  "implied": "A P/E in the 20s-30s implies derivatives growth continues to offset a weak cash equities market.",
+  "debate": "Bulls say it is monopoly infrastructure with a growing derivatives franchise and the MAS equity market review as a catalyst. Bears note the listings pipeline has been thin for a decade.",
+  "disprove": "Derivatives daily average volume declining; securities turnover velocity falling further; delistings outpacing listings; data and connectivity growth stalling."
+ },
+ "F34": {
+  "what": "Processes and trades agricultural commodities - palm oil, sugar, oilseeds - and sells branded consumer food products, mostly in China, India and Indonesia.",
+  "rev": "Food products (branded consumer, medium pack, bulk) roughly 50%, feed and industrial products ~40%, plantation and sugar milling the rest. China is the largest market through its Yihai Kerry stake.",
+  "gm": "Gross margin in the mid single digits. This is a volume and spread business - crush margins and refining spreads, not brand pricing power.",
+  "mgmt": "Founder Kuok Khoon Hong is chairman and CEO, with the Kuok family and Archer Daniels Midland as major shareholders. Strong insider alignment.",
+  "comp": "Golden Agri-Resources, Musim Mas, Cargill, Archer Daniels Midland, Bunge.",
+  "moat": "Integrated supply chain from plantation to refinery to Chinese supermarket shelf, plus a distribution network in China that took thirty years to build.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Agricultural processing volumes grow with population and income; margins are cyclical and weather-dependent.",
+  "risk": "Chinese consumer weakness and crush margin compression at Yihai Kerry, which is the largest part of the value.",
+  "implied": "Trading below book value and at a low P/E implies the market expects little margin recovery.",
+  "debate": "Bulls point to a sum-of-parts where the listed Yihai Kerry stake alone approaches the whole market cap. Bears say the discount has persisted for years and commodity margins are unpredictable.",
+  "disprove": "Yihai Kerry earnings declining further; crush margins staying negative; net gearing rising; the promised value unlocking not happening."
+ },
+ "H78": {
+  "what": "Owns and leases prime commercial property in Hong Kong Central and Singapore Marina Bay, and develops residential property in mainland China and Singapore.",
+  "rev": "Investment properties (Hong Kong Central office and retail, Singapore MBFC and One Raffles Link) provide recurring rent; development properties in China and Singapore provide lumpy profits.",
+  "gm": "Look at rental income, occupancy and reversion rates rather than gross margin. Hong Kong Central office rents and vacancy are the swing factor.",
+  "mgmt": "Managed within the Jardine Matheson group, which holds a majority stake. Reports in US dollars, listed on SGX.",
+  "comp": "Swire Properties and Henderson Land in Hong Kong, CapitaLand and City Developments in Singapore.",
+  "moat": "Irreplaceable ownership of a large contiguous block of Hong Kong Central - the most valuable office district in Asia. No one can rebuild it.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Brand"
+  ],
+  "ind": "Hong Kong Central office vacancy is at multi-decade highs with new supply still arriving - a genuinely difficult market.",
+  "risk": "Hong Kong Central office rents continuing to fall, forcing further valuation write-downs on the core asset.",
+  "implied": "A very large discount to net asset value implies the market expects further declines in Hong Kong property values.",
+  "debate": "Bulls say you buy trophy assets at half price with a strategy shift toward capital recycling. Bears say Hong Kong office demand is structurally impaired and the discount can persist indefinitely.",
+  "disprove": "Central office vacancy rising; rental reversions still negative; further asset revaluation losses; the share buyback programme ending."
+ },
+ "J36": {
+  "what": "A holding company controlling Asian businesses - Hongkong Land, DFI Retail, Jardine Cycle and Carriage, Mandarin Oriental and Astra International in Indonesia.",
+  "rev": "Astra Indonesia (cars, mining equipment, financial services) is the largest contributor, with Hongkong Land, DFI Retail and Mandarin Oriental making up the rest.",
+  "gm": "A conglomerate - look through to the underlying businesses and to the discount between the share price and the sum of listed stakes.",
+  "mgmt": "The Keswick family has controlled Jardines for generations and appoints the group executive. The cross-holding structure with Jardine Strategic was simplified in 2021.",
+  "comp": "Other Asian conglomerates and, in each business, the direct operating competitors.",
+  "moat": "Long-established market positions in Indonesia and Hong Kong that would be very hard to assemble today, plus entrenched family control.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Regulation"
+  ],
+  "ind": "Mixed: Indonesian consumer and mining equipment demand is decent; Hong Kong property is weak.",
+  "risk": "Indonesian rupiah weakness and Astra losing car market share to Chinese EV brands - Astra is the engine of group earnings.",
+  "implied": "A wide discount to the value of its listed stakes implies the market applies a permanent conglomerate penalty.",
+  "debate": "Bulls say you buy a basket of Asian businesses at a substantial discount with buybacks narrowing it. Bears say holding company discounts rarely close and family control means minority shareholders wait.",
+  "disprove": "Astra market share falling further; Hongkong Land write-downs continuing; the discount to net asset value widening; buybacks stopping."
+ },
+ "Q0F": {
+  "what": "Operates private hospitals - Mount Elizabeth and Gleneagles in Singapore, Pantai in Malaysia, Acibadem in Turkey and Europe, plus Fortis in India.",
+  "rev": "Malaysia, Singapore, Turkey/Europe and India are the four pillars, with India growing fastest after the Fortis consolidation. A secondary SGX listing; primary listing is Bursa Malaysia.",
+  "gm": "Hospital EBITDA margins in the 20s. Revenue intensity per bed and occupancy are the operating drivers; medical tourism carries higher margin.",
+  "mgmt": "Prem Kumar Nair is acting CEO. Khazanah (Malaysia) and Mitsui are the controlling shareholders.",
+  "comp": "Raffles Medical and Parkway competitors in Singapore, Apollo and Max in India, local hospital groups in Turkey.",
+  "moat": "Brand reputation in medical tourism, doctor networks, and hospital licences and beds that take years to approve and build.",
+  "moatTags": [
+   "Brand",
+   "Regulation",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Private healthcare demand in Asia grows with income and ageing; Indian hospital growth is particularly strong.",
+  "risk": "Turkish lira hyperinflation accounting distorting results, and regulatory price caps on private hospital charges in Malaysia or India.",
+  "implied": "A P/E in the 30s implies continued double-digit revenue intensity growth and successful India expansion.",
+  "debate": "Bulls say it is the premier pan-Asian hospital operator with structural demand growth. Bears point at currency risk, regulatory price intervention and a demanding multiple.",
+  "disprove": "Inpatient admissions growth slowing; Turkish operations losing real value; Indian margin not expanding; price control legislation advancing."
+ },
+ "C6L": {
+  "what": "Flies passengers and cargo as Singapore Airlines and Scoot, from a hub with no domestic market - every passenger is connecting or visiting.",
+  "rev": "Passenger flown revenue is the bulk, cargo the rest. The Air India stake (around 25% after the Vistara merger) is now a significant associate.",
+  "gm": "Watch passenger load factor, yield per kilometre and fuel cost. Airlines have no gross margin worth quoting - operating margin in the high single digits is a good year.",
+  "mgmt": "Goh Choon Phong is CEO. Temasek holds roughly 55%, which was decisive during the pandemic recapitalisation.",
+  "comp": "Emirates, Qatar Airways and Cathay Pacific for premium connecting traffic; regional low-cost carriers for Scoot.",
+  "moat": "Brand and service reputation that supports a premium fare, Changi hub slots, and a state shareholder that will not let it fail. Still, airlines are capital-intensive price-takers.",
+  "moatTags": [
+   "Brand",
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "Long-haul travel demand has normalised after the post-pandemic surge; capacity is returning industry-wide.",
+  "risk": "Fuel price spikes or a capacity war on Asia-Europe routes compressing the yields that made recent record profits possible.",
+  "implied": "Trading near book value implies yields normalise from the post-pandemic peak rather than collapse.",
+  "debate": "Bulls like a strong balance sheet, the Air India optionality and a large dividend. Bears say record profits came from a capacity shortage that has now ended.",
+  "disprove": "Passenger yields falling faster than costs; load factors declining; Air India losses continuing; fuel hedging losses."
+ },
+ "BN4": {
+  "what": "An asset manager and operator in infrastructure, real estate and connectivity - transformed from the old Keppel conglomerate and offshore yard.",
+  "rev": "Infrastructure (power, district cooling, environment) provides the largest recurring earnings, real estate and connectivity (data centres, subsea cables) the rest, plus growing asset management fees.",
+  "gm": "Watch recurring income as a share of total, funds under management growth, and the pace of asset monetisation.",
+  "mgmt": "Loh Chin Hua is CEO and has driven the transformation to an asset-light model. Temasek is a major shareholder.",
+  "comp": "CapitaLand Investment in asset management, Sembcorp in infrastructure, regional data centre developers.",
+  "moat": "Operating capability in infrastructure that most fund managers lack, plus the Singapore government relationships behind district cooling and power concessions.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Switching costs"
+  ],
+  "ind": "Data centre and energy transition infrastructure demand in Asia is strong; the asset management fee pool is growing.",
+  "risk": "The asset monetisation programme stalling, leaving capital trapped in legacy assets and the re-rating story unproven.",
+  "implied": "The price implies the transition to fee-based earnings succeeds and the legacy assets are sold near book value.",
+  "debate": "Bulls say an infrastructure asset manager deserves a higher multiple than a conglomerate. Bears say Keppel has promised transformation before and the legacy exposure is still there.",
+  "disprove": "Asset monetisation proceeds falling short of targets; funds under management growth stalling; recurring income share not rising; further Seatrium-related provisions."
+ },
+ "BS6": {
+  "what": "Builds container ships, bulk carriers, tankers and increasingly dual-fuel vessels at yards in Jiangsu, China - one of the largest private shipbuilders in China.",
+  "rev": "Shipbuilding is essentially all of revenue now that the financial business was spun off. Order book stretches several years out, mostly for international owners.",
+  "gm": "Gross margin in the high teens to 20s - exceptional for shipbuilding - because of a strong order book, favourable steel costs and disciplined contracting.",
+  "mgmt": "Ren Letian is CEO; founder Ren Yuanlin remains executive chairman and the family retains a large stake.",
+  "comp": "Chinese state yards (CSSC), Hyundai Heavy and Samsung Heavy in Korea, Japanese yards.",
+  "moat": "Cost position and yard capacity that is fully booked for years, plus a track record that lets it be selective about contracts.",
+  "moatTags": [
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Shipbuilding is in an upcycle driven by fleet replacement and emissions rules, but it is a famously cyclical industry.",
+  "risk": "New orders drying up as freight rates normalise, leaving the yard with unfilled slots after the current book is delivered - plus US port fees on Chinese-built vessels.",
+  "implied": "A low P/E implies the market expects margins to normalise from cycle-high levels.",
+  "debate": "Bulls point at a record order book, net cash and high margins at a single-digit multiple. Bears say cyclical peaks always look cheap on trailing earnings.",
+  "disprove": "New order intake falling sharply; steel prices rising; order cancellations; US regulation on Chinese-built ships affecting customer demand."
+ },
+ "G07": {
+  "what": "Sells life and health insurance in Singapore and Malaysia - the oldest and largest life insurer in both markets - now majority owned by OCBC.",
+  "rev": "Singapore and Malaysia life insurance premiums plus investment income on a very large policyholder fund.",
+  "gm": "Insurance metrics: new business embedded value, total weighted new sales, and the investment return on the shareholder and participating funds.",
+  "mgmt": "Managed within the OCBC group, which holds over 90% after a buyout offer - free float is now very thin, which matters for liquidity.",
+  "comp": "Prudential, AIA, Manulife and Income Insurance in Singapore and Malaysia.",
+  "moat": "A 117-year-old brand, the largest agency force in Singapore, and bancassurance distribution through OCBC branches.",
+  "moatTags": [
+   "Brand",
+   "Regulation",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Life insurance in Singapore and Malaysia grows with wealth; protection gaps remain wide.",
+  "risk": "The very small free float after the OCBC offer - liquidity is poor and minority shareholders have little influence.",
+  "implied": "The price reflects the OCBC offer situation more than fundamentals.",
+  "debate": "Bulls note a quality insurance franchise trading below embedded value. Bears say with minimal free float you are a passenger, not an owner.",
+  "disprove": "Trading volumes remaining minimal; new business embedded value declining; OCBC changing the dividend policy; further delisting pressure."
+ },
+ "C38U": {
+  "what": "Owns Singapore shopping malls and offices - Plaza Singapura, Bugis Junction, Raffles City, IMM - and collects rent as the largest Singapore REIT.",
+  "rev": "Retail is roughly 60% of net property income, office ~30%, integrated developments the rest. Singapore is the overwhelming majority, with some Australia and Germany.",
+  "gm": "REIT metrics: net property income margin around 72-74%, distribution per unit, gearing (around 38-40%), and rental reversion (positive high single digits recently).",
+  "mgmt": "Managed by CapitaLand Investment, which is also the sponsor and provides a pipeline of assets. CapitaLand holds a significant unitholding.",
+  "comp": "Frasers Centrepoint Trust and Mapletree Pan Asia in retail, Keppel REIT and Suntec REIT in office.",
+  "moat": "Irreplaceable mall locations sitting directly on top of MRT stations - the scarcity is the planning approval, not the building.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Brand"
+  ],
+  "ind": "Singapore suburban retail is healthy with high occupancy; office demand is stable but new supply matters.",
+  "risk": "Interest rates staying higher for longer, raising the cost of debt on refinancing and compressing distributions.",
+  "implied": "A distribution yield around 5-6% with gearing near 40% implies stable rents and no major refinancing shock.",
+  "debate": "Bulls say it is the bluest of blue-chip S-REITs with the best Singapore retail assets and a yield well above bank deposits. Bears note REITs are leveraged bond proxies that struggle when rates rise.",
+  "disprove": "Rental reversions turning negative; occupancy falling below 96%; gearing rising above 42%; distribution per unit declining year over year."
+ },
+ "9CI": {
+  "what": "Manages real estate funds and REITs, and owns a lodging platform (Ascott) - the asset-light manager spun out of the old CapitaLand.",
+  "rev": "Fee income from funds and listed REITs, lodging management fees from Ascott, plus returns on its own balance sheet investments.",
+  "gm": "Watch funds under management growth, fee-related earnings and return on equity. The strategy is to shift from owning assets to managing other people's money.",
+  "mgmt": "Lee Chee Koon is CEO. Temasek holds roughly half the company - another government-linked anchor.",
+  "comp": "Blackstone, Brookfield and ESR in Asian real estate fund management; Keppel in the same transition.",
+  "moat": "A sponsor relationship with several listed REITs providing captive fee streams, plus a pan-Asian asset base that fund investors want exposure to.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Asian real estate fund raising has been slow; lodging demand is solid.",
+  "risk": "China property exposure requiring further write-downs, and fund raising staying weak so funds under management stall.",
+  "implied": "The price implies fee income grows and the balance sheet assets are eventually recycled at reasonable values.",
+  "debate": "Bulls say an asset-light fee manager deserves a re-rating once the balance sheet is lighter. Bears note China exposure and that funds under management growth has been slower than promised.",
+  "disprove": "Funds under management flat or falling; fee-related earnings not growing; further China impairments; asset monetisation below book value."
+ }
+}

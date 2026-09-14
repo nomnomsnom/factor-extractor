@@ -1,0 +1,351 @@
+{
+ "A17U": {
+  "what": "Owns business parks, logistics facilities and data centres in Singapore, Australia, the US and Europe, and leases them to corporate tenants.",
+  "rev": "Singapore is roughly 60-65% of asset value, with the US, Australia and Europe the rest. Business parks and industrial are the largest categories, data centres the highest-value.",
+  "gm": "REIT metrics: net property income margin around 70%, gearing in the high 30s, weighted average lease expiry around 3-4 years, positive rental reversions.",
+  "mgmt": "Managed by CapitaLand Investment as sponsor. The sponsor pipeline is a genuine advantage for acquisitions.",
+  "comp": "Mapletree Industrial Trust, ESR-REIT, Frasers Logistics in the same tenant pool.",
+  "moat": "Scale in Singapore business park space - a category with limited land supply - plus tenant relationships with multinationals.",
+  "moatTags": [
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Logistics and data centre demand is strong; business park demand depends on office-style occupancy which has been mixed.",
+  "risk": "Refinancing at higher rates while business park occupancy softens - the double squeeze on distributions.",
+  "implied": "A yield above 5% implies stable occupancy and modest rental growth with no distribution cut.",
+  "debate": "Bulls like the diversified industrial exposure and sponsor pipeline. Bears note business parks face the same hybrid-work question as offices.",
+  "disprove": "Portfolio occupancy falling below 92%; rental reversions turning negative; gearing above 40%; distribution per unit declining."
+ },
+ "Y92": {
+  "what": "Brews and distributes beer and spirits in Thailand and Vietnam - Chang beer, Thai whisky brands and a stake in Sabeco.",
+  "rev": "Spirits (Thai white and brown spirits) is the profit engine, beer the largest revenue line, plus non-alcoholic beverages and food. Thailand and Vietnam dominate.",
+  "gm": "Gross margin in the 20s-30s. Thai spirits are highly profitable with entrenched distribution; beer is more competitive and excise-heavy.",
+  "mgmt": "Controlled by the Sirivadhanabhakdi family through TCC. Singapore-listed but a Thai company, with a long-delayed plan to list the beer business separately.",
+  "comp": "Boon Rawd (Singha) and Carlsberg in Thai beer, Heineken and Habeco in Vietnam.",
+  "moat": "Dominant share of Thai spirits with a distribution network reaching hundreds of thousands of outlets, plus licences that are effectively unobtainable for newcomers.",
+  "moatTags": [
+   "Brand",
+   "Regulation",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Thai consumption has been weak with high household debt; Vietnamese beer volumes hit by drink-driving enforcement.",
+  "risk": "Thai excise tax changes, or Vietnamese consumption staying depressed so the expensive Sabeco stake keeps underperforming.",
+  "implied": "A low P/E and high dividend yield imply little growth is expected - the market has priced in the Thai consumer malaise.",
+  "debate": "Bulls say a dominant spirits franchise at a single-digit multiple with a possible beer listing catalyst. Bears note the Sabeco acquisition was expensive and Thai demand is weak.",
+  "disprove": "Thai spirits volumes declining; Sabeco profit contribution falling; net debt to EBITDA not improving; the beer listing shelved again."
+ },
+ "C07": {
+  "what": "Distributes and retails motor vehicles in Singapore (Mercedes, Mitsubishi, Kia) and holds a controlling stake in Astra International of Indonesia.",
+  "rev": "Astra Indonesia is the overwhelming majority of earnings - cars, motorcycles, heavy equipment, mining, financial services. Singapore motor operations are a small part.",
+  "gm": "Look through to Astra: Indonesian car and motorcycle market share, heavy equipment (Komatsu) sales and coal mining contribution.",
+  "mgmt": "Part of the Jardine Matheson group, which controls it. Effectively a listed vehicle for Astra exposure.",
+  "comp": "In Indonesia, Chinese EV brands attacking Astra's Toyota and Daihatsu share; in Singapore, other authorised dealers.",
+  "moat": "Astra's dealer and financing network across Indonesia is decades deep and hard to replicate - but market share in cars is being eroded.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Indonesian vehicle sales have been soft; coal and heavy equipment cyclical.",
+  "risk": "Chinese EV brands taking Indonesian market share from Astra faster than expected.",
+  "implied": "A single-digit P/E with a high dividend yield implies the market expects Astra's earnings to decline.",
+  "debate": "Bulls say cheap access to Indonesian consumption with a strong dividend. Bears see structural share loss in the core car business.",
+  "disprove": "Astra car market share falling below 50%; Indonesian vehicle sales declining; coal contribution shrinking; dividend cut."
+ },
+ "U96": {
+  "what": "Generates and sells electricity and provides urban utilities - gas, water, waste - in Singapore, India, the UK and Southeast Asia, with a growing renewables portfolio.",
+  "rev": "Gas and related services (Singapore power generation) is the profit core; renewables (solar and wind in India and China) is the growth engine; integrated urban solutions the rest.",
+  "gm": "Watch the spark spread in Singapore power generation, renewables capacity added, and net gearing - this is a capital-intensive utility.",
+  "mgmt": "Wong Kim Yin is CEO. Temasek holds roughly 49% - the Sembcorp Marine separation left a cleaner energy company.",
+  "comp": "Keppel Infrastructure and YTL PowerSeraya in Singapore generation, regional independent power producers in renewables.",
+  "moat": "Singapore generation licences and long-term power purchase agreements, plus a first-mover renewables position in India.",
+  "moatTags": [
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "Asian electricity demand is growing; the energy transition is creating a large renewables build-out.",
+  "risk": "Singapore spark spreads normalising downward as new capacity arrives, while renewables returns are lower than the gas business they replace.",
+  "implied": "A low-teens P/E implies the renewables build-out replaces gas earnings without a return-on-capital decline.",
+  "debate": "Bulls say a transition story with strong cash flows funding renewables growth. Bears note Singapore generation margins are at cyclical highs and renewables earn less.",
+  "disprove": "Singapore spark spreads compressing; renewables capacity additions below target; net gearing rising; return on equity declining."
+ },
+ "G13": {
+  "what": "Operates Resorts World Sentosa - the casino, Universal Studios theme park and hotels - under a Singapore duopoly licence.",
+  "rev": "Gaming is roughly 60-65% of revenue, non-gaming (theme park, hotels, attractions) the rest. Singapore is essentially the whole business.",
+  "gm": "EBITDA margin in the 30s-40s. Casino economics are excellent once the property is built; the current expansion is a large capital commitment.",
+  "mgmt": "Part of the Genting group, which holds roughly 53%. Tan Sri Lim Kok Thay controls the parent.",
+  "comp": "Marina Bay Sands is the only other Singapore licence holder; regionally, Macau, Manila and Korean casinos compete for tourists.",
+  "moat": "A government-granted duopoly with the casino licence extended to 2030s, plus Universal Studios which no competitor can replicate.",
+  "moatTags": [
+   "Regulation",
+   "Brand",
+   "Scale"
+  ],
+  "ind": "Regional tourism to Singapore is recovering; Chinese outbound travel remains below pre-pandemic levels.",
+  "risk": "The multi-billion RWS expansion delivering lower returns than expected, or Chinese high-roller demand not returning.",
+  "implied": "The valuation with a large net cash balance implies modest growth and continued high dividends.",
+  "debate": "Bulls say a licensed duopoly with net cash, a high dividend and an expansion pipeline. Bears note VIP gaming volatility and a heavy capex cycle depressing free cash flow.",
+  "disprove": "Gaming volumes declining; expansion capex exceeding budget; hold rates masking weak underlying volume; Chinese visitor arrivals not recovering."
+ },
+ "U14": {
+  "what": "Develops and invests in property in Singapore and internationally, and owns hotels through Pan Pacific - a family-controlled property group.",
+  "rev": "Property investment (rental from Singapore offices and malls), property development, and hotel operations across Asia Pacific.",
+  "gm": "Look at recurring rental income coverage of interest, net asset value per share, and the discount the share price trades at to that value.",
+  "mgmt": "The Wee family (also behind UOB) controls it; Wee Ee Lim is CEO. Family control means a long horizon and a persistent valuation discount.",
+  "comp": "City Developments, GuocoLand, Frasers Property and CapitaLand in Singapore development and investment.",
+  "moat": "Prime Singapore commercial assets and a conservative balance sheet - not a competitive moat so much as asset quality.",
+  "moatTags": [
+   "Scale",
+   "Brand"
+  ],
+  "ind": "Singapore office and retail rents are stable; residential is constrained by cooling measures.",
+  "risk": "Singapore property cooling measures tightening further, or higher interest costs on development financing.",
+  "implied": "A large discount to net asset value implies the market does not expect the assets to be monetised.",
+  "debate": "Bulls say you buy prime Singapore property at a steep discount with a safe balance sheet. Bears say family-controlled property companies trade at discounts forever.",
+  "disprove": "Net asset value per share declining; rental income falling; development margins compressing; the discount widening rather than narrowing."
+ },
+ "C09": {
+  "what": "Develops residential and commercial property in Singapore and internationally, and owns hotels through Millennium and Copthorne.",
+  "rev": "Property development (Singapore residential) is the largest earnings driver, hotel operations the largest revenue line, plus rental income from investment properties.",
+  "gm": "Development margins have compressed as land costs rose; hotel RevPAR has recovered. Net gearing is high relative to Singapore peers.",
+  "mgmt": "The Kwek family controls it through Hong Leong; the 2024 boardroom dispute between father and son raised genuine governance concerns.",
+  "comp": "UOL, GuocoLand, Frasers Property and CapitaLand in Singapore residential.",
+  "moat": "A large Singapore land bank and a global hotel portfolio - asset-heavy, but not a competitive moat.",
+  "moatTags": [
+   "Scale",
+   "Brand"
+  ],
+  "ind": "Singapore residential sales volumes are constrained by cooling measures; hotels have recovered.",
+  "risk": "High gearing combined with slow inventory sell-down and any further governance disruption.",
+  "implied": "A very large discount to net asset value implies the market doubts both the asset values and the governance.",
+  "debate": "Bulls say deeply discounted assets with a potential unlocking through divestments. Bears point at gearing, a China project write-down history and the public boardroom fight.",
+  "disprove": "Net gearing rising above 100%; unsold inventory ageing; further impairments; governance disputes resurfacing."
+ },
+ "5E2": {
+  "what": "Builds and repairs offshore rigs, floating production vessels and now offshore wind installation vessels - the merged Sembcorp Marine and Keppel Offshore and Marine.",
+  "rev": "Newbuild projects (FPSOs, wind vessels) plus repairs and upgrades. Order book is concentrated in a handful of very large projects.",
+  "gm": "Margins have been thin to negative because of legacy contracts; the question is whether newer contracts are priced profitably.",
+  "mgmt": "Chris Ong Leng Yeow leads the company after a period of instability. Temasek is the largest shareholder. It has been through corruption-related provisions tied to legacy Keppel Offshore and Marine projects.",
+  "comp": "Korean yards (Hyundai, Samsung), Chinese yards, and Sembcorp's own past self - global yard capacity is ample.",
+  "moat": "Scale of Singapore yard facilities and FPSO integration capability, but this is a project business with limited pricing power.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "Offshore oil capex has recovered and offshore wind installation demand is growing - the cycle has turned up.",
+  "risk": "Another loss-making project or legacy provision, which has been the pattern rather than the exception.",
+  "implied": "The price implies the order book converts at positive margins - which the company has repeatedly failed to deliver historically.",
+  "debate": "Bulls say a record order book, a cleaner balance sheet and an offshore upcycle. Bears point at a long history of cost overruns, provisions and dilution.",
+  "disprove": "New project charges; order book margin guidance cut; net cash position deteriorating; further legacy legal provisions."
+ },
+ "EB5": {
+  "what": "Grows oil palm and produces crude palm oil in Indonesia, with a young and productive plantation base.",
+  "rev": "Crude palm oil and palm kernel sales, mostly within Indonesia and to export markets. A pure upstream plantation play.",
+  "gm": "Margins track the palm oil price against cash cost per tonne. First Resources has among the lowest costs and youngest tree profiles in the sector.",
+  "mgmt": "The Fangiono family controls the company - founder-led with substantial insider ownership.",
+  "comp": "Golden Agri-Resources, Bumitama Agri, Wilmar upstream, Malaysian planters.",
+  "moat": "Low cost per tonne and a favourable tree age profile. In a commodity, being the low-cost producer is the only durable advantage.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "Palm oil prices have been firm on tight supply and biodiesel mandates in Indonesia.",
+  "risk": "Indonesian export levies and biodiesel policy changes, or a palm price fall combined with rising fertiliser costs.",
+  "implied": "A low P/E implies the market expects palm prices to mean-revert lower.",
+  "debate": "Bulls like the low cost base, net cash and high dividend at a single-digit multiple. Bears say commodity producers deserve low multiples at cycle peaks.",
+  "disprove": "Crude palm oil prices falling below cash costs; yields declining; Indonesian export levy increases; replanting capex rising."
+ },
+ "N2IU": {
+  "what": "Owns VivoCity and Mapletree Business City in Singapore plus office and retail assets in Hong Kong, China, Japan and Korea.",
+  "rev": "Singapore is roughly 60% of net property income (VivoCity is the single largest asset), Hong Kong ~20% and the problem child, China, Japan and Korea the rest.",
+  "gm": "REIT metrics: net property income margin around 75%, gearing around 38-40%, and the Festival Walk Hong Kong valuation is the key swing factor.",
+  "mgmt": "Managed by Mapletree Investments, a Temasek subsidiary and the sponsor.",
+  "comp": "CapitaLand Integrated Commercial Trust and Frasers Centrepoint in Singapore retail; Link REIT in Hong Kong.",
+  "moat": "VivoCity is Singapore's largest mall with a captive catchment - a genuinely strong asset. The overseas portfolio is more ordinary.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Regulation"
+  ],
+  "ind": "Singapore retail is strong; Hong Kong retail rents have fallen sharply as shoppers cross into Shenzhen.",
+  "risk": "Festival Walk in Hong Kong requiring further valuation write-downs and negative rental reversions.",
+  "implied": "A high distribution yield implies the market expects further Hong Kong weakness and possible distribution pressure.",
+  "debate": "Bulls say you get VivoCity cheaply because of Hong Kong. Bears say the Hong Kong and China exposure keeps the discount justified.",
+  "disprove": "Festival Walk reversions staying deeply negative; China occupancy falling; gearing rising above 41%; distribution per unit declining again."
+ },
+ "D01": {
+  "what": "Runs pan-Asian retail - Guardian and Mannings health and beauty, 7-Eleven convenience, supermarkets, IKEA franchises and a stake in Yonghui in China.",
+  "rev": "Health and beauty is the profit engine, convenience stores the largest store count, food retail the largest revenue but weakest margin. Hong Kong, Singapore, Malaysia, Indonesia and mainland China.",
+  "gm": "Health and beauty carries the highest margin; food retail is thin. The turnaround has been about exiting low-return formats.",
+  "mgmt": "Scott Price is CEO; Jardine Matheson controls the company. The strategy has been portfolio simplification and cost discipline.",
+  "comp": "Watsons (AS Watson) in health and beauty, FairPrice and Sheng Siong in Singapore groceries, local convenience chains.",
+  "moat": "Store networks in dense Asian cities with prime locations, and scale in health and beauty buying.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Hong Kong retail is weak as residents shop in Shenzhen; Southeast Asian convenience retail is growing.",
+  "risk": "Hong Kong consumer spending continuing to leak to mainland China, which hits the most profitable Mannings business.",
+  "implied": "The price implies the turnaround holds and the divestments are complete.",
+  "debate": "Bulls say a restructured retailer with improving returns and a large dividend. Bears note Hong Kong structural weakness and years of underperformance.",
+  "disprove": "Hong Kong like-for-like sales declining; health and beauty margin compressing; Yonghui losses continuing; dividend cut."
+ },
+ "S58": {
+  "what": "Provides airport ground handling, cargo handling and inflight catering at Changi and, after the WFS acquisition, at airports worldwide.",
+  "rev": "Gateway services (ground and cargo handling) is now the larger half after WFS; food solutions (inflight catering and central kitchens) the rest. Asia, Europe and the Americas.",
+  "gm": "Operating margins in the high single digits. Labour is the dominant cost; the business scales with flight and cargo volumes.",
+  "mgmt": "Kerry Mok is CEO. Temasek is a major shareholder. The WFS acquisition was large, debt-funded and initially controversial.",
+  "comp": "Swissport and Menzies in ground handling, dnata, and airline in-house handling units.",
+  "moat": "Airport concessions and long-term contracts with airlines, plus scale at Changi that is effectively a franchise position.",
+  "moatTags": [
+   "Regulation",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Air cargo volumes and passenger traffic are both growing; e-commerce air freight is a structural tailwind.",
+  "risk": "Air cargo volumes falling in a trade slowdown while the WFS debt remains, or a labour cost spiral.",
+  "implied": "The price implies continued deleveraging and margin improvement from the WFS integration.",
+  "debate": "Bulls say a global network now that the acquisition is integrating and debt is falling. Bears note the leverage and thin margins in a labour-intensive business.",
+  "disprove": "Net debt to EBITDA not falling; cargo volumes declining; labour costs rising faster than revenue; free cash flow not recovering."
+ },
+ "M44U": {
+  "what": "Owns logistics warehouses across Singapore, Hong Kong, China, Japan, Australia, South Korea and Southeast Asia and leases them to logistics operators.",
+  "rev": "Singapore roughly 25% of revenue, China ~20%, Hong Kong, Japan, Australia and Korea the rest. Over 180 properties.",
+  "gm": "REIT metrics: net property income margin around 87% (logistics is cheap to run), gearing around 40%, occupancy above 95%.",
+  "mgmt": "Managed by Mapletree Investments, a Temasek subsidiary with a large sponsor pipeline.",
+  "comp": "ESR-REIT, Frasers Logistics and Commercial Trust, CapitaLand Ascendas in the same tenant pool.",
+  "moat": "Geographic diversification and sponsor pipeline access. Individual warehouses are commodities; the portfolio scale is the advantage.",
+  "moatTags": [
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Regional logistics demand is solid outside China; Chinese warehouse rents have been falling.",
+  "risk": "China rental reversions staying negative while currency translation from the yen and renminbi reduces distributions.",
+  "implied": "A distribution yield around 6-7% implies flat-to-declining distributions, which is what the market has recently seen.",
+  "debate": "Bulls say a diversified logistics portfolio at a discount to book with a high yield. Bears point at China weakness, currency drag and rising borrowing costs.",
+  "disprove": "China reversions still negative; portfolio occupancy below 95%; gearing above 41%; distribution per unit falling for a third year."
+ },
+ "ME8U": {
+  "what": "Owns Singapore industrial properties - data centres, hi-tech buildings, business parks and flatted factories - plus US data centres.",
+  "rev": "Data centres are roughly 55% of assets under management and the strategic focus; hi-tech buildings, business parks and flatted factories the rest. Singapore ~50%, US ~45%.",
+  "gm": "REIT metrics: net property income margin around 74%, gearing around 40%, with data centre leases providing long weighted average lease expiry.",
+  "mgmt": "Managed by Mapletree Investments as sponsor - a Temasek subsidiary.",
+  "comp": "CapitaLand Ascendas REIT, Keppel DC REIT, Digital Realty and Equinix in data centres.",
+  "moat": "Data centre assets with power capacity that cannot easily be replicated in land-scarce Singapore - power allocation is the real scarcity.",
+  "moatTags": [
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Data centre demand is extremely strong; Singapore has had a moratorium on new capacity that favours existing owners.",
+  "risk": "US data centre tenant concentration and credit risk, plus higher refinancing costs on the US dollar debt.",
+  "implied": "A yield around 6% implies stable distributions with data centre growth offsetting flatted factory weakness.",
+  "debate": "Bulls say Singapore power-constrained data centres are a scarce asset. Bears note US tenant risk and rising interest expense.",
+  "disprove": "US data centre occupancy or tenant defaults; Singapore flatted factory reversions turning negative; gearing above 41%; distribution declining."
+ },
+ "OV8": {
+  "what": "Runs a chain of about 80 value supermarkets across Singapore's heartland housing estates, plus a small China operation.",
+  "rev": "Singapore supermarket retail is essentially all of revenue, with fresh produce a larger share of the basket than at competitors.",
+  "gm": "Gross margin around 30-31% and steadily rising - unusual for a grocer - because of house brands, direct sourcing and a bulk-handling distribution centre.",
+  "mgmt": "The Lim family founded and controls the business and runs it conservatively - net cash, no debt, consistent dividends.",
+  "comp": "NTUC FairPrice (the dominant cooperative), Giant and Cold Storage (DFI), Prime and U Stars in the heartlands.",
+  "moat": "Store locations in HDB estates won through competitive tenders, a low-cost operating model, and house brands that competitors cannot match on price.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Singapore grocery is mature and grows with population and inflation; new HDB estate openings are the unit growth driver.",
+  "risk": "Losing HDB store tenders to FairPrice or paying too much for them, or a slowdown in new store openings.",
+  "implied": "A P/E in the 20s implies continued new store openings and gross margin expansion - it is priced as a quality compounder, not a cheap grocer.",
+  "debate": "Bulls say a debt-free, family-run compounder with rising margins and a reliable dividend. Bears say the multiple is full for a grocer with a limited store runway in a small country.",
+  "disprove": "Same-store sales declining; new store openings slowing; gross margin flattening; China operations losses widening."
+ },
+ "V03": {
+  "what": "Designs and manufactures complex electronic products for global technology customers - life sciences instruments, networking, industrial and medical devices.",
+  "rev": "Life science and genomics, test and measurement, networking and communications, advanced industrial. Customer concentration is high and undisclosed by name.",
+  "gm": "Gross margin around 25-27%, high for contract manufacturing, because Venture does design work rather than pure assembly.",
+  "mgmt": "Wong Ngit Liong founded and chaired the company for decades; leadership transition is a live issue. Net cash balance sheet and a consistent dividend.",
+  "comp": "Flex, Jabil, Benchmark Electronics and Asian contract manufacturers.",
+  "moat": "Design-in relationships where Venture co-develops the product - switching manufacturer means re-qualifying the whole design.",
+  "moatTags": [
+   "Switching costs",
+   "IP/Patents"
+  ],
+  "ind": "Customer end markets (life sciences instruments, test equipment) have been in a prolonged destocking cycle.",
+  "risk": "Losing a major customer program, or the life sciences instrument market not recovering.",
+  "implied": "A mid-teens P/E with a large net cash position implies a modest recovery in customer demand.",
+  "debate": "Bulls say net cash, a high dividend yield and eventual customer recovery. Bears note revenue has declined for several years with no clear catalyst.",
+  "disprove": "Revenue declining again; gross margin below 25%; net cash being spent without returns; customer concentration disclosures worsening."
+ },
+ "U06": {
+  "what": "Owns and develops Singapore commercial property - offices and malls in the CBD and suburbs - plus hotels, within the UOL and Wee family group.",
+  "rev": "Property investment (rental income) is the recurring core; property trading and hotel operations the rest. Almost entirely Singapore.",
+  "gm": "Look at rental income, occupancy at Singapore Land Tower and Marina Square, and the discount to net asset value.",
+  "mgmt": "Controlled by UOL Group and the Wee family. Conservative, low-leverage management with a long horizon.",
+  "comp": "CapitaLand, City Developments, GuocoLand and Frasers Property in Singapore commercial.",
+  "moat": "Prime CBD office assets - scarce, but this is asset ownership rather than a competitive advantage.",
+  "moatTags": [
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Singapore CBD office rents have been resilient with limited new supply.",
+  "risk": "An office demand downturn or the persistent net asset value discount never closing.",
+  "implied": "A deep discount to book implies the market gives little credit to the property valuations.",
+  "debate": "Bulls say quality Singapore offices at a large discount with a strong balance sheet. Bears say low free float and no catalyst mean the discount stays.",
+  "disprove": "Office occupancy falling; rental reversions negative; net asset value per share declining; no divestments or capital return."
+ },
+ "8A8": {
+  "what": "Markets and distributes specialty prescription drugs in China, in-licensing products from overseas developers.",
+  "rev": "Prescription drug sales in China across cardiovascular, gastroenterology, dermatology and ophthalmology. Note this is a Hong Kong-primary company with an SGX secondary listing.",
+  "gm": "Gross margin is high (above 70%) as a pharmaceutical marketer, but Chinese volume-based procurement has compressed prices industry-wide.",
+  "mgmt": "Founder Lam Kong is chairman with a controlling stake. Cash generation has been strong and dividends generous.",
+  "comp": "Domestic Chinese pharmaceutical marketers and the multinational pharma companies whose products it licenses.",
+  "moat": "A specialist salesforce covering Chinese hospitals and relationships with overseas licensors - a distribution position, not patents.",
+  "moatTags": [
+   "Switching costs",
+   "Regulation",
+   "Brand"
+  ],
+  "ind": "Chinese pharmaceutical policy has been hostile to pricing through centralised procurement.",
+  "risk": "Key products being added to volume-based procurement lists, which typically cuts prices by 50% or more.",
+  "implied": "A single-digit P/E implies the market expects earnings to decline under Chinese pricing policy.",
+  "debate": "Bulls say a cash-generative business with a high dividend at a very low multiple. Bears say Chinese drug pricing policy is a structural, not cyclical, headwind.",
+  "disprove": "Core products entering procurement programmes; revenue declining; receivable days rising; dividend cut."
+ },
+ "T14": {
+  "what": "Manufactures and sells traditional Chinese medicine, led by the Su Xiao Jiu Xin Wan cardiovascular pill, in China.",
+  "rev": "Traditional Chinese medicine manufacturing and distribution, with a small number of flagship products generating most of the profit. China only.",
+  "gm": "Gross margin around 40-45%. Proprietary formulations with brand recognition, but raw material (herb) costs are volatile.",
+  "mgmt": "State-linked ownership through Tianjin Pharmaceutical Group; a Chinese company with a primary SGX listing, which is unusual.",
+  "comp": "Tong Ren Tang, Yunnan Baiyao and other Chinese traditional medicine makers.",
+  "moat": "Protected traditional formulations, brand heritage and inclusion on provincial reimbursement lists.",
+  "moatTags": [
+   "Brand",
+   "Regulation",
+   "IP/Patents"
+  ],
+  "ind": "Chinese traditional medicine has policy support but faces the same procurement price pressure as western drugs.",
+  "risk": "Raw herb cost inflation squeezing margins, or reimbursement list changes reducing volumes.",
+  "implied": "A low P/E and high dividend yield imply low growth expectations.",
+  "debate": "Bulls note strong cash generation and a generous dividend at a low multiple. Bears point at Chinese policy risk and limited disclosure for Singapore investors.",
+  "disprove": "Core product volumes declining; herb costs rising; reimbursement changes; related-party transactions with the state parent increasing."
+ },
+ "J69U": {
+  "what": "Owns nine suburban shopping malls in Singapore - Causeway Point, Northpoint City, Waterway Point - located at MRT and bus interchanges.",
+  "rev": "Suburban retail rent, almost entirely Singapore. Tenants are mostly necessity retail: supermarkets, food and beverage, services.",
+  "gm": "REIT metrics: net property income margin around 72%, gearing in the high 30s, occupancy above 99%, rental reversions consistently positive.",
+  "mgmt": "Managed by Frasers Property as sponsor, which provides an acquisition pipeline.",
+  "comp": "CapitaLand Integrated Commercial Trust and Mapletree Pan Asia in Singapore retail.",
+  "moat": "Malls physically integrated with MRT stations in dense residential catchments - the most defensible retail format in Singapore.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Brand"
+  ],
+  "ind": "Singapore suburban retail has been the strongest retail segment - necessity spending is resilient.",
+  "risk": "Interest costs rising on refinancing, or acquisitions at yields below the cost of capital.",
+  "implied": "A yield around 5% implies continued positive reversions and stable occupancy - it trades at a premium to most S-REITs for a reason.",
+  "debate": "Bulls say the highest-quality suburban retail portfolio in Singapore with near-full occupancy. Bears say the premium valuation limits the return.",
+  "disprove": "Rental reversions falling toward zero; occupancy below 98%; gearing above 40%; distribution per unit declining."
+ }
+}

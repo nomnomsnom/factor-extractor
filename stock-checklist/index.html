@@ -1,0 +1,241 @@
+<title>Two Hundred Filings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@450;600&display=swap">
+<style>
+:root{
+  --paper:#F1F4F0; --card:#FFFFFF; --card-2:#F8FAF7; --sunk:#EDF1EC;
+  --ink:#151E19; --ink-2:#48564F; --ink-3:#74837B;
+  --rule:#D9E1DB; --rule-2:#E9EEE9;
+  --us:#2C4A7C; --us-bg:#E9EEF6;
+  --sg:#6B3F7A; --sg-bg:#F2EAF5;
+  --good:#256B4C; --good-bg:#E4F0E8;
+  --warn:#835D0C; --warn-bg:#F6EEDC;
+  --bad:#9E3527; --bad-bg:#F8E8E4;
+  --focus:#2C4A7C;
+  --shadow:0 1px 2px rgba(20,40,30,.05),0 6px 20px -12px rgba(20,40,30,.22);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --slab:"Zilla Slab",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101612; --card:#19201B; --card-2:#1E2620; --sunk:#151C17;
+    --ink:#E9EFE9; --ink-2:#A7B5AB; --ink-3:#7C8B81;
+    --rule:#2B352D; --rule-2:#232B25;
+    --us:#93B6EA; --us-bg:#1B2634;
+    --sg:#CBA4DA; --sg-bg:#2A2130;
+    --good:#6EC095; --good-bg:#172A20;
+    --warn:#D8AE5A; --warn-bg:#2A2416;
+    --bad:#E18876; --bad-bg:#2E1E1A;
+    --focus:#93B6EA;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101612; --card:#19201B; --card-2:#1E2620; --sunk:#151C17;
+  --ink:#E9EFE9; --ink-2:#A7B5AB; --ink-3:#7C8B81;
+  --rule:#2B352D; --rule-2:#232B25;
+  --us:#93B6EA; --us-bg:#1B2634;
+  --sg:#CBA4DA; --sg-bg:#2A2130;
+  --good:#6EC095; --good-bg:#172A20;
+  --warn:#D8AE5A; --warn-bg:#2A2416;
+  --bad:#E18876; --bad-bg:#2E1E1A;
+  --focus:#93B6EA;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:18px}
+a{color:var(--focus)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px}
+button,input,select,textarea{font:inherit;color:inherit}
+
+/* ---------- masthead ---------- */
+header.mast{padding-block:34px 22px;border-bottom:2px solid var(--ink)}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin:0 0 10px}
+h1{font-family:var(--slab);font-weight:700;font-size:clamp(30px,5.2vw,46px);line-height:1.04;margin:0;letter-spacing:-.015em;text-wrap:balance}
+.standfirst{margin:12px 0 0;max-width:62ch;color:var(--ink-2);font-size:16px}
+.standfirst em{font-style:italic;color:var(--ink)}
+.mast-meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:18px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.mast-meta b{color:var(--ink-2);font-weight:600}
+
+/* ---------- toolbar ---------- */
+.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--paper);border-bottom:1px solid var(--rule);padding-block:12px;margin-bottom:0}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search{flex:1 1 280px;position:relative;display:flex;align-items:center}
+.search svg{position:absolute;left:11px;width:15px;height:15px;color:var(--ink-3)}
+#q{width:100%;padding:10px 34px 10px 33px;border:1px solid var(--rule);background:var(--card);border-radius:7px;font-size:14.5px}
+#q::placeholder{color:var(--ink-3)}
+#clearq{position:absolute;right:6px;border:0;background:none;color:var(--ink-3);cursor:pointer;padding:4px 6px;font-size:16px;line-height:1}
+.seg{display:flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:none;padding:9px 13px;cursor:pointer;font-size:13.5px;color:var(--ink-2);white-space:nowrap}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);font-weight:600}
+select.sort{padding:10px 11px;border:1px solid var(--rule);border-radius:7px;background:var(--card);font-size:13.5px;cursor:pointer}
+.filterbtn{display:flex;align-items:center;gap:7px;padding:10px 13px;border:1px solid var(--rule);border-radius:7px;background:var(--card);cursor:pointer;font-size:13.5px}
+.filterbtn .count{font-family:var(--mono);font-size:11px;background:var(--ink);color:var(--paper);border-radius:99px;padding:1px 6px}
+.panel{border:1px solid var(--rule);border-radius:9px;background:var(--card);margin-top:10px;padding:14px 15px}
+.fgroup{display:flex;flex-wrap:wrap;gap:7px;align-items:baseline;padding-block:9px}
+.fgroup+.fgroup{border-top:1px dashed var(--rule)}
+.flabel{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);width:104px;flex:none;padding-top:5px}
+.chip{border:1px solid var(--rule);background:var(--card-2);color:var(--ink-2);border-radius:99px;padding:5px 11px;font-size:12.5px;cursor:pointer}
+.chip:hover{border-color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.resetbtn{margin-left:auto;background:none;border:0;color:var(--ink-3);text-decoration:underline;cursor:pointer;font-size:12.5px}
+.statusline{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:14px 0 10px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.statusline b{color:var(--ink);font-weight:600}
+
+/* ---------- ledger ---------- */
+.ledger{border-top:1px solid var(--rule);margin-bottom:60px}
+.row{border-bottom:1px solid var(--rule-2);background:var(--card)}
+.row.open{background:var(--card)}
+.rowhead{display:grid;grid-template-columns:32px minmax(170px,2.3fr) 92px 62px 62px 66px 72px 146px 18px;gap:11px;align-items:center;width:100%;text-align:left;border:0;background:none;padding:11px 10px;cursor:pointer;border-left:3px solid transparent}
+.rowhead:hover{background:var(--card-2)}
+.row.open .rowhead{background:var(--card-2)}
+.row[data-mkt="US"] .rowhead{border-left-color:var(--us)}
+.row[data-mkt="SGX"] .rowhead,.row[data-mkt="SG"] .rowhead{border-left-color:var(--sg)}
+.rk{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);text-align:right}
+.nm{min-width:0;display:block}
+.nm>span{display:block}
+.tick{font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.02em}
+.row[data-mkt="US"] .tick{color:var(--us)}
+.row[data-mkt="SGX"] .tick,.row[data-mkt="SG"] .tick{color:var(--sg)}
+.coname{font-family:var(--slab);font-size:15.5px;font-weight:600;line-height:1.22;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.subline{font-size:11.5px;color:var(--ink-3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.num{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink-2)}
+.num.strong{color:var(--ink)}
+.num small{display:block;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-family:var(--sans)}
+.pips{display:flex;gap:4px;flex-wrap:wrap;align-content:center}
+.pip{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;padding:2px 5px;border-radius:3px;background:var(--sunk);color:var(--ink-2);white-space:nowrap}
+.pip.good{background:var(--good-bg);color:var(--good)}
+.pip.warn{background:var(--warn-bg);color:var(--warn)}
+.pip.bad{background:var(--bad-bg);color:var(--bad)}
+.chev{color:var(--ink-3);transition:transform .16s ease;justify-self:end}
+.row.open .chev{transform:rotate(90deg)}
+.progdot{width:9px;height:9px;border-radius:99px;border:1.5px solid var(--ink-3);display:inline-block;vertical-align:-1px;margin-right:5px}
+.progdot.part{background:conic-gradient(var(--warn) var(--p,50%),transparent 0);border-color:var(--warn)}
+.progdot.done{background:var(--good);border-color:var(--good)}
+
+/* ---------- detail ---------- */
+.detail{padding:4px 12px 30px 48px;border-top:1px dashed var(--rule);background:var(--card-2)}
+.sec{padding-block:18px;border-bottom:1px dashed var(--rule)}
+.sec:last-child{border-bottom:0}
+.sechead{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+.secnum{font-family:var(--mono);font-size:11px;color:var(--paper);background:var(--ink);border-radius:4px;padding:2px 6px;font-weight:600}
+.sectitle{font-family:var(--slab);font-size:18px;font-weight:600;margin:0}
+.item{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;padding-block:9px}
+.item>div{min-width:0}
+.item+.item{border-top:1px solid var(--rule-2)}
+.cbx{appearance:none;width:17px;height:17px;border:1.5px solid var(--ink-3);border-radius:3px;background:var(--card);cursor:pointer;margin-top:3px;position:relative;flex:none}
+.cbx:checked{background:var(--good);border-color:var(--good)}
+.cbx:checked::after{content:"";position:absolute;left:5px;top:1px;width:4px;height:9px;border:solid var(--card);border-width:0 2px 2px 0;transform:rotate(42deg)}
+.qn{font-weight:600;font-size:14px;margin:0 0 3px}
+.hint{font-size:12px;color:var(--ink-3);margin:0 0 6px}
+.ans{font-size:14px;color:var(--ink-2);margin:0;max-width:74ch}
+.ans strong{color:var(--ink);font-weight:600}
+.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.tag{font-size:11.5px;border:1px solid var(--rule);border-radius:99px;padding:2px 9px;color:var(--ink-2);background:var(--card)}
+.tag.moat{border-color:var(--good);color:var(--good);background:var(--good-bg)}
+.tag.none{border-color:var(--bad);color:var(--bad);background:var(--bad-bg)}
+
+table.fin{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;margin-top:8px}
+.scroller{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+table.fin th,table.fin td{padding:5px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule-2)}
+table.fin th:first-child,table.fin td:first-child{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--ink-2)}
+table.fin thead th{font-family:var(--sans);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--rule)}
+table.fin td.pos{color:var(--good)}
+table.fin td.neg{color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));background:var(--card);border:1px solid var(--rule-2);border-radius:7px;overflow:hidden;margin-top:10px}
+.cell{background:var(--card);padding:9px 11px;border-right:1px solid var(--rule-2);border-top:1px solid var(--rule-2)}
+.cell dt{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:0 0 3px}
+.cell dd{margin:0;font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums}
+.cell dd small{font-family:var(--sans);font-size:11px;color:var(--ink-3);display:block;letter-spacing:0;text-transform:none;margin-top:2px}
+.cell.flag-good dd{color:var(--good)} .cell.flag-warn dd{color:var(--warn)} .cell.flag-bad dd{color:var(--bad)}
+figure.chart{margin:12px 0 0;padding:0}
+figcaption{font-size:11.5px;color:var(--ink-3);margin-bottom:6px}
+.note{display:block;margin-top:8px}
+.note label{display:block;font-size:12px;color:var(--ink-3);margin-bottom:4px}
+.note textarea,.note input{width:100%;max-width:74ch;border:1px solid var(--rule);border-radius:6px;background:var(--card);padding:8px 10px;font-size:13.5px;font-family:var(--sans);resize:vertical}
+.note textarea{min-height:58px}
+.srcbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.srcbar a,.srcbar button{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;border:1px solid var(--rule);background:var(--card);border-radius:6px;padding:7px 11px;text-decoration:none;color:var(--ink-2);cursor:pointer}
+.srcbar a:hover,.srcbar button:hover{border-color:var(--ink-3);color:var(--ink)}
+.meter{display:flex;align-items:center;gap:9px;margin-top:4px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.meterbar{flex:1;max-width:220px;height:5px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.meterbar i{display:block;height:100%;background:var(--good);border-radius:99px;transition:width .2s ease}
+.empty{padding:50px 10px;text-align:center;color:var(--ink-3)}
+footer.foot{border-top:1px solid var(--rule);padding-block:24px 60px;color:var(--ink-3);font-size:12.5px}
+footer.foot p{max-width:74ch;margin:0 0 9px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:9px 15px;border-radius:7px;font-size:13px;z-index:60;box-shadow:var(--shadow)}
+@media (max-width:860px){
+  .rowhead{grid-template-columns:28px 1fr 84px 60px 18px;gap:9px;row-gap:7px}
+  .rowhead .c-roic,.rowhead .c-rev,.rowhead .c-yield{display:none}
+  .rowhead .c-pips{grid-column:2/6;grid-row:2;justify-self:start;margin-top:2px}
+  .rowhead .chev{grid-column:5;grid-row:1}
+  .coname{white-space:normal}
+  .detail{padding-left:14px}
+  .flabel{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="kicker">Stock research checklist &middot; 200 companies</p>
+    <h1>Two Hundred Filings</h1>
+    <p class="standfirst">The 100 largest companies in the S&amp;P 500 and the 100 largest listed in Singapore, each one run through the same 23-question checklist. <em>If you cannot fill most of this in, you do not know the business well enough to buy it.</em></p>
+    <div class="mast-meta">
+      <span>Figures <b id="asof">loading</b></span>
+      <span>Source <b>stockanalysis.com</b>, company filings</span>
+      <span>US in <b>US$</b> &middot; Singapore in <b>S$</b></span>
+      <span id="syncstate">Notes saved <b>on this device</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="tools">
+      <div class="search">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5 18 18"/></svg>
+        <input id="q" type="search" placeholder="Search name, ticker, sector, business, competitor, risk…" autocomplete="off">
+        <button id="clearq" hidden aria-label="Clear search">&times;</button>
+      </div>
+      <div class="seg" role="group" aria-label="Market">
+        <button id="m-all" aria-pressed="true">Both</button>
+        <button id="m-us" aria-pressed="false">S&amp;P 100</button>
+        <button id="m-sg" aria-pressed="false">Singapore 100</button>
+      </div>
+      <select class="sort" id="sort" aria-label="Sort by">
+        <option value="rank">Sort: market cap</option>
+        <option value="pe">Sort: P/E, lowest first</option>
+        <option value="yield">Sort: dividend yield</option>
+        <option value="roic">Sort: return on capital</option>
+        <option value="growth">Sort: 5-year revenue growth</option>
+        <option value="vshist">Sort: cheapest vs own history</option>
+        <option value="name">Sort: company name</option>
+      </select>
+      <button class="filterbtn" id="filterbtn" aria-expanded="false">Filters <span class="count" id="fcount" hidden>0</span></button>
+    </div>
+    <div class="panel" id="filterpanel" hidden></div>
+    <div class="statusline">
+      <span id="showing">Loading the ledger…</span>
+      <span id="notestat"></span>
+    </div>
+  </div>
+</div>
+
+<main class="wrap"><div class="ledger" id="ledger"></div></main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><b>Where the numbers come from.</b> Every figure in sections 2 and 4 &mdash; margins, cash flow, return on capital, debt, multiples and the five-year histories &mdash; was pulled from stockanalysis.com, which compiles company filings. The written answers in sections 1, 3 and 4 are research notes, not filings. Both can be wrong or out of date. Before you buy anything, check the primary document: the annual report and 10-K on SEC EDGAR for US listings, the SGX announcements page for Singapore listings. Every company below links to both.</p>
+    <p><b>This is not advice.</b> It is a framework for doing your own work, and nothing here is a recommendation to buy or sell. A company being large, profitable or well rated does not make it a good investment at today&rsquo;s price. Brokerage and CDP accounts in Singapore generally require you to be 18.</p>
+  </div>
+</footer>
+
+<script>window.AS_OF = "14 September 2026";</script>
+<script src="data-us.js"></script>
+<script src="data-sg.js"></script>
+<script src="app.js"></script>

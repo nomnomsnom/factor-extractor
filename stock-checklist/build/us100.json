@@ -1,0 +1,802 @@
+[
+{
+"rank": "1",
+"name": "NVIDIA",
+"ticker": "NVDA",
+"mcap": "5.094T",
+"price": "$210.96",
+"in_sp": true
+},
+{
+"rank": "2",
+"name": "Apple",
+"ticker": "AAPL",
+"mcap": "4.861T",
+"price": "$333.08",
+"in_sp": true
+},
+{
+"rank": "3",
+"name": "Alphabet (Google)",
+"ticker": "GOOG",
+"mcap": "4.228T",
+"price": "$345.71",
+"in_sp": true
+},
+{
+"rank": "4",
+"name": "Microsoft",
+"ticker": "MSFT",
+"mcap": "3.752T",
+"price": "$505.41",
+"in_sp": true
+},
+{
+"rank": "5",
+"name": "Amazon",
+"ticker": "AMZN",
+"mcap": "2.734T",
+"price": "$253.54",
+"in_sp": true
+},
+{
+"rank": "7",
+"name": "Meta Platforms (Facebook)",
+"ticker": "META",
+"mcap": "1.695T",
+"price": "$665.60",
+"in_sp": true
+},
+{
+"rank": "8",
+"name": "Broadcom",
+"ticker": "AVGO",
+"mcap": "1.645T",
+"price": "$344.72",
+"in_sp": true
+},
+{
+"rank": "9",
+"name": "Tesla",
+"ticker": "TSLA",
+"mcap": "1.417T",
+"price": "$358.97",
+"in_sp": true
+},
+{
+"rank": "11",
+"name": "Micron Technology",
+"ticker": "MU",
+"mcap": "1.043T",
+"price": "$924.03",
+"in_sp": true
+},
+{
+"rank": "10",
+"name": "Berkshire Hathaway",
+"ticker": "BRK.B",
+"mcap": "1.09T",
+"price": "",
+"in_sp": true
+},
+{
+"rank": "12",
+"name": "Eli Lilly",
+"ticker": "LLY",
+"mcap": "1.015T",
+"price": "$1,138",
+"in_sp": true
+},
+{
+"rank": "13",
+"name": "JPMorgan Chase",
+"ticker": "JPM",
+"mcap": "930.71B",
+"price": "$350.13",
+"in_sp": true
+},
+{
+"rank": "14",
+"name": "Walmart",
+"ticker": "WMT",
+"mcap": "868.06B",
+"price": "$109.08",
+"in_sp": true
+},
+{
+"rank": "15",
+"name": "AMD",
+"ticker": "AMD",
+"mcap": "805.47B",
+"price": "$493.41",
+"in_sp": true
+},
+{
+"rank": "16",
+"name": "Visa",
+"ticker": "V",
+"mcap": "700.66B",
+"price": "$375.28",
+"in_sp": true
+},
+{
+"rank": "17",
+"name": "Exxon Mobil",
+"ticker": "XOM",
+"mcap": "678.79B",
+"price": "$165.08",
+"in_sp": true
+},
+{
+"rank": "18",
+"name": "Johnson & Johnson",
+"ticker": "JNJ",
+"mcap": "641.80B",
+"price": "$266.32",
+"in_sp": true
+},
+{
+"rank": "19",
+"name": "Intel",
+"ticker": "INTC",
+"mcap": "513.75B",
+"price": "$97.19",
+"in_sp": true
+},
+{
+"rank": "20",
+"name": "Mastercard",
+"ticker": "MA",
+"mcap": "503.19B",
+"price": "$574.42",
+"in_sp": true
+},
+{
+"rank": "21",
+"name": "AbbVie",
+"ticker": "ABBV",
+"mcap": "462.57B",
+"price": "$261.77",
+"in_sp": true
+},
+{
+"rank": "22",
+"name": "Cisco",
+"ticker": "CSCO",
+"mcap": "433.92B",
+"price": "$110.06",
+"in_sp": true
+},
+{
+"rank": "23",
+"name": "Oracle",
+"ticker": "ORCL",
+"mcap": "417.06B",
+"price": "$144.79",
+"in_sp": true
+},
+{
+"rank": "24",
+"name": "Palantir",
+"ticker": "PLTR",
+"mcap": "416.47B",
+"price": "$173.31",
+"in_sp": true
+},
+{
+"rank": "25",
+"name": "Chevron",
+"ticker": "CVX",
+"mcap": "416.19B",
+"price": "$212.17",
+"in_sp": true
+},
+{
+"rank": "26",
+"name": "Bank of America",
+"ticker": "BAC",
+"mcap": "415.85B",
+"price": "$59.47",
+"in_sp": true
+},
+{
+"rank": "27",
+"name": "Costco",
+"ticker": "COST",
+"mcap": "407.51B",
+"price": "$918.91",
+"in_sp": true
+},
+{
+"rank": "28",
+"name": "Coca-Cola",
+"ticker": "KO",
+"mcap": "384.43B",
+"price": "$89.35",
+"in_sp": true
+},
+{
+"rank": "29",
+"name": "Caterpillar",
+"ticker": "CAT",
+"mcap": "360.38B",
+"price": "$784.00",
+"in_sp": true
+},
+{
+"rank": "30",
+"name": "Merck",
+"ticker": "MRK",
+"mcap": "357.36B",
+"price": "$144.85",
+"in_sp": true
+},
+{
+"rank": "31",
+"name": "UnitedHealth",
+"ticker": "UNH",
+"mcap": "344.27B",
+"price": "$383.55",
+"in_sp": true
+},
+{
+"rank": "32",
+"name": "Lam Research",
+"ticker": "LRCX",
+"mcap": "342.22B",
+"price": "$273.49",
+"in_sp": true
+},
+{
+"rank": "33",
+"name": "Dell",
+"ticker": "DELL",
+"mcap": "339.70B",
+"price": "$534.28",
+"in_sp": true
+},
+{
+"rank": "34",
+"name": "Procter & Gamble",
+"ticker": "PG",
+"mcap": "339.41B",
+"price": "$146.13",
+"in_sp": true
+},
+{
+"rank": "35",
+"name": "Applied Materials",
+"ticker": "AMAT",
+"mcap": "336.65B",
+"price": "$424.21",
+"in_sp": true
+},
+{
+"rank": "36",
+"name": "Netflix",
+"ticker": "NFLX",
+"mcap": "334.44B",
+"price": "$80.32",
+"in_sp": true
+},
+{
+"rank": "37",
+"name": "General Electric",
+"ticker": "GE",
+"mcap": "329.48B",
+"price": "$317.56",
+"in_sp": true
+},
+{
+"rank": "38",
+"name": "Morgan Stanley",
+"ticker": "MS",
+"mcap": "324.44B",
+"price": "$206.58",
+"in_sp": true
+},
+{
+"rank": "39",
+"name": "Home Depot",
+"ticker": "HD",
+"mcap": "310.15B",
+"price": "$310.87",
+"in_sp": true
+},
+{
+"rank": "40",
+"name": "Palo Alto Networks",
+"ticker": "PANW",
+"mcap": "305.88B",
+"price": "$373.94",
+"in_sp": true
+},
+{
+"rank": "41",
+"name": "Philip Morris International",
+"ticker": "PM",
+"mcap": "303.71B",
+"price": "$194.86",
+"in_sp": true
+},
+{
+"rank": "42",
+"name": "Goldman Sachs",
+"ticker": "GS",
+"mcap": "287.80B",
+"price": "$988.45",
+"in_sp": true
+},
+{
+"rank": "43",
+"name": "Wells Fargo",
+"ticker": "WFC",
+"mcap": "268.25B",
+"price": "$88.71",
+"in_sp": true
+},
+{
+"rank": "44",
+"name": "RTX",
+"ticker": "RTX",
+"mcap": "263.27B",
+"price": "$195.34",
+"in_sp": true
+},
+{
+"rank": "45",
+"name": "CrowdStrike",
+"ticker": "CRWD",
+"mcap": "241.01B",
+"price": "$235.38",
+"in_sp": true
+},
+{
+"rank": "46",
+"name": "Texas Instruments",
+"ticker": "TXN",
+"mcap": "240.56B",
+"price": "$263.42",
+"in_sp": true
+},
+{
+"rank": "47",
+"name": "Arista Networks",
+"ticker": "ANET",
+"mcap": "236.87B",
+"price": "$187.81",
+"in_sp": true
+},
+{
+"rank": "48",
+"name": "IBM",
+"ticker": "IBM",
+"mcap": "234.67B",
+"price": "$249.09",
+"in_sp": true
+},
+{
+"rank": "49",
+"name": "GE Vernova",
+"ticker": "GEV",
+"mcap": "232.97B",
+"price": "$874.76",
+"in_sp": true
+},
+{
+"rank": "50",
+"name": "Citigroup",
+"ticker": "C",
+"mcap": "228.43B",
+"price": "$136.18",
+"in_sp": true
+},
+{
+"rank": "51",
+"name": "Sandisk",
+"ticker": "SNDK",
+"mcap": "227.24B",
+"price": "$1,552",
+"in_sp": true
+},
+{
+"rank": "52",
+"name": "Thermo Fisher Scientific",
+"ticker": "TMO",
+"mcap": "226.88B",
+"price": "$613.62",
+"in_sp": true
+},
+{
+"rank": "53",
+"name": "American Express",
+"ticker": "AXP",
+"mcap": "221.35B",
+"price": "$327.78",
+"in_sp": true
+},
+{
+"rank": "54",
+"name": "KLA",
+"ticker": "KLAC",
+"mcap": "220.92B",
+"price": "$169.09",
+"in_sp": true
+},
+{
+"rank": "55",
+"name": "Salesforce",
+"ticker": "CRM",
+"mcap": "213.51B",
+"price": "$259.43",
+"in_sp": true
+},
+{
+"rank": "56",
+"name": "Verizon",
+"ticker": "VZ",
+"mcap": "213.09B",
+"price": "$51.29",
+"in_sp": true
+},
+{
+"rank": "57",
+"name": "Amgen",
+"ticker": "AMGN",
+"mcap": "206.25B",
+"price": "$381.50",
+"in_sp": true
+},
+{
+"rank": "58",
+"name": "Marvell Technology",
+"ticker": "MRVL",
+"mcap": "196.65B",
+"price": "$218.82",
+"in_sp": true
+},
+{
+"rank": "59",
+"name": "T-Mobile US",
+"ticker": "TMUS",
+"mcap": "196.19B",
+"price": "$182.90",
+"in_sp": true
+},
+{
+"rank": "60",
+"name": "Amphenol",
+"ticker": "APH",
+"mcap": "193.70B",
+"price": "$78.55",
+"in_sp": true
+},
+{
+"rank": "61",
+"name": "QUALCOMM",
+"ticker": "QCOM",
+"mcap": "192.41B",
+"price": "$180.15",
+"in_sp": true
+},
+{
+"rank": "62",
+"name": "Walt Disney",
+"ticker": "DIS",
+"mcap": "187.50B",
+"price": "$108.59",
+"in_sp": true
+},
+{
+"rank": "63",
+"name": "Pepsico",
+"ticker": "PEP",
+"mcap": "186.24B",
+"price": "$136.34",
+"in_sp": true
+},
+{
+"rank": "64",
+"name": "Charles Schwab",
+"ticker": "SCHW",
+"mcap": "185.57B",
+"price": "$107.31",
+"in_sp": true
+},
+{
+"rank": "65",
+"name": "Deere & Company (John Deere)",
+"ticker": "DE",
+"mcap": "183.73B",
+"price": "$681.46",
+"in_sp": true
+},
+{
+"rank": "66",
+"name": "McDonald",
+"ticker": "MCD",
+"mcap": "182.21B",
+"price": "$257.49",
+"in_sp": true
+},
+{
+"rank": "67",
+"name": "AT&T",
+"ticker": "T",
+"mcap": "181.65B",
+"price": "$26.51",
+"in_sp": true
+},
+{
+"rank": "68",
+"name": "Gilead Sciences",
+"ticker": "GILD",
+"mcap": "181.54B",
+"price": "$146.41",
+"in_sp": true
+},
+{
+"rank": "69",
+"name": "Abbott Laboratories",
+"ticker": "ABT",
+"mcap": "178.38B",
+"price": "$103.09",
+"in_sp": true
+},
+{
+"rank": "70",
+"name": "Analog Devices",
+"ticker": "ADI",
+"mcap": "174.93B",
+"price": "$361.02",
+"in_sp": true
+},
+{
+"rank": "71",
+"name": "BlackRock",
+"ticker": "BLK",
+"mcap": "173.13B",
+"price": "$1,066",
+"in_sp": true
+},
+{
+"rank": "72",
+"name": "Nextera Energy",
+"ticker": "NEE",
+"mcap": "170.27B",
+"price": "$81.63",
+"in_sp": true
+},
+{
+"rank": "73",
+"name": "Union Pacific Corporation",
+"ticker": "UNP",
+"mcap": "169.35B",
+"price": "$285.08",
+"in_sp": true
+},
+{
+"rank": "74",
+"name": "Welltower",
+"ticker": "WELL",
+"mcap": "168.76B",
+"price": "$234.21",
+"in_sp": true
+},
+{
+"rank": "75",
+"name": "Boeing",
+"ticker": "BA",
+"mcap": "166.19B",
+"price": "$210.27",
+"in_sp": true
+},
+{
+"rank": "76",
+"name": "ConocoPhillips",
+"ticker": "COP",
+"mcap": "164.18B",
+"price": "$136.67",
+"in_sp": true
+},
+{
+"rank": "78",
+"name": "Pfizer",
+"ticker": "PFE",
+"mcap": "157.99B",
+"price": "$27.72",
+"in_sp": true
+},
+{
+"rank": "79",
+"name": "Interactive Brokers",
+"ticker": "IBKR",
+"mcap": "154.62B",
+"price": "$90.75",
+"in_sp": true
+},
+{
+"rank": "80",
+"name": "Western Digital",
+"ticker": "WDC",
+"mcap": "153.92B",
+"price": "$426.94",
+"in_sp": true
+},
+{
+"rank": "81",
+"name": "Blackstone Group",
+"ticker": "BX",
+"mcap": "153.34B",
+"price": "$128.29",
+"in_sp": true
+},
+{
+"rank": "82",
+"name": "Uber",
+"ticker": "UBER",
+"mcap": "148.35B",
+"price": "$72.63",
+"in_sp": true
+},
+{
+"rank": "83",
+"name": "ServiceNow",
+"ticker": "NOW",
+"mcap": "147.17B",
+"price": "$142.35",
+"in_sp": true
+},
+{
+"rank": "84",
+"name": "Danaher",
+"ticker": "DHR",
+"mcap": "142.88B",
+"price": "$203.25",
+"in_sp": true
+},
+{
+"rank": "85",
+"name": "TJX Companies",
+"ticker": "TJX",
+"mcap": "138.58B",
+"price": "$125.99",
+"in_sp": true
+},
+{
+"rank": "86",
+"name": "Intuitive Surgical",
+"ticker": "ISRG",
+"mcap": "135.40B",
+"price": "$377.94",
+"in_sp": true
+},
+{
+"rank": "87",
+"name": "Booking Holdings (Booking.com)",
+"ticker": "BKNG",
+"mcap": "131.75B",
+"price": "$175.35",
+"in_sp": true
+},
+{
+"rank": "88",
+"name": "Vertex Pharmaceuticals",
+"ticker": "VRTX",
+"mcap": "131.67B",
+"price": "$519.51",
+"in_sp": true
+},
+{
+"rank": "89",
+"name": "Prologis",
+"ticker": "PLD",
+"mcap": "131.41B",
+"price": "$135.19",
+"in_sp": true
+},
+{
+"rank": "90",
+"name": "Bristol-Myers Squibb",
+"ticker": "BMY",
+"mcap": "130.93B",
+"price": "$64.10",
+"in_sp": true
+},
+{
+"rank": "91",
+"name": "Newmont",
+"ticker": "NEM",
+"mcap": "129.67B",
+"price": "$123.07",
+"in_sp": true
+},
+{
+"rank": "92",
+"name": "Progressive",
+"ticker": "PGR",
+"mcap": "128.43B",
+"price": "$221.02",
+"in_sp": true
+},
+{
+"rank": "93",
+"name": "Capital One",
+"ticker": "COF",
+"mcap": "126.79B",
+"price": "$206.68",
+"in_sp": true
+},
+{
+"rank": "94",
+"name": "Fortinet",
+"ticker": "FTNT",
+"mcap": "124.86B",
+"price": "$170.18",
+"in_sp": true
+},
+{
+"rank": "95",
+"name": "Corning",
+"ticker": "GLW",
+"mcap": "123.69B",
+"price": "$143.60",
+"in_sp": true
+},
+{
+"rank": "96",
+"name": "S&P Global",
+"ticker": "SPGI",
+"mcap": "123.38B",
+"price": "$418.54",
+"in_sp": true
+},
+{
+"rank": "97",
+"name": "CVS Health",
+"ticker": "CVS",
+"mcap": "122.20B",
+"price": "$95.55",
+"in_sp": true
+},
+{
+"rank": "98",
+"name": "Lockheed Martin",
+"ticker": "LMT",
+"mcap": "122.17B",
+"price": "$529.38",
+"in_sp": true
+},
+{
+"rank": "99",
+"name": "Altria Group",
+"ticker": "MO",
+"mcap": "117.90B",
+"price": "$70.61",
+"in_sp": true
+},
+{
+"rank": "102",
+"name": "Parker-Hannifin",
+"ticker": "PH",
+"mcap": "117.07B",
+"price": "$928.83",
+"in_sp": true
+},
+{
+"rank": "103",
+"name": "Starbucks",
+"ticker": "SBUX",
+"mcap": "112.93B",
+"price": "$99.07",
+"in_sp": true
+},
+{
+"rank": "104",
+"name": "AppLovin",
+"ticker": "APP",
+"mcap": "112.28B",
+"price": "$334.24",
+"in_sp": true
+}
+]

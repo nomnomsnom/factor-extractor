@@ -1,0 +1,363 @@
+{
+ "DIS": {
+  "what": "Sells entertainment - films, streaming, linear TV, theme parks and cruises - and licenses its characters.",
+  "rev": "Experiences (parks and cruises) ~37% of revenue but the majority of operating profit; entertainment (studios, Disney+, linear) ~45%; sports (ESPN) ~18%.",
+  "gm": "Parks carry high incremental margins on fixed assets; streaming has only recently turned profitable; linear TV is in structural decline.",
+  "mgmt": "Josh D'Amaro is CEO after the long-running Iger succession question was resolved. Insider ownership minimal.",
+  "comp": "Netflix and YouTube for streaming attention, Universal and Comcast in parks, sports rights bidders for ESPN.",
+  "moat": "Irreplaceable intellectual property - a century of characters - plus theme park real estate that cannot be rebuilt.",
+  "moatTags": [
+   "Brand",
+   "IP/Patents",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Parks demand is solid; linear TV is shrinking fast; streaming is growing but crowded.",
+  "risk": "Cord-cutting accelerating faster than ESPN direct-to-consumer can replace, plus a consumer slowdown hitting parks.",
+  "implied": "A high-teens to low-20s P/E implies streaming margins keep improving and parks growth holds.",
+  "debate": "Bulls say the IP plus parks combination is unrepeatable and streaming profits are just starting. Bears see a melting linear ice cube and succession risk.",
+  "disprove": "Linear networks revenue falling faster than guided; parks per-capita spending declining; streaming margin expansion stalling; ESPN direct launch disappointing."
+ },
+ "PEP": {
+  "what": "Sells snacks (Frito-Lay, Quaker) and beverages (Pepsi, Gatorade) to consumers through retailers, globally.",
+  "rev": "Convenient foods roughly 55% of profit, beverages the rest. North America is about 60% of revenue. Frito-Lay is the crown jewel.",
+  "gm": "Gross margin around 54-55%. Snacks carry better economics than beverages because of direct store delivery and shelf control.",
+  "mgmt": "Ramon Laguarta is CEO. Insider ownership minimal; an activist has pushed for portfolio changes.",
+  "comp": "Coca-Cola and Keurig Dr Pepper in drinks; Mondelez, Kellanova, General Mills and private label in snacks.",
+  "moat": "Direct store delivery network, brand portfolio and shelf space that a new entrant cannot buy.",
+  "moatTags": [
+   "Brand",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Snacking volumes in North America have been weak - the first real volume decline in years.",
+  "risk": "GLP-1 medication adoption structurally reducing snack consumption, which would attack the most profitable half of the company.",
+  "implied": "A high-teens P/E implies a return to mid single-digit organic growth after volume declines - the market is not fully convinced.",
+  "debate": "Bulls say the valuation already reflects the volume problem and Frito-Lay pricing power is intact. Bears say the salty snack category has a structural demand question.",
+  "disprove": "Frito-Lay North America volumes negative for several more quarters; price/mix contribution shrinking; market share loss to private label."
+ },
+ "SCHW": {
+  "what": "Runs a retail brokerage and custody platform, and earns most of its profit as a bank on client cash balances.",
+  "rev": "Net interest revenue on client cash roughly half, asset management fees ~30%, trading ~15%. US retail and adviser clients.",
+  "gm": "Watch net interest margin, cash sorting behaviour and pre-tax profit margin (40%+ in good conditions).",
+  "mgmt": "Rick Wurster became CEO in 2025. Insider ownership modest; the Ameritrade integration is complete.",
+  "comp": "Fidelity, Vanguard, Interactive Brokers, Robinhood and the wirehouses in advisory custody.",
+  "moat": "Scale in custody and a client base whose cash sits at the bank by default - the sweep is the profit engine, and inertia protects it.",
+  "moatTags": [
+   "Scale",
+   "Switching costs",
+   "Brand"
+  ],
+  "ind": "Retail investing participation keeps growing; cash sorting is the cyclical variable.",
+  "risk": "A rate environment where clients keep moving cash to money market funds, squeezing the spread that most of the profit comes from.",
+  "implied": "A low-20s P/E implies cash sorting has ended and net interest margin expands from here.",
+  "debate": "Bulls say deposit costs normalising plus asset growth means years of earnings expansion. Bears note the 2023 episode showed how rate-sensitive the model is.",
+  "disprove": "Bank sweep balances declining; net interest margin not expanding; new account growth slowing; clients shifting to higher-yield alternatives."
+ },
+ "DE": {
+  "what": "Sells agricultural, construction and forestry machinery, plus precision agriculture technology, with captive financing.",
+  "rev": "Production and precision agriculture ~35%, small agriculture and turf ~22%, construction and forestry ~25%, financial services the rest. US and Canada ~55%.",
+  "gm": "Gross margin around 28-32%. Dealer network and parts drive profitability, and precision ag software is being layered on as a subscription.",
+  "mgmt": "John May is CEO. Insider ownership small; the company manages production tightly to dealer inventory.",
+  "comp": "CNH Industrial, AGCO, Kubota in agriculture; Caterpillar and Komatsu in construction.",
+  "moat": "Dealer network, brand loyalty among farmers, and a precision ag data platform that raises switching costs beyond the iron.",
+  "moatTags": [
+   "Brand",
+   "Switching costs",
+   "Scale",
+   "IP/Patents"
+  ],
+  "ind": "Agriculture is in a downcycle: low crop prices mean farmers defer equipment purchases.",
+  "risk": "A prolonged farm income recession keeping large equipment sales at trough levels for several years.",
+  "implied": "A P/E in the 20s on trough earnings implies a cyclical recovery in farm incomes within a couple of years.",
+  "debate": "Bulls say Deere manages the downcycle better than ever and precision ag adds recurring revenue. Bears say ag cycles last longer than investors expect.",
+  "disprove": "Large ag equipment orders falling further; used equipment prices declining; farm income forecasts cut; precision ag subscriptions not scaling."
+ },
+ "MCD": {
+  "what": "Franchises and operates quick-service restaurants - it is largely a real estate and royalty business with a burger brand attached.",
+  "rev": "About 95% of restaurants are franchised; revenue is rent and royalties plus company-operated sales. International operated and developmental markets are over half of operating income.",
+  "gm": "Franchised margins run above 80% because the revenue is rent and a percentage of sales with minimal cost. Company-operated margins are far lower.",
+  "mgmt": "Chris Kempczinski is CEO. Insider ownership minimal; the dividend has risen every year since 1976.",
+  "comp": "Burger King (RBI), Wendys, Chick-fil-A, Yum Brands, plus local chains internationally.",
+  "moat": "Brand recognition at global scale, prime real estate locations, franchisee economics that attract the best operators, and purchasing scale.",
+  "moatTags": [
+   "Brand",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Low-income consumer traffic has been weak; value menus are defending share at the cost of mix.",
+  "risk": "A sustained traffic decline among lower-income consumers that value pricing cannot fix without damaging franchisee profitability.",
+  "implied": "A mid-20s P/E implies low single-digit comparable sales growth plus unit expansion and buybacks - modest but requires traffic to stabilise.",
+  "debate": "Bulls say it is the most defensive consumer brand with an inflation-linked rent stream. Bears point at negative US traffic and GLP-1 headwinds.",
+  "disprove": "US comparable sales negative on traffic rather than price; franchisee margin complaints; international developmental markets slowing; unit growth guidance cut."
+ },
+ "T": {
+  "what": "Sells mobile and fibre broadband connectivity to US consumers and businesses.",
+  "rev": "Mobility ~70%, business wireline ~15% (declining), consumer wireline and fibre ~15% (growing). US only.",
+  "gm": "Capital intensity is the story: EBITDA margins in the 30s-40s but fibre build and spectrum consume the cash.",
+  "mgmt": "John Stankey is CEO and has refocused on connectivity after the failed media acquisitions. Insider ownership minimal.",
+  "comp": "Verizon, T-Mobile, cable operators in broadband and mobile.",
+  "moat": "Spectrum, fibre footprint and scale. Fibre is the genuinely advantaged asset because it is expensive to overbuild.",
+  "moatTags": [
+   "Regulation",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Mature wireless; fibre passings are a multi-year growth project.",
+  "risk": "A wireless price war, or the fibre build costing more per home passed than the returns justify.",
+  "implied": "A low-to-mid teens P/E implies steady subscriber growth and free cash flow funding the dividend and debt paydown.",
+  "debate": "Bulls say deleveraging plus fibre growth with a covered dividend. Bears remember a decade of value destruction and heavy debt.",
+  "disprove": "Fibre net adds slowing; postpaid phone churn rising; free cash flow guidance missed; net debt to EBITDA not improving."
+ },
+ "GILD": {
+  "what": "Sells HIV treatment and prevention medicines, plus oncology and liver disease drugs.",
+  "rev": "HIV is roughly 70% of product sales, led by Biktarvy, with lenacapavir (Yeztugo) the major new prevention launch. Oncology and liver the rest. US ~70%.",
+  "gm": "Gross margin around 76-79%. Patented antivirals with strong US pricing, partially offset by government programme rebates.",
+  "mgmt": "Daniel ODay is CEO. Insider ownership small; acquisitions in oncology have had mixed results.",
+  "comp": "ViiV (GSK) in HIV, Merck in HIV prevention, plus a wide field in oncology.",
+  "moat": "HIV franchise dominance with proven regimens physicians will not switch casually, patents to the 2030s, and manufacturing scale.",
+  "moatTags": [
+   "IP/Patents",
+   "Brand",
+   "Switching costs",
+   "Regulation"
+  ],
+  "ind": "HIV treatment is stable and growing slowly; long-acting prevention is a genuinely new market.",
+  "risk": "Biktarvy losing exclusivity in the early 2030s without lenacapavir scaling to replace it, or US prevention funding being cut.",
+  "implied": "A mid-teens P/E implies modest growth with the lenacapavir launch partly credited - not a heroic assumption.",
+  "debate": "Bulls say twice-yearly HIV prevention is a category-defining product with a durable cash franchise behind it. Bears point to a patent cliff and a weak oncology record.",
+  "disprove": "Yeztugo uptake slower than launch trajectory; Biktarvy growth stalling; oncology write-downs; Medicaid and PEPFAR funding reductions."
+ },
+ "ABT": {
+  "what": "Sells medical devices (continuous glucose monitors, cardiac devices), diagnostics, nutrition products and generic medicines.",
+  "rev": "Medical devices ~45% and the growth engine, established pharmaceuticals ~17%, nutrition ~17%, diagnostics ~20%. Roughly 40% US.",
+  "gm": "Gross margin around 55-57%. Devices like FreeStyle Libre carry strong margins and recurring consumable revenue.",
+  "mgmt": "Robert Ford is CEO. Insider ownership small; the company has an unusually balanced portfolio by design.",
+  "comp": "Dexcom in glucose monitoring, Medtronic and Boston Scientific in cardiac, Roche and Siemens in diagnostics, Danone in nutrition.",
+  "moat": "FreeStyle Libre scale and prescriber habit, regulatory approvals, and hospital relationships across four different businesses.",
+  "moatTags": [
+   "Brand",
+   "Regulation",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Diabetes technology is growing strongly; diagnostics has normalised after COVID; nutrition is mature.",
+  "risk": "Reimbursement pressure or a competitive CGM price war with Dexcom and new entrants compressing the best segment.",
+  "implied": "A mid-20s P/E implies high single-digit organic growth led by devices.",
+  "debate": "Bulls like the diversification and the Libre growth runway into basal and non-insulin users. Bears see litigation over preterm infant formula and slower diagnostics.",
+  "disprove": "Libre growth decelerating below 15%; CGM pricing falling; nutrition litigation verdicts; diagnostics revenue declining."
+ },
+ "ADI": {
+  "what": "Sells high-performance analog and mixed-signal chips to industrial, automotive, communications and healthcare customers.",
+  "rev": "Industrial ~45%, automotive ~30%, communications ~11%, consumer ~12%. Broadly global with a large European and Asian base.",
+  "gm": "Gross margin around 57-60%. Long product lifecycles, proprietary designs and a hybrid manufacturing model support the margin.",
+  "mgmt": "Vincent Roche has been CEO since 2013. Insider ownership small; the Maxim acquisition was well executed.",
+  "comp": "Texas Instruments, Infineon, NXP, STMicroelectronics, Microchip.",
+  "moat": "Analog parts designed into industrial systems for a decade or more - once specified, they are rarely re-qualified - plus deep applications engineering.",
+  "moatTags": [
+   "Switching costs",
+   "IP/Patents",
+   "Scale"
+  ],
+  "ind": "Industrial semiconductors are recovering from a deep inventory correction; auto content keeps rising.",
+  "risk": "Industrial capex staying weak while automotive production declines - both core markets soft at once.",
+  "implied": "A high-30s P/E implies a full cyclical recovery plus continued content growth.",
+  "debate": "Bulls say ADI is the highest-quality analog franchise with the best industrial exposure. Bears say the multiple already assumes the recovery is complete.",
+  "disprove": "Bookings not improving; industrial revenue still declining; automotive orders cut; inventory at distributors rising."
+ },
+ "BLK": {
+  "what": "Manages money - index funds, ETFs, active strategies and now private markets and infrastructure - for institutions and individuals.",
+  "rev": "Investment advisory and administration fees from over $12 trillion of assets, plus technology services (Aladdin) which is a high-multiple software business inside an asset manager.",
+  "gm": "Operating margin around 38-45%. Asset management is a scale business: the incremental dollar of assets costs almost nothing to manage.",
+  "mgmt": "Larry Fink is co-founder and CEO; succession is the key governance question. Insider ownership modest.",
+  "comp": "Vanguard and State Street in index, Blackstone and KKR in private markets, Fidelity across the board.",
+  "moat": "Scale that makes iShares fee competition survivable, Aladdin embedded in client risk systems, and distribution relationships everywhere.",
+  "moatTags": [
+   "Scale",
+   "Switching costs",
+   "Brand",
+   "Network effects"
+  ],
+  "ind": "Passive flows keep growing; private markets and infrastructure are the higher-fee growth frontier.",
+  "risk": "A severe market drawdown cutting the asset base and therefore fees, or fee compression accelerating faster than flows.",
+  "implied": "A mid-20s P/E implies continued net inflows plus a successful shift into higher-fee private assets.",
+  "debate": "Bulls say Aladdin plus private markets justify a premium to asset-manager multiples. Bears note fee rates keep falling and the business is levered to market levels.",
+  "disprove": "Net outflows in a rising market; effective fee rate falling faster than asset growth; private markets acquisitions not delivering targeted fee income."
+ },
+ "NEE": {
+  "what": "Runs Florida Power and Light, a large regulated utility, and NextEra Energy Resources, the largest renewables developer in the US.",
+  "rev": "FPL regulated utility roughly two-thirds of earnings, Energy Resources (wind, solar, storage, nuclear) the rest and the growth engine.",
+  "gm": "Regulated utilities earn an allowed return on rate base - roughly 10-11% - so growth comes from investing capital, not from margin.",
+  "mgmt": "John Ketchum is CEO. Insider ownership small; the business is capital-intensive and financed with heavy debt issuance.",
+  "comp": "Other utilities and independent power producers; in renewables, everyone from oil majors to infrastructure funds.",
+  "moat": "Regulated monopoly in Florida, a development pipeline and interconnection queue position that took decades to assemble, and financing scale.",
+  "moatTags": [
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "Electricity demand is growing again after twenty flat years - data centres and electrification.",
+  "risk": "Federal clean energy tax credit rollbacks plus higher interest rates making the renewables development model less profitable.",
+  "implied": "A low-20s P/E for a utility implies above-average earnings growth (6-8%) continuing.",
+  "debate": "Bulls say it owns the best regulated jurisdiction and the largest renewables pipeline in a demand upcycle. Bears point at rate sensitivity, debt and policy risk.",
+  "disprove": "Renewables backlog additions slowing; tax credit legislation changes; FPL rate case outcome below expectations; credit rating pressure."
+ },
+ "UNP": {
+  "what": "Runs the western US freight rail network, hauling intermodal containers, grain, coal, chemicals and cars.",
+  "rev": "Bulk (grain, coal, fertiliser) ~33%, industrial ~35%, premium (intermodal and automotive) ~32%. Western two-thirds of the US plus Mexico gateways.",
+  "gm": "Operating ratio is the metric - around 58-60%, meaning 40%+ operating margin. Rail is a fixed-cost business where volume is everything.",
+  "mgmt": "Jim Vena is CEO. Insider ownership small; the pending combination with Norfolk Southern would create the first transcontinental railroad.",
+  "comp": "BNSF (Berkshire) in the west, trucking for shorter hauls, and the eastern railroads at interchange points.",
+  "moat": "Rights of way that cannot be rebuilt at any price, and a duopoly structure in the western US. This is one of the most durable moats in the market.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Switching costs"
+  ],
+  "ind": "Volumes track industrial production and are structurally flat to slightly up; pricing above inflation is the earnings driver.",
+  "risk": "The Norfolk Southern merger being blocked or conditioned heavily by the Surface Transportation Board, or a freight recession.",
+  "implied": "A low-20s P/E implies pricing power holds and merger synergies are eventually realised.",
+  "debate": "Bulls say irreplaceable assets, pricing above inflation and a transformative merger. Bears note volume growth has been near zero for a decade.",
+  "disprove": "Carload volumes declining; operating ratio deteriorating; merger denied or heavily conditioned; truck capacity undercutting rail pricing."
+ },
+ "WELL": {
+  "what": "Owns senior housing, outpatient medical and health system real estate, and takes operating upside in its senior housing portfolio.",
+  "rev": "Senior housing operating portfolio is the majority and the growth engine; triple-net leases and outpatient medical the rest. US, Canada and the UK.",
+  "gm": "REIT metrics: watch funds from operations per share, same-store net operating income growth (running high single to low double digits) and occupancy.",
+  "mgmt": "Shankh Mitra is CEO. Insider ownership modest; the company has been an aggressive and so far successful acquirer.",
+  "comp": "Ventas, Healthpeak, Brookdale as an operator, and private capital bidding for the same assets.",
+  "moat": "Scale in senior housing data and operator relationships, plus a cost of capital advantage that lets it buy assets others cannot.",
+  "moatTags": [
+   "Scale",
+   "Brand"
+  ],
+  "ind": "The 80-plus population is growing rapidly while new senior housing construction is at a multi-decade low - the best supply-demand setup in real estate.",
+  "risk": "A wave of new construction starting, or labour cost inflation in senior housing outrunning rent growth.",
+  "implied": "A high multiple of funds from operations implies occupancy keeps climbing toward pre-pandemic levels with strong rent growth.",
+  "debate": "Bulls say demographics plus no new supply equals years of double-digit net operating income growth. Bears say the valuation already reflects it and REITs are rate-sensitive.",
+  "disprove": "Same-store occupancy gains stalling; senior housing construction starts rising; labour costs accelerating; acquisitions at cap rates below cost of capital."
+ },
+ "BA": {
+  "what": "Builds commercial aircraft, defence systems and space hardware for airlines and governments.",
+  "rev": "Commercial airplanes ~40%, defence and space ~35%, global services ~25% and the only consistently profitable segment.",
+  "gm": "Commercial aircraft margins have been negative for years due to production problems and charges; services carries the profit.",
+  "mgmt": "Kelly Ortberg became CEO in 2024 to fix quality and production. Insider ownership small; the balance sheet carries heavy debt.",
+  "comp": "Airbus in commercial (now the clear leader), Lockheed and Northrop in defence.",
+  "moat": "A duopoly in large commercial aircraft with certification barriers that are effectively absolute, plus an installed base needing parts for decades.",
+  "moatTags": [
+   "Regulation",
+   "Scale",
+   "Switching costs",
+   "IP/Patents"
+  ],
+  "ind": "Airlines want far more aircraft than the duopoly can build - demand is not the problem, production is.",
+  "risk": "Another quality or safety incident resetting production rates and FAA oversight again.",
+  "implied": "The price implies production rates recover to 737 MAX rates above 50 a month and free cash flow returns to prior levels.",
+  "debate": "Bulls say a duopoly with a decade-long backlog cannot stay broken forever. Bears note years of promises, dilution and negative cash flow.",
+  "disprove": "Monthly delivery rates not climbing; new charges on fixed-price defence contracts; FAA rate caps extended; free cash flow still negative."
+ },
+ "COP": {
+  "what": "Produces oil and gas from a large, low-cost portfolio spanning the Permian, Alaska, Norway and LNG projects.",
+  "rev": "Lower 48 (Permian, Eagle Ford, Bakken) is the bulk; Alaska, Canada, Norway, Qatar LNG and Asia Pacific the rest.",
+  "gm": "Watch cash cost per barrel and the free cash flow break-even, which ConocoPhillips targets around $40 WTI.",
+  "mgmt": "Andrew O'Brien is CEO, succeeding Ryan Lance. Insider ownership small; the company is explicit about returning a large share of cash flow to shareholders.",
+  "comp": "ExxonMobil, Chevron, EOG, Occidental and other large independents.",
+  "moat": "Low cost of supply across a deep inventory - the moat in commodities is being the low-cost producer, not having pricing power.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "Oil demand growth is modest; US shale productivity gains are slowing; LNG demand is growing.",
+  "risk": "Oil below $55 combined with the large capital commitments to Willow and LNG projects.",
+  "implied": "The multiple implies mid-cycle oil and the major projects delivering on budget.",
+  "debate": "Bulls like the low break-even and disciplined distributions. Bears note the capex on Willow and LNG comes before the cash flow.",
+  "disprove": "Break-even rising; Willow cost overruns; distributions cut when oil falls; production guidance missed."
+ },
+ "PFE": {
+  "what": "Sells prescription medicines and vaccines - COVID products, oncology after the Seagen acquisition, and a broad primary care portfolio.",
+  "rev": "Primary care (including Comirnaty and Paxlovid), specialty care and oncology. COVID revenue is volatile and declining. US around half.",
+  "gm": "Gross margin around 65-70%, dragged by COVID product write-offs and the cost of acquired oncology assets.",
+  "mgmt": "Albert Bourla is CEO. Insider ownership small; the Seagen deal added significant debt and is the defining capital allocation decision.",
+  "comp": "Merck, AstraZeneca, BMS in oncology; Moderna in vaccines; GSK in respiratory.",
+  "moat": "Scale in manufacturing and regulatory affairs, patents on the oncology portfolio, and vaccine distribution reach.",
+  "moatTags": [
+   "IP/Patents",
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Post-COVID normalisation is over; the issue now is a 2026-2028 patent cliff across several large products.",
+  "risk": "The Seagen oncology pipeline failing to offset the loss of exclusivity on Eliquis, Ibrance and Xeljanz.",
+  "implied": "A single-digit to low-teens P/E and a high dividend yield imply the market expects the cliff to win.",
+  "debate": "Bulls say a cheap multiple with a covered dividend and an underrated oncology pipeline. Bears say the pipeline has to replace roughly $15bn of revenue and has not proven it can.",
+  "disprove": "Oncology readouts failing; net debt not declining; dividend coverage from free cash flow deteriorating; cost cuts not reaching guidance."
+ },
+ "IBKR": {
+  "what": "Runs an electronic brokerage for active traders, professional investors and introducing brokers worldwide.",
+  "rev": "Net interest income on client cash and margin loans is roughly two-thirds; commissions the rest. Truly global client base across 200+ countries.",
+  "gm": "Pre-tax margin above 70% - among the highest of any listed financial - because the platform is automated and headcount grows slowly.",
+  "mgmt": "Founder Thomas Peterffy still controls the majority of the company; Milan Galik is CEO. Founder alignment is total.",
+  "comp": "Charles Schwab, Robinhood, Futu and Tiger in Asia, plus local brokers such as UOB Kay Hian and Moomoo in Singapore.",
+  "moat": "Lowest-cost automated infrastructure, global market access in one account, and a cost base that barely moves as accounts grow.",
+  "moatTags": [
+   "Scale",
+   "Switching costs",
+   "Network effects"
+  ],
+  "ind": "Global retail and professional trading participation keeps growing, especially outside the US.",
+  "risk": "A sharp fall in interest rates cutting the interest income that is most of the profit, combined with quieter markets.",
+  "implied": "A high-20s to 30s P/E implies continued 20%+ account growth and no severe rate-driven earnings decline.",
+  "debate": "Bulls say it is the lowest-cost global broker compounding accounts at 30% a year. Bears note profits are levered to rates and market activity.",
+  "disprove": "Account growth slowing below 20%; client credit balances falling; net interest margin compressing sharply; commission per trade declining."
+ },
+ "WDC": {
+  "what": "Sells hard disk drives - now almost entirely for data centre mass storage after spinning off the flash business.",
+  "rev": "Nearline HDD for cloud and enterprise is the dominant revenue source; client and consumer drives the remainder.",
+  "gm": "Gross margin has risen sharply in the current upcycle as HDD supply is tight and pricing has improved - it is a two-player market with Seagate.",
+  "mgmt": "Irving Tan leads the post-separation company. Insider ownership small; capital discipline is the promise of the new structure.",
+  "comp": "Seagate is effectively the only competitor; flash-based SSDs compete at the margin for some workloads.",
+  "moat": "A duopoly in high-capacity drives with enormous technology barriers (HAMR and SMR) and disciplined capacity - the best structure HDD has ever had.",
+  "moatTags": [
+   "Scale",
+   "IP/Patents"
+  ],
+  "ind": "AI data storage demand has lifted nearline drive demand after years of decline.",
+  "risk": "Flash prices falling far enough to displace HDD in mass storage tiers, or cloud customers digesting inventory after a buying surge.",
+  "implied": "The price implies the current tight supply and pricing persist rather than mean-revert.",
+  "debate": "Bulls say AI creates permanent demand for cheap bulk storage and the duopoly is disciplined. Bears say storage has always been cyclical and margins are at records.",
+  "disprove": "Exabyte shipment growth slowing; pricing per terabyte falling; cloud customers extending drive replacement cycles; capacity additions announced."
+ },
+ "BX": {
+  "what": "Manages private equity, real estate, credit and infrastructure funds for institutions and, increasingly, wealthy individuals.",
+  "rev": "Management fees (stable) plus performance revenues (volatile) across over $1 trillion of assets under management. Real estate and credit are the largest pools.",
+  "gm": "Fee-related earnings margin above 55%. The economics are excellent when fundraising works and realisations happen.",
+  "mgmt": "Co-founder Stephen Schwarzman is chairman and CEO with a large stake; Jon Gray is president and the likely successor.",
+  "comp": "KKR, Apollo, Brookfield, Ares and the largest sovereign and pension funds investing directly.",
+  "moat": "Brand and track record that make fundraising easier, scale that allows deals nobody else can do, and long lock-up capital.",
+  "moatTags": [
+   "Brand",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Private markets keep taking share of institutional portfolios; the wealth channel is the new growth frontier.",
+  "risk": "A prolonged period where exits do not happen - no realisations means no performance fees and unhappy limited partners.",
+  "implied": "A high multiple of distributable earnings implies fundraising and realisations both normalise upward.",
+  "debate": "Bulls say permanent capital plus retail distribution is a structural growth story. Bears point at commercial real estate marks and a slow exit environment.",
+  "disprove": "Fundraising slowing; net accrued performance revenue declining; real estate fund redemptions rising; realisations staying frozen."
+ },
+ "UBER": {
+  "what": "Runs marketplaces for ride-hailing, food delivery and freight, matching drivers and couriers with consumers.",
+  "rev": "Mobility ~55% of revenue, delivery ~35%, freight the rest. Advertising is a small but very high-margin growth line. US and Canada ~45%.",
+  "gm": "Take rate around 20-30% of gross bookings depending on segment. The marginal trip costs Uber almost nothing - the cost is driver incentives.",
+  "mgmt": "Dara Khosrowshahi is CEO. Insider ownership small; the company reached genuine GAAP profitability in 2023-24.",
+  "comp": "Lyft in US rides, DoorDash in delivery, Grab and Didi internationally, and Waymo in autonomy - as both partner and threat.",
+  "moat": "Liquidity network effects in each city - more drivers means shorter waits means more riders - plus scale in routing and payments.",
+  "moatTags": [
+   "Network effects",
+   "Scale",
+   "Brand"
+  ],
+  "ind": "Ride-hailing and delivery are both still growing double digits; autonomy is the structural wildcard.",
+  "risk": "Autonomous fleets owned by Waymo or Tesla bypassing the Uber network entirely, turning it into a demand aggregator with no pricing power.",
+  "implied": "The valuation implies bookings keep compounding at mid-to-high teens with margin expansion and a benign autonomy outcome.",
+  "debate": "Bulls say Uber becomes the demand layer for every autonomous fleet. Bears say the fleets will go direct and Uber owns no vehicles.",
+  "disprove": "Waymo or a rival launching a consumer app at scale in Ubers core cities; mobility bookings growth slowing; driver incentive costs rising; take rate falling."
+ }
+}

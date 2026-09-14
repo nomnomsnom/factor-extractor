@@ -1,0 +1,367 @@
+{
+ "NVDA": {
+  "what": "Sells accelerated-computing chips and the CUDA software around them to cloud providers, AI labs, enterprises and gamers.",
+  "rev": "Data centre is roughly 88-90% of revenue; gaming under 10%; auto and pro visualisation are rounding errors. By billing location, heavily Singapore/Taiwan/US, but end demand is US hyperscalers.",
+  "gm": "Gross margin around 70-75%. It is a fabless designer: TSMC makes the silicon, NVIDIA captures the architecture and software rent. CUDA lock-in lets it price to value, not cost.",
+  "mgmt": "Co-founder Jensen Huang has run it since 1993 and holds roughly 3-4% personally - unusually high for a company this size.",
+  "comp": "AMD (Instinct), Broadcom and Marvell (custom ASICs for hyperscalers), plus in-house silicon from Google TPU, Amazon Trainium, Microsoft Maia.",
+  "moat": "CUDA plus fifteen years of libraries, kernels and trained engineers. Switching cost is rewriting a code base, not swapping a chip. Add NVLink/networking scale and TSMC capacity priority.",
+  "moatTags": [
+   "Switching costs",
+   "Scale",
+   "IP/Patents",
+   "Network effects"
+  ],
+  "ind": "Growing violently, but the growth is capex-funded by roughly five customers.",
+  "risk": "Hyperscalers succeeding with their own silicon for inference, so NVIDIA keeps training but loses the larger inference market - or an AI capex digestion year.",
+  "implied": "The multiple only works if data-centre revenue keeps compounding at a high double-digit rate for several more years with margins near 70%.",
+  "debate": "Bulls say compute demand is a decade-long build-out and NVIDIA is the toll booth. Bears say customer concentration plus custom silicon means peak share is behind it.",
+  "disprove": "Hyperscaler capex guidance cut; inventory and purchase commitments rising faster than revenue; gross margin drifting below 70%; a top customer publicly standardising on its own accelerator."
+ },
+ "AAPL": {
+  "what": "Sells premium consumer hardware - iPhone above all - and an attached services bundle to about 2.4 billion active devices.",
+  "rev": "iPhone is roughly half of revenue; Services about a quarter but over 40% of gross profit; Mac, iPad and Wearables the rest. Americas ~42%, Europe ~26%, Greater China ~15%.",
+  "gm": "Blended gross margin around 47-48%: hardware near 37%, Services above 70%. Scale in procurement plus pricing power from the ecosystem.",
+  "mgmt": "John Ternus has taken over as CEO from Tim Cook, who led the company from 2011. Insider ownership is negligible (well under 1%) - this is a professionally managed, not founder-owned, company.",
+  "comp": "Samsung and Chinese OEMs (Huawei, Xiaomi) in phones; Google in services and search defaults; Microsoft in PCs.",
+  "moat": "Switching costs across iMessage, iCloud, App Store and Watch, plus a brand that supports a price premium and unmatched silicon-plus-software integration.",
+  "moatTags": [
+   "Brand",
+   "Switching costs",
+   "Scale",
+   "IP/Patents"
+  ],
+  "ind": "Smartphone units are flat globally; the growth is in price, services attach and installed base.",
+  "risk": "Losing the Google search default payment (roughly $20bn+ of near-pure profit) to an antitrust remedy, or a China demand and supply shock.",
+  "implied": "At a high-30s P/E the price implies services keeps compounding and a new hardware or AI cycle re-accelerates iPhone - not the low single-digit revenue growth of recent years.",
+  "debate": "Bulls point to the installed base as an annuity and buybacks shrinking the share count 2-3% a year. Bears say you are paying a growth multiple for a mature hardware business.",
+  "disprove": "Services growth slowing below ~10%; Greater China revenue declining two years running; an adverse final ruling on the Google default; gross margin rolling over."
+ },
+ "GOOG": {
+  "what": "Sells advertising against search, YouTube and its network, plus cloud infrastructure, to advertisers and enterprises worldwide.",
+  "rev": "Search ~56%, YouTube ads ~10%, Network ~8%, Cloud ~14% and growing fastest, subscriptions/devices the rest. US ~48% of revenue.",
+  "gm": "Gross margin around 58%. Search has almost no marginal cost; Cloud and the traffic-acquisition payments to Apple and carriers drag the blend down.",
+  "mgmt": "Sundar Pichai is CEO; founders Page and Brin still control the company through Class B super-voting shares despite owning a minority of economics.",
+  "comp": "Meta and Amazon for ad dollars, Microsoft/OpenAI in search-like answers, AWS and Azure in cloud.",
+  "moat": "Default distribution, twenty-five years of query data, YouTube network effects and the cheapest compute per query via TPUs.",
+  "moatTags": [
+   "Network effects",
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Digital advertising grows mid-to-high single digits; cloud and AI inference grow much faster.",
+  "risk": "Answer engines eating the ten blue links, so query volume monetises worse - plus antitrust remedies on default placements.",
+  "implied": "The multiple implies ad revenue keeps growing double digits while Cloud margin expands, with no structural erosion in search monetisation.",
+  "debate": "Bulls say Gemini plus TPUs plus distribution make it the best-positioned AI incumbent and Cloud is still underearning. Bears say search is the most disrupted profit pool on earth.",
+  "disprove": "Paid clicks growing while revenue per click falls for several quarters; Cloud growth decelerating below Azure; a forced unbundling of Chrome or Android defaults."
+ },
+ "MSFT": {
+  "what": "Sells enterprise software, Azure cloud infrastructure and AI services to businesses, on subscription.",
+  "rev": "Intelligent Cloud (Azure, server) ~43%, Productivity (Office/M365, LinkedIn) ~32%, More Personal Computing (Windows, gaming, search) ~25%. US just over half.",
+  "gm": "Gross margin around 68-69%. Software is near-free to copy; the AI build-out of GPUs and data centres is pulling the cloud portion down toward the low 70s.",
+  "mgmt": "Satya Nadella has been CEO since 2014. Insider ownership is small; pay is heavily performance-share weighted.",
+  "comp": "Amazon AWS and Google Cloud in infrastructure; Google Workspace in productivity; Salesforce, ServiceNow and AWS in applications.",
+  "moat": "Enterprise switching costs across identity, Office and Windows, bundled licensing that makes each add-on nearly free, and a direct sales relationship with essentially every large company.",
+  "moatTags": [
+   "Switching costs",
+   "Scale",
+   "Network effects",
+   "Brand"
+  ],
+  "ind": "Enterprise IT spend is growing; the AI portion is growing much faster but is capital-hungry.",
+  "risk": "An AI capex cycle that does not convert into Azure revenue, leaving a huge depreciation charge against flat growth - or the OpenAI relationship souring.",
+  "implied": "A mid-30s P/E implies mid-teens revenue growth and stable margins despite capex now running above $80bn a year.",
+  "debate": "Bulls say Copilot and Azure AI are the largest enterprise attach opportunity ever. Bears say depreciation from the build-out will compress returns on capital for years.",
+  "disprove": "Azure growth slipping toward the mid-teens; capex rising while cloud gross margin falls; Copilot seat disclosures that never arrive; operating margin declining two years running."
+ },
+ "AMZN": {
+  "what": "Sells retail goods and logistics to consumers and sells cloud computing and advertising to businesses.",
+  "rev": "Online stores ~40%, third-party seller services ~24%, AWS ~17% of revenue but the majority of operating profit, advertising ~9%, subscriptions ~7%. North America ~60%.",
+  "gm": "Reported gross margin is near 50% but mixes a low-margin retail business with AWS at roughly 60% operating margin and advertising at near-pure margin.",
+  "mgmt": "Andy Jassy is CEO; founder Jeff Bezos remains executive chairman and still owns roughly 8-9% - the largest insider stake among US mega caps.",
+  "comp": "Walmart and Temu/Shein in retail; Microsoft Azure and Google Cloud in infrastructure; Google and Meta in advertising.",
+  "moat": "Fulfilment network scale no one can replicate economically, Prime habit and lock-in, AWS switching costs and marketplace network effects.",
+  "moatTags": [
+   "Scale",
+   "Network effects",
+   "Switching costs",
+   "Brand"
+  ],
+  "ind": "E-commerce keeps taking share of retail; cloud and retail media both growing faster still.",
+  "risk": "AWS losing the AI workload race to Azure and Google while retail capex stays heavy - margin and multiple compress together.",
+  "implied": "The valuation implies AWS re-accelerates and retail operating margin keeps climbing toward high single digits.",
+  "debate": "Bulls say three high-margin businesses (AWS, ads, logistics-as-a-service) are hidden inside a retailer. Bears say capex of $100bn+ a year makes free cash flow unreliable.",
+  "disprove": "AWS growth trailing Azure and Google Cloud for several quarters; North America retail margin stalling; free cash flow negative in a non-recession year."
+ },
+ "META": {
+  "what": "Sells targeted advertising against attention on Facebook, Instagram, WhatsApp and Threads to roughly 10 million advertisers.",
+  "rev": "Advertising is about 98% of revenue; Reality Labs is a loss-making rounding error. US and Canada ~45% of revenue from ~10% of users.",
+  "gm": "Gross margin around 81%. Once the data centre is built, another ad impression costs almost nothing; the cost is compute for ranking and recommendation.",
+  "mgmt": "Mark Zuckerberg is founder-CEO and controls a majority of votes through Class B shares while owning about 13% of economics.",
+  "comp": "Google/YouTube, TikTok and Amazon for advertising dollars and user time.",
+  "moat": "Network effects across 3.4 billion daily users, an ad-ranking system improved by the largest behavioural data set outside Google, and advertiser switching costs.",
+  "moatTags": [
+   "Network effects",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Digital ads grow mid-to-high single digits; Meta has been taking share via AI-driven ranking.",
+  "risk": "Regulatory restriction on data use for targeting in the EU or US, or a spending pivot into AI and Reality Labs that never earns its cost of capital.",
+  "implied": "The multiple implies high-teens ad growth continues while capex-driven depreciation is absorbed without margin loss.",
+  "debate": "Bulls say AI recommendations keep lifting price per ad and Meta is the cheapest mega-cap on earnings. Bears point at $70bn+ annual capex and a founder who can spend it without asking.",
+  "disprove": "Ad impressions growing while price per ad falls persistently; Reality Labs losses widening past $20bn; EU consent rulings that cut targeting reach; capex guidance rising with no revenue response."
+ },
+ "AVGO": {
+  "what": "Sells networking and custom AI silicon to hyperscalers, plus infrastructure software (VMware, mainframe, security) to large enterprises.",
+  "rev": "Semiconductor solutions roughly 60% (AI networking and custom accelerators the growth engine), infrastructure software roughly 40% after VMware. Heavily concentrated in a handful of customers.",
+  "gm": "Gross margin around 65-78% depending on mix - software is high 80s, custom silicon lower. Broadcom buys mature franchises and raises prices rather than chasing volume.",
+  "mgmt": "Hock Tan has run it since 2006 and is one of the highest-paid, most disciplined capital allocators in semis; his stake is meaningful but modest.",
+  "comp": "NVIDIA and Marvell in AI silicon and networking; Cisco and Arista in switching; Nutanix and cloud providers against VMware.",
+  "moat": "Deep custom-ASIC co-design relationships with a few hyperscalers, essentially monopoly positions in several networking niches, and VMware contracts that are painful to leave.",
+  "moatTags": [
+   "Switching costs",
+   "IP/Patents",
+   "Scale"
+  ],
+  "ind": "AI networking and custom accelerators growing fast; the legacy semis and software franchises are mature by design.",
+  "risk": "Losing a single custom-silicon customer - the top three are most of AI revenue - or a VMware price backlash driving migration.",
+  "implied": "The price implies custom AI silicon revenue keeps compounding at a very high rate and the VMware price increases stick.",
+  "debate": "Bulls say Broadcom is the only credible alternative to NVIDIA for hyperscaler silicon. Bears note extreme customer concentration and a debt-funded roll-up model.",
+  "disprove": "A named hyperscaler moving its next-generation accelerator elsewhere; VMware renewal churn showing in software growth; free cash flow not covering the acquisition debt schedule."
+ },
+ "TSLA": {
+  "what": "Sells electric vehicles, stationary batteries and energy services, and is betting the company on autonomy and robotics.",
+  "rev": "Automotive roughly 75-80% of revenue, energy generation and storage the fastest-growing segment at ~12-15%, services the rest. US, China and Europe are the three markets.",
+  "gm": "Gross margin has fallen from the low 30s to the high teens as prices were cut to defend volume; energy storage now carries a higher margin than cars.",
+  "mgmt": "Elon Musk holds roughly 13% plus a contested compensation award; he divides attention across several companies, which the board treats as acceptable.",
+  "comp": "BYD and Chinese EV makers on price, legacy OEMs (VW, Hyundai, GM) on volume, Waymo on autonomy.",
+  "moat": "Brand, charging network, manufacturing cost leadership outside China and a fleet data advantage - but every element is being competed away.",
+  "moatTags": [
+   "Brand",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Global EV adoption still growing, but price competition is brutal and US incentives have weakened.",
+  "risk": "Full self-driving failing to reach regulatory approval at scale, leaving the valuation resting on a car business with shrinking margins.",
+  "implied": "The price implies robotaxi and Optimus become real, large, high-margin businesses. On cars alone the multiple is indefensible.",
+  "debate": "Bulls underwrite autonomy and humanoid robots as option value. Bears say deliveries are flat, margins are compressing and the multiple is a belief system.",
+  "disprove": "Unsupervised robotaxi timelines slipping again; automotive gross margin ex-credits below the mid-teens; deliveries declining year over year; regulatory credit revenue disappearing."
+ },
+ "MU": {
+  "what": "Sells DRAM and NAND memory - increasingly high-bandwidth memory for AI accelerators - to data centre, mobile and auto customers.",
+  "rev": "DRAM is roughly 75-80% of revenue and nearly all of profit; NAND the rest. Data centre is now the largest end market, driven by HBM.",
+  "gm": "Gross margin swings from negative to above 50% across the cycle. Memory is a commodity: margin is set by industry supply discipline, not by Micron.",
+  "mgmt": "Sanjay Mehrotra has been CEO since 2017. Insider ownership is minimal; this is a capital-intensive cyclical run by professional managers.",
+  "comp": "Samsung and SK Hynix - a three-player oligopoly in DRAM - plus Kioxia and YMTC in NAND.",
+  "moat": "Scale and process technology in a genuine oligopoly, plus HBM qualification cycles that lock supply a year ahead. The moat is the industry structure, not the company.",
+  "moatTags": [
+   "Scale",
+   "IP/Patents"
+  ],
+  "ind": "Structurally growing with AI memory intensity, but still a capacity cycle that has always mean-reverted.",
+  "risk": "The classic memory glut: all three players adding capacity into a demand pause, and pricing collapsing within two quarters.",
+  "implied": "At this price the market is treating HBM as a secular growth business rather than the peak of a cycle. Check the P/E against peak earnings, not trailing.",
+  "debate": "Bulls say AI memory demand has broken the old cycle and HBM is sold out on contract. Bears note every memory upcycle in forty years ended the same way.",
+  "disprove": "DRAM spot prices falling for two months; HBM capacity additions from all three suppliers; inventory days rising; customers pushing out qualification."
+ },
+ "BRK.B": {
+  "what": "Owns insurance (GEICO, Berkshire Hathaway Reinsurance), a railroad, energy utilities, a spread of industrial and retail businesses, and a large listed equity portfolio.",
+  "rev": "Insurance, BNSF railroad, Berkshire Hathaway Energy and the manufacturing/service/retail group. Float from insurance funds the investments. Almost entirely US.",
+  "gm": "Not a meaningful metric for a conglomerate; watch operating earnings by segment and the cost of insurance float, which has often been negative.",
+  "mgmt": "Greg Abel has taken over as CEO with Warren Buffett as chairman; Buffett still holds a large economic stake. Insider alignment is exceptional.",
+  "comp": "Other insurers (Progressive, Chubb) and other acquirers of private businesses (Brookfield, private equity) competing for deals.",
+  "moat": "Permanent capital, a cost-of-float advantage, and a reputation that makes Berkshire the buyer of choice in a crisis. Size is now the constraint.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Regulation"
+  ],
+  "ind": "Mature businesses; the interesting variable is what gets done with the cash pile.",
+  "risk": "Succession without Buffett changing the culture or the deal flow - or a mega-catastrophe insurance year colliding with an equity drawdown.",
+  "implied": "It trades on book value, not earnings. The price implies modest premium to book with cash earning short-term rates.",
+  "debate": "Bulls say a fortress balance sheet with a vast cash pile is an option on market dislocation. Bears say the size makes double-digit compounding arithmetically hard.",
+  "disprove": "Price to book stretching above historical range; underwriting losses at GEICO; large acquisitions at prices the old Berkshire would not have paid."
+ },
+ "LLY": {
+  "what": "Sells prescription drugs - above all the GLP-1 incretins tirzepatide (Mounjaro/Zepbound) - to patients through payers and health systems.",
+  "rev": "Incretins are over half of revenue and nearly all of the growth; oncology (Verzenio), immunology, neuroscience (Kisunla) the rest. US roughly 70%.",
+  "gm": "Gross margin around 80-83%. Patented biologics with enormous pricing power in the US, though manufacturing scale-up and net price rebates weigh on it.",
+  "mgmt": "David Ricks is CEO. Insider ownership is low, but the Lilly Endowment holds a large block, which gives long-horizon stability.",
+  "comp": "Novo Nordisk head-on in incretins, with Amgen, Pfizer, Viking and Chinese biotechs pursuing oral and next-generation obesity drugs.",
+  "moat": "Patents to the mid-2030s, manufacturing capacity that took years and billions to build, and clinical data breadth across obesity, diabetes, sleep apnoea and heart failure.",
+  "moatTags": [
+   "IP/Patents",
+   "Scale",
+   "Brand",
+   "Regulation"
+  ],
+  "ind": "The obesity market is the fastest-growing drug category in history and is still supply-constrained.",
+  "risk": "US drug-pricing action on GLP-1s, or an oral competitor with comparable efficacy and far lower cost of goods.",
+  "implied": "A P/E in the 30s on rapidly growing earnings implies incretin revenue roughly doubling again with pricing holding up.",
+  "debate": "Bulls model a $150bn+ obesity market with two credible suppliers. Bears point at Medicare pricing negotiation, compounders and orals arriving in force.",
+  "disprove": "US net price per script falling faster than volume growth; a competitor oral matching 20%+ weight loss with clean safety; scripts plateauing; capacity expansion outrunning demand."
+ },
+ "JPM": {
+  "what": "The largest US bank: lends to and banks consumers, corporates and institutions, and runs a top-three investment bank and asset manager.",
+  "rev": "Consumer and community banking ~35-40%, corporate and investment bank ~35%, asset and wealth management ~15%, commercial banking the rest. Mostly US.",
+  "gm": "Banks do not report gross margin. Watch net interest margin, efficiency ratio (around 50-55%) and return on tangible equity, which has run near 20%.",
+  "mgmt": "Jamie Dimon has run it since 2005 and holds a substantial personal stake; succession is the open governance question.",
+  "comp": "Bank of America, Citigroup and Wells Fargo domestically; Goldman Sachs and Morgan Stanley in markets and advisory.",
+  "moat": "Scale in deposits and technology spend, regulatory capital requirements that deter entry, and a genuine fortress balance sheet that wins share in every crisis.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Mature and cyclical; deposit share keeps concentrating in the largest banks.",
+  "risk": "A credit cycle - commercial real estate or consumer - arriving while rates fall and net interest income compresses.",
+  "implied": "Around two times tangible book implies sustained high-teens returns on tangible equity, well above the sector.",
+  "debate": "Bulls say it is the best-run bank in the world and deserves a premium. Bears say you are buying a cyclical at peak earnings and peak book multiple.",
+  "disprove": "Net charge-offs rising faster than guidance; reserve builds accelerating; net interest income guidance cut; ROTCE falling below the mid-teens."
+ },
+ "WMT": {
+  "what": "Sells groceries and general merchandise to about 250 million weekly customers, increasingly online and increasingly with advertising attached.",
+  "rev": "Walmart US ~68%, Walmart International ~18%, Sams Club ~14%. Grocery is roughly 60% of US sales - it is a grocer with a media business attached.",
+  "gm": "Gross margin around 24-25%. Retail scale means buying power, but grocery is structurally low margin; the profit growth is coming from advertising and membership.",
+  "mgmt": "John Furner is CEO, succeeding Doug McMillon after a long tenure; the Walton family still owns roughly 45% of the shares.",
+  "comp": "Amazon, Costco, Target and Kroger, plus dollar stores at the value end.",
+  "moat": "Purchasing scale, a store network within ten miles of most Americans doubling as fulfilment nodes, and an everyday-low-price reputation.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Grocery grows with population and inflation; the share shift online and into retail media is the real story.",
+  "risk": "A price war with Amazon on grocery delivery, or consumer trade-down that arrives without the offsetting mix benefit.",
+  "implied": "A P/E in the 30s for a retailer growing sales mid single digits implies advertising and membership keep expanding the margin every year.",
+  "debate": "Bulls say the high-margin ad and marketplace layer re-rates the whole company. Bears say it is still a grocer priced like a software company.",
+  "disprove": "US comparable sales slowing below 3%; e-commerce losses widening; advertising growth decelerating; operating margin failing to expand."
+ },
+ "AMD": {
+  "what": "Sells CPUs and GPUs for data centres, PCs and gaming consoles - the credible second source to Intel and NVIDIA.",
+  "rev": "Data centre is roughly half of revenue (EPYC server CPUs plus Instinct accelerators), client PCs about a third, gaming and embedded the rest.",
+  "gm": "Gross margin around 50-54%. Fabless with TSMC; server CPUs carry high margin, AI accelerators currently lower than NVIDIA equivalents.",
+  "mgmt": "Lisa Su has run the turnaround since 2014 and is widely regarded as one of the best operators in the industry; insider ownership is small.",
+  "comp": "Intel in x86 server and client CPUs, NVIDIA in AI accelerators, Arm-based designs from Amazon and Ampere.",
+  "moat": "Process-node leadership through TSMC and a chiplet architecture that is genuinely ahead of Intel - but no CUDA equivalent on the GPU side.",
+  "moatTags": [
+   "IP/Patents",
+   "Scale"
+  ],
+  "ind": "Server CPU share shifting to AMD; the AI accelerator market is growing but NVIDIA holds it.",
+  "risk": "ROCm failing to reach parity with CUDA, so AI revenue stays a rounding error against expectations - or Intel recovering on 18A.",
+  "implied": "The valuation implies AMD takes a meaningful double-digit share of AI accelerator spend within a few years.",
+  "debate": "Bulls say any second source in a supply-constrained market wins billions. Bears say software is the barrier and AMD has not cleared it.",
+  "disprove": "Instinct revenue guidance missed twice; hyperscalers naming custom silicon over AMD; server CPU share gains stalling; gross margin sliding as accelerator mix rises."
+ },
+ "V": {
+  "what": "Runs the rails for card payments between banks, merchants and consumers - it does not lend, it takes a toll on volume.",
+  "rev": "Service, data processing, international transaction and other revenues, net of client incentives. Cross-border volume carries far higher take rates. US roughly 40% of revenue.",
+  "gm": "Operating margin runs near 65-67%, among the highest of any large company. The network is built; each additional transaction costs almost nothing.",
+  "mgmt": "Ryan McInerney is CEO. Insider ownership is negligible; capital returns are steady and large.",
+  "comp": "Mastercard as the near-twin, American Express in premium, plus account-to-account rails (Pix, UPI, FedNow) and stablecoins as the structural threat.",
+  "moat": "Two-sided network effects across 150 million merchants and 4 billion cards, plus decades of settlement, fraud and regulatory infrastructure.",
+  "moatTags": [
+   "Network effects",
+   "Scale",
+   "Regulation",
+   "Brand"
+  ],
+  "ind": "Cash-to-card conversion continues globally; developed-market volume growth is now mostly nominal GDP plus a little.",
+  "risk": "Regulated real-time account-to-account rails in major markets bypassing the card networks - the Pix outcome repeated elsewhere.",
+  "implied": "A high-20s P/E implies low-double-digit revenue growth indefinitely with no take-rate compression.",
+  "debate": "Bulls call it a toll on global consumption with software margins. Bears watch governments building public payment rails that do the same job for free.",
+  "disprove": "Take rate declining; cross-border volume growth slowing sharply; a major market mandating A2A acceptance; client incentives growing faster than gross revenue."
+ },
+ "XOM": {
+  "what": "Finds, produces, refines and sells oil, gas and chemicals worldwide.",
+  "rev": "Upstream production (Permian and Guyana are the crown jewels), energy products (refining), chemical products and specialty products. Global, with US the largest single market.",
+  "gm": "Not the right metric. Watch upstream unit costs, refining crack spreads and the cash break-even oil price - Exxon has pushed break-even into the $30s per barrel.",
+  "mgmt": "Darren Woods is CEO. Insider ownership is small; capital discipline and a rising dividend are the stated policy.",
+  "comp": "Chevron, Shell, BP, TotalEnergies and the national oil companies.",
+  "moat": "Low-cost resource position in Guyana and the Permian, integration across the barrel, and a scale of project execution few can match.",
+  "moatTags": [
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Oil demand is still growing modestly but is a declining share of energy; refining capacity is tight.",
+  "risk": "A sustained oil price below the mid $50s, which would squeeze the dividend-plus-buyback commitment.",
+  "implied": "The multiple implies mid-cycle oil prices holding and Guyana volumes ramping as planned.",
+  "debate": "Bulls point to the lowest-cost barrels in the industry and decades of reserve life. Bears say terminal demand risk caps the multiple permanently.",
+  "disprove": "Guyana production or cost guidance slipping; break-even creeping up; buybacks funded by debt; reserve replacement below 100%."
+ },
+ "JNJ": {
+  "what": "Sells prescription medicines (immunology, oncology, neuroscience) and medical devices (surgery, orthopaedics, vision) to health systems.",
+  "rev": "Innovative Medicine roughly 65%, MedTech roughly 35% after the consumer spin-off of Kenvue. US just over half of revenue.",
+  "gm": "Gross margin around 68-70%. Patented drugs are high margin; devices are lower and more manufacturing-intensive.",
+  "mgmt": "Joaquin Duato is CEO. Insider ownership is minimal; the dividend has been raised for more than sixty consecutive years.",
+  "comp": "AbbVie, Merck and Pfizer in pharma; Medtronic, Stryker and Abbott in devices.",
+  "moat": "Patent portfolio, surgeon training and hospital relationships in devices, and a balance sheet rated higher than most governments.",
+  "moatTags": [
+   "IP/Patents",
+   "Brand",
+   "Switching costs",
+   "Regulation"
+  ],
+  "ind": "Mature and defensive; growth comes from the pipeline and from an ageing population.",
+  "risk": "The talc litigation resolving badly, or the Stelara biosimilar erosion running faster than the new launches can offset.",
+  "implied": "A high-teens P/E implies mid single-digit growth with litigation contained - a modest bar.",
+  "debate": "Bulls like the defensiveness and the pipeline depth at a reasonable multiple. Bears see a patent cliff and an unresolved legal overhang.",
+  "disprove": "Stelara erosion faster than guided; talc settlement above reserves; MedTech growth below market; pipeline readouts failing."
+ },
+ "INTC": {
+  "what": "Designs and manufactures x86 CPUs, and is trying to become a contract foundry for other chip designers.",
+  "rev": "Client computing (PC CPUs) roughly half, data centre and AI about a third, foundry services and other the rest.",
+  "gm": "Gross margin has fallen from 60%+ to the 30s-40s. Owning fabs means enormous fixed costs; under-utilisation destroys the margin.",
+  "mgmt": "Lip-Bu Tan took over in 2025 with a mandate to cut costs and fix the foundry. The US government took an equity stake as part of CHIPS support.",
+  "comp": "AMD in x86, TSMC in foundry, NVIDIA in accelerators, Arm-based designs across the board.",
+  "moat": "What is left of it is scale in x86 and government-backed domestic manufacturing. The technology lead is gone - treat the moat as impaired.",
+  "moatTags": [
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "PCs are flat, data centre CPUs are losing share to AMD and accelerators; foundry is growing but dominated by TSMC.",
+  "risk": "18A or 14A failing to win a major external foundry customer, leaving a capital-intensive business with no path to scale.",
+  "implied": "The price now embeds a foundry turnaround. On current earnings power the multiple is not supportable.",
+  "debate": "Bulls see a national-champion turnaround with government support and a cheap asset base. Bears see two decades of execution failure and negative free cash flow.",
+  "disprove": "No named external 18A/14A customer with volume; capex not funded from operations; further share loss in server CPUs; foundry losses widening."
+ },
+ "MA": {
+  "what": "Runs a global card payment network, connecting issuers and merchants for a fee on volume.",
+  "rev": "Payment network fees plus a fast-growing value-added services and solutions arm (fraud, data, consulting) that is now roughly a third of revenue.",
+  "gm": "Operating margin around 55-58%. Same network economics as Visa: fixed infrastructure, near-zero marginal cost.",
+  "mgmt": "Michael Miebach is CEO. The Mastercard Foundation holds a large block, giving a long-term anchor shareholder.",
+  "comp": "Visa above all, American Express in premium, domestic schemes and real-time payment rails everywhere.",
+  "moat": "Network effects, regulatory complexity and a services layer that increases merchant and issuer switching costs.",
+  "moatTags": [
+   "Network effects",
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Same as Visa: cash conversion plus cross-border travel recovery, with A2A rails as the long-term threat.",
+  "implied": "A high-30s P/E implies sustained mid-teens earnings growth - a demanding bar even for this quality.",
+  "risk": "Regulated domestic rails displacing card acceptance in large markets, or interchange regulation in the US.",
+  "debate": "Bulls say value-added services justify the premium to Visa. Bears note it is the more expensive of two near-identical businesses.",
+  "disprove": "Cross-border volume growth normalising to low single digits; services growth slowing; regulatory caps on interchange in the US; take rate falling."
+ },
+ "ABBV": {
+  "what": "Sells immunology drugs (Skyrizi, Rinvoq), aesthetics (Botox) and neuroscience treatments, after losing Humira exclusivity.",
+  "rev": "Immunology is roughly half of revenue, with Skyrizi and Rinvoq now well past Humira; aesthetics, neuroscience and oncology the rest. US around 75%.",
+  "gm": "Gross margin around 70% on a reported basis, higher adjusted. Patented biologics with US pricing power; aesthetics is a cash-pay consumer business.",
+  "mgmt": "Robert Michael is CEO following Richard Gonzalez. Insider ownership is small; the dividend is the stated priority.",
+  "comp": "J&J and Pfizer in immunology, Merck and BMS in oncology, plus biosimilar manufacturers.",
+  "moat": "Formulary position, patent estates on the new immunology pair, and the Botox brand in a cash-pay market.",
+  "moatTags": [
+   "IP/Patents",
+   "Brand",
+   "Regulation"
+  ],
+  "ind": "Immunology is growing; aesthetics is cyclical and has been weak.",
+  "risk": "Skyrizi and Rinvoq facing Medicare price negotiation late this decade before the next wave of launches arrives.",
+  "implied": "The multiple implies the immunology pair keeps compounding to $30bn+ combined with no pricing shock.",
+  "debate": "Bulls say ABBV navigated the largest patent cliff in history and now has two mega-brands. Bears point to a heavy debt load and the next cliff already visible.",
+  "disprove": "Skyrizi or Rinvoq script growth decelerating; aesthetics declining further; net debt not falling; IRA negotiation including the immunology pair."
+ }
+}

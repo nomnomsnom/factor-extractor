@@ -1,0 +1,361 @@
+{
+ "CSCO": {
+  "what": "Sells enterprise networking hardware, security and observability software to corporates, telcos and increasingly AI data centres.",
+  "rev": "Networking roughly 60%, security (boosted by Splunk) ~15%, collaboration and observability the rest. Software and subscriptions are now over half of revenue. Americas ~58%.",
+  "gm": "Gross margin around 65-68%, rising as software mix grows. Hardware carries Cisco-certified engineer lock-in more than physical scarcity.",
+  "mgmt": "Chuck Robbins has been CEO since 2015. Insider ownership is negligible; capital return is the main use of cash.",
+  "comp": "Arista in data centre switching, Juniper/HPE, Palo Alto and CrowdStrike in security, plus white-box hardware.",
+  "moat": "Installed base, certification ecosystem and enterprise switching costs - real, but eroding at the high end where Arista wins.",
+  "moatTags": [
+   "Switching costs",
+   "Brand",
+   "Scale"
+  ],
+  "ind": "Enterprise networking is a low-growth market; AI back-end networking is the one fast-growing pocket.",
+  "risk": "Losing the AI networking wave to Arista and NVIDIA while the core campus business stays flat.",
+  "implied": "A high-teens P/E implies low single-digit growth with margin held - not demanding, but not cheap for the growth.",
+  "debate": "Bulls say software mix plus AI orders re-rate a cheap incumbent. Bears say it is a share donor with a dividend.",
+  "disprove": "AI order backlog not converting to revenue; security growth slowing post-Splunk; product revenue declining year over year."
+ },
+ "ORCL": {
+  "what": "Sells database software, enterprise applications and, now, GPU cloud capacity to enterprises and AI labs.",
+  "rev": "Cloud services and licence support is the bulk; OCI infrastructure is the growth engine with an enormous contracted backlog. Applications (NetSuite, Fusion) steady.",
+  "gm": "Gross margin has been falling from the high 70s as low-margin GPU cloud revenue scales - a real mix shift, not a one-off.",
+  "mgmt": "Safra Catz leads; founder Larry Ellison remains chairman, CTO and owns roughly 40% of the company - extraordinary insider alignment and extraordinary key-man risk.",
+  "comp": "AWS, Microsoft Azure, Google Cloud and CoreWeave in infrastructure; SAP and Workday in applications.",
+  "moat": "Database switching costs are among the strongest in enterprise software. The new GPU cloud business has almost no moat and is capital-intensive.",
+  "moatTags": [
+   "Switching costs",
+   "Scale",
+   "IP/Patents"
+  ],
+  "ind": "Databases mature; AI infrastructure demand exploding but with thin, contested economics.",
+  "risk": "Signing enormous multi-year GPU commitments funded by debt, then a customer - OpenAI above all - failing to take or pay for the capacity.",
+  "implied": "The price implies the RPO backlog converts to revenue at acceptable margin and Oracle becomes a top-tier cloud.",
+  "debate": "Bulls point to a backlog measured in hundreds of billions. Bears see rising debt, falling margins and concentration in one unprofitable counterparty.",
+  "disprove": "RPO growth without matching revenue conversion; capex funded by new debt issuance; cloud gross margin falling further; a major contract cancelled or restructured."
+ },
+ "PLTR": {
+  "what": "Sells data-integration and AI decision software (Gotham, Foundry, AIP) to Western governments and large enterprises.",
+  "rev": "Roughly 55% government (US defence and intelligence lead) and 45% commercial, with US commercial growing fastest. US is about 70% of revenue.",
+  "gm": "Gross margin around 80%. It is software, but delivery has historically needed forward-deployed engineers, which caps it below pure SaaS.",
+  "mgmt": "Co-founder Alex Karp is CEO; Peter Thiel and the founding group retain outsized voting control. Stock-based compensation is very large.",
+  "comp": "Snowflake and Databricks on data platforms, Booz Allen and Leidos in government services, in-house data teams everywhere.",
+  "moat": "Security clearances, accredited government deployments and workflow embedding that is painful to unwind. Regulation and trust are the real barriers.",
+  "moatTags": [
+   "Switching costs",
+   "Regulation",
+   "IP/Patents"
+  ],
+  "ind": "Defence software and enterprise AI budgets are both growing quickly.",
+  "risk": "A US defence budget shift or procurement scandal, or enterprise AI spending proving to be a pilot budget rather than a platform budget.",
+  "implied": "At well over 200 times earnings and 60-plus times sales, the price implies many years of 30%+ growth with expanding margins. This is among the most demanding valuations in the index.",
+  "debate": "Bulls say it is the operating system for Western AI deployment. Bears say no software company has ever grown into a 60x sales multiple without a drawdown.",
+  "disprove": "US commercial customer count growth slowing; net dollar retention falling; stock-based compensation staying above 20% of revenue; a government contract loss."
+ },
+ "CVX": {
+  "what": "Produces, refines and markets oil, gas and chemicals, with a large Permian and post-Hess Guyana position.",
+  "rev": "Upstream is most of the earnings; downstream refining and chemicals the rest. US and international roughly balanced.",
+  "gm": "Use cash break-even and upstream unit costs. Chevron targets covering dividend and capex below $60 Brent.",
+  "mgmt": "Mike Wirth is CEO. Modest insider ownership; the dividend record is the management scorecard.",
+  "comp": "ExxonMobil, Shell, TotalEnergies, ConocoPhillips.",
+  "moat": "Low-cost Permian acreage, the Tengiz expansion and now a Guyana stake - scale assets, not pricing power.",
+  "moatTags": [
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Same as the sector: modest demand growth, capital discipline, terminal-value debate.",
+  "risk": "Oil below $55 for a sustained period, or execution problems at Tengiz.",
+  "implied": "The multiple implies mid-cycle crude and the Hess assets delivering as underwritten.",
+  "debate": "Bulls like the dividend and the Guyana optionality. Bears see a commodity price-taker with a structural demand question.",
+  "disprove": "Free cash flow not covering dividend plus buyback at current oil prices; Tengiz cost overruns; production guidance cuts."
+ },
+ "BAC": {
+  "what": "A universal US bank: consumer deposits and lending, wealth management through Merrill, and a global markets and banking arm.",
+  "rev": "Consumer banking ~40%, global wealth ~20%, global banking ~20%, markets ~20%. Overwhelmingly US.",
+  "gm": "Watch net interest income, the efficiency ratio (mid 60s) and return on tangible equity (low to mid teens).",
+  "mgmt": "Brian Moynihan has led since 2010. Berkshire Hathaway has historically been a large holder.",
+  "comp": "JPMorgan, Wells Fargo, Citigroup, plus fintech deposit competition.",
+  "moat": "Deposit franchise scale and regulatory barriers. The low-cost deposit base is the asset.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Switching costs"
+  ],
+  "ind": "Mature, cyclical, rate-sensitive.",
+  "risk": "A sharp fall in rates compressing net interest income while credit costs rise - the two bad things at once.",
+  "implied": "Near or slightly above tangible book implies mid-teens returns on equity persisting.",
+  "debate": "Bulls say it is the cheapest big-bank deposit franchise with rate upside. Bears note a large held-to-maturity securities book and weaker returns than JPMorgan.",
+  "disprove": "Net interest income guidance cut; deposit costs rising faster than asset yields; consumer charge-offs above 4%."
+ },
+ "COST": {
+  "what": "Sells bulk groceries and general merchandise at near-cost to paying members - the profit is the membership fee.",
+  "rev": "Merchandise sales are ~98% of revenue but membership fees are roughly two-thirds of operating profit. US ~73% of sales.",
+  "gm": "Gross margin around 12-13% by design. Costco caps markups; the business model converts scale into lower prices, not higher margin.",
+  "mgmt": "Ron Vachris is CEO after Craig Jelinek. Insider ownership small, culture famously durable.",
+  "comp": "Sams Club (Walmart), BJs, Amazon and local grocers.",
+  "moat": "Membership renewal rates above 90%, purchasing scale on a deliberately narrow SKU count, and a price reputation that compounds.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Warehouse club retail keeps taking share, especially in inflationary periods.",
+  "risk": "Membership fee increases failing to stick, or a consumer shift that breaks the bulk-buying habit. The bigger risk is simply the price paid.",
+  "implied": "A P/E near 50 for a retailer growing sales mid-to-high single digits implies decades of uninterrupted execution. The business is excellent; the multiple is the risk.",
+  "debate": "Bulls say quality this consistent deserves a premium forever. Bears say the entry price caps returns even if nothing goes wrong.",
+  "disprove": "Renewal rates falling below 90%; traffic growth stalling; membership fee income growth decelerating after the last increase laps."
+ },
+ "KO": {
+  "what": "Sells concentrate and brand marketing for non-alcoholic drinks to bottlers, who do the capital-intensive work.",
+  "rev": "Sparkling soft drinks roughly 70% of volume; water, sports, coffee and juice the rest. Latin America, EMEA and Asia Pacific each meaningful - over 60% outside North America.",
+  "gm": "Gross margin around 60% because Coca-Cola sells syrup and brand, not bottles. Refranchising bottling deliberately moved the capital out.",
+  "mgmt": "Henrique Braun is CEO, succeeding James Quincey. Insider ownership minimal; Berkshire remains a large long-term holder.",
+  "comp": "PepsiCo, Keurig Dr Pepper, Nestle in water, plus private label.",
+  "moat": "One of the strongest brands on earth, a bottler and distribution network reaching essentially every retail outlet, and shelf-space dominance.",
+  "moatTags": [
+   "Brand",
+   "Scale",
+   "Network effects"
+  ],
+  "ind": "Volume growth is low single digit; the growth is price/mix and emerging markets.",
+  "risk": "GLP-1 drugs and sugar regulation structurally reducing consumption of sweetened beverages.",
+  "implied": "A low-to-mid 20s P/E implies durable mid single-digit growth - reasonable if pricing power holds.",
+  "debate": "Bulls say it is an inflation-protected annuity with pricing power. Bears see a sugar business facing a demand headwind that did not exist five years ago.",
+  "disprove": "Unit case volume declining in developed markets; price/mix driven entirely by inflation; currency-neutral organic growth below 4%."
+ },
+ "CAT": {
+  "what": "Sells construction and mining equipment, engines and power generation systems to contractors, miners and now data centres.",
+  "rev": "Construction industries ~40%, resource industries ~20%, energy and transportation ~35%, plus a captive finance arm. Roughly half outside the US.",
+  "gm": "Gross margin around 33-36%. Pricing power comes from the dealer network and parts, not from the machines themselves.",
+  "mgmt": "Joe Creed took over as CEO in 2025. Insider ownership small; the dividend has grown for three decades.",
+  "comp": "Komatsu, Deere in some lines, Volvo CE, Hitachi, Cummins in engines.",
+  "moat": "The independent dealer network and the aftermarket parts annuity - a used Cat holds value because parts and service are everywhere.",
+  "moatTags": [
+   "Brand",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Cyclical, but data centre power generation has become a genuine secular growth pocket.",
+  "risk": "A construction and mining downturn coinciding with the end of the data centre power build.",
+  "implied": "The price implies the power generation business keeps growing and margins hold near record levels through the cycle.",
+  "debate": "Bulls say the energy and transportation segment has changed the cyclicality. Bears say record margins in a cyclical are a warning, not a virtue.",
+  "disprove": "Dealer inventories rising; order backlog shrinking; machine sales declining while margins are still at peak; services revenue growth stalling."
+ },
+ "MRK": {
+  "what": "Sells prescription drugs - dominated by Keytruda in oncology - plus vaccines and an animal health business.",
+  "rev": "Keytruda alone is roughly 45-50% of pharma revenue. Gardasil, diabetes and animal health the rest. US around 50%.",
+  "gm": "Gross margin around 75-80%. Patented oncology biologics with strong pricing, offset by royalty obligations on Keytruda.",
+  "mgmt": "Rob Davis is CEO. Insider ownership small; capital is going into business development to fill the coming gap.",
+  "comp": "BMS (Opdivo), AstraZeneca, Roche in oncology; Pfizer and GSK in vaccines.",
+  "moat": "Keytruda patents and a decade of trial data across dozens of tumour types, plus manufacturing and regulatory scale.",
+  "moatTags": [
+   "IP/Patents",
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "Oncology is growing; vaccines have been weak, especially Gardasil in China.",
+  "risk": "The Keytruda US patent cliff in 2028 - close to half of revenue facing biosimilars with the pipeline not yet proven to replace it.",
+  "implied": "A low-teens P/E already discounts the cliff. The question is whether the pipeline and deals replace more than the market expects.",
+  "debate": "Bulls say a subcutaneous Keytruda conversion plus acquisitions bridge the gap at a cheap multiple. Bears say 2028 is a wall you can see from here.",
+  "disprove": "Subcutaneous conversion rates below plan; Gardasil China not recovering; pipeline readouts failing; business development at prices that destroy value."
+ },
+ "UNH": {
+  "what": "Sells health insurance (UnitedHealthcare) and owns the care delivery, pharmacy benefit and data businesses (Optum) that it pays.",
+  "rev": "UnitedHealthcare roughly 55% of external revenue, Optum the rest and the majority of profit. Almost entirely US.",
+  "gm": "Insurers report a medical loss ratio instead - roughly 85-89%. Every point of MLR is enormous; recent cost trend has run hot.",
+  "mgmt": "Stephen Hemsley returned as CEO during the 2025 crisis. Insider buying by the board was a notable signal.",
+  "comp": "Elevance, CVS/Aetna, Cigna, Humana in Medicare Advantage.",
+  "moat": "Scale in claims data, vertical integration between insurer and provider, and regulatory complexity that deters entrants.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Switching costs"
+  ],
+  "ind": "Healthcare spending grows above GDP, but Medicare Advantage reimbursement has tightened.",
+  "risk": "Medicare Advantage rate pressure plus elevated utilisation persisting, combined with the DOJ investigation into risk coding.",
+  "implied": "A low-to-mid teens P/E on depressed earnings implies a partial margin recovery but not a return to prior profitability.",
+  "debate": "Bulls say the earnings reset is cyclical and Optum is structurally advantaged. Bears say the business model itself is under political and legal attack.",
+  "disprove": "Medical cost trend not moderating; MA star ratings falling; DOJ action expanding; Optum Health margins failing to recover."
+ },
+ "LRCX": {
+  "what": "Sells wafer fabrication equipment for etch and deposition - the steps that build 3D structures - to memory and logic chipmakers.",
+  "rev": "Systems roughly 60-65%, customer support and spares the rest and far more stable. Korea, Taiwan and China are the largest regions.",
+  "gm": "Gross margin around 48-50%. Highly engineered tools with a large installed-base service annuity attached.",
+  "mgmt": "Tim Archer is CEO. Insider ownership small; capital return has been aggressive.",
+  "comp": "Applied Materials and Tokyo Electron in overlapping steps; ASML is complementary, not competing.",
+  "moat": "Process know-how in high-aspect-ratio etch, an installed base of thousands of tools generating service revenue, and qualification cycles measured in years.",
+  "moatTags": [
+   "IP/Patents",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Memory capex is rising with HBM; China spending has been a swing factor and an export-control risk.",
+  "risk": "Further US export restrictions cutting China revenue, or a memory capex pause.",
+  "implied": "The multiple implies the memory capex cycle runs for several more years at HBM-driven intensity.",
+  "debate": "Bulls say NAND upgrades and HBM make this the best-positioned equipment name. Bears note the cyclicality and China exposure.",
+  "disprove": "Memory customers cutting capex guidance; China revenue share falling without replacement; service revenue growth stalling."
+ },
+ "DELL": {
+  "what": "Sells servers, storage and PCs to enterprises and consumers - now largely an AI server integrator.",
+  "rev": "Infrastructure Solutions (servers and storage) is the growth engine; Client Solutions (PCs) is the larger but flat half. US around half.",
+  "gm": "Gross margin around 19-21% and falling as AI servers mix up: AI server margins are in single digits because the GPU cost is passed through.",
+  "mgmt": "Michael Dell is founder, CEO and owns roughly half the company through Class C shares - exceptional alignment, limited minority say.",
+  "comp": "Supermicro and HPE in AI servers, Lenovo and HP in PCs, ODMs selling direct to hyperscalers.",
+  "moat": "Supply chain scale, enterprise relationships and financing. In AI servers the moat is thin - this is assembly with allocation access.",
+  "moatTags": [
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "AI server demand is booming but is a low-margin pass-through; PCs are a replacement cycle business.",
+  "risk": "Hyperscalers buying direct from ODMs, leaving Dell with the low-margin enterprise tail, or GPU allocation drying up.",
+  "implied": "The price implies AI server backlog converts at a margin better than recent reported levels.",
+  "debate": "Bulls point at a multi-billion AI backlog and a cheap multiple. Bears say revenue without margin is not earnings.",
+  "disprove": "AI server gross margin falling below 5%; backlog conversion slipping; PC refresh cycle ending; operating margin declining as revenue grows."
+ },
+ "PG": {
+  "what": "Sells branded household and personal care products - Tide, Pampers, Gillette, Head and Shoulders - through retailers worldwide.",
+  "rev": "Fabric and home care ~35%, baby/feminine/family ~24%, beauty ~18%, health care ~15%, grooming ~8%. North America ~50%.",
+  "gm": "Gross margin around 50-52%. Brand permits a price premium over private label; commodity and freight costs drive the swings.",
+  "mgmt": "Jon Moeller handed the CEO role to Shailesh Jejurikar in 2026. Insider ownership minimal; dividend raised for nearly 70 years.",
+  "comp": "Unilever, Colgate, Kimberly-Clark, Henkel and retailer private label.",
+  "moat": "Brand equity backed by the largest advertising budget in the category, plus shelf-space scale with every major retailer.",
+  "moatTags": [
+   "Brand",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "Low single-digit volume growth; the category is mature and trade-down is a persistent threat.",
+  "risk": "Sustained consumer trade-down to private label in a weak economy, which would break the price/mix engine.",
+  "implied": "A low-20s P/E implies mid single-digit organic growth and continued margin expansion.",
+  "debate": "Bulls call it the highest-quality consumer staple with reliable compounding. Bears see volumes flat and growth bought with price increases that cannot repeat.",
+  "disprove": "Organic volume negative for consecutive quarters; private label share gains in core categories; price/mix contribution falling toward zero."
+ },
+ "AMAT": {
+  "what": "Sells the widest range of chip manufacturing equipment - deposition, etch, inspection - to every major foundry and memory maker.",
+  "rev": "Semiconductor systems ~75%, applied global services ~20% (recurring), display the rest. China has been 30-40% of revenue at times.",
+  "gm": "Gross margin around 47-49%, supported by the growing service and subscription mix.",
+  "mgmt": "Gary Dickerson has been CEO since 2013. Insider ownership small; steady buybacks.",
+  "comp": "Lam Research, Tokyo Electron, KLA (in inspection), ASML (complementary).",
+  "moat": "Breadth across process steps, deep co-development with customers, and an installed base of tens of thousands of tools under service contracts.",
+  "moatTags": [
+   "IP/Patents",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Wafer fab equipment spending is growing with AI logic and HBM, but is cyclical and politically exposed.",
+  "risk": "Export controls cutting China revenue faster than leading-edge demand replaces it.",
+  "implied": "A high-teens to low-20s multiple implies the current capex cycle continues without a China cliff.",
+  "debate": "Bulls say AI logic plus advanced packaging lifts all equipment spend. Bears watch China normalising from an artificially high base.",
+  "disprove": "China revenue falling below 20% without offset; service revenue growth slowing; customer capex guidance cuts."
+ },
+ "NFLX": {
+  "what": "Sells streaming video subscriptions - and now advertising - to over 300 million paying households worldwide.",
+  "rev": "Streaming subscriptions are nearly all of revenue, with advertising growing from a small base. UCAN ~44%, EMEA ~31%, LATAM ~13%, APAC ~12%.",
+  "gm": "Gross margin around 48-50% and rising as content spend grows slower than revenue. Content is amortised, so reported margin lags cash economics.",
+  "mgmt": "Ted Sarandos and Greg Peters are co-CEOs; founder Reed Hastings is executive chairman. Insider ownership small.",
+  "comp": "Disney+, Amazon Prime Video, YouTube (the real attention competitor), plus local streamers.",
+  "moat": "Scale in content spend amortised over the largest subscriber base, a recommendation system with two decades of viewing data, and brand habit.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Streaming is still taking share from linear TV; the advertising tier opens a second revenue pool.",
+  "risk": "Content spending inflation returning as competitors bid for rights, or password-sharing and pricing levers being exhausted.",
+  "implied": "A P/E in the 30s-40s implies double-digit revenue growth with continuing margin expansion for years.",
+  "debate": "Bulls say it won the streaming war and now harvests: price rises, ads and live events. Bears say subscriber growth is slowing and sports rights are expensive.",
+  "disprove": "Operating margin guidance falling; ad revenue growth undershooting; content cash spend growing faster than revenue; paid net additions turning negative in developed markets."
+ },
+ "GE": {
+  "what": "Designs, builds and services jet engines for commercial and military aircraft - the aftermarket is the business.",
+  "rev": "Commercial engines and services roughly 70% of revenue (services the majority of profit), defence and propulsion the rest.",
+  "gm": "Reported margin understates the model: engines are sold at low or negative margin and the money is made on decades of spare parts and overhauls.",
+  "mgmt": "Larry Culp is CEO and led the breakup of the old GE conglomerate. Insider ownership modest; execution record is strong.",
+  "comp": "Rolls-Royce and Pratt and Whitney (RTX) in large engines; CFM is a joint venture with Safran.",
+  "moat": "An installed base of tens of thousands of engines, each generating parts revenue for 25+ years, with regulatory certification as an absolute barrier.",
+  "moatTags": [
+   "Switching costs",
+   "Regulation",
+   "IP/Patents",
+   "Scale"
+  ],
+  "ind": "Air traffic growth plus an ageing fleet means the services backlog is growing.",
+  "risk": "A demand shock to air travel, or supply chain constraints capping spare-parts throughput.",
+  "implied": "A P/E near 40 implies aftermarket growth compounding at a high rate with no air travel disruption.",
+  "debate": "Bulls say it is an annuity on global flight hours with a multi-decade backlog. Bears say the multiple already prices in perfection in a cyclical industry.",
+  "disprove": "Departures growth stalling; shop visit volumes declining; spare parts pricing moderating; supply chain delays pushing deliveries out again."
+ },
+ "MS": {
+  "what": "Runs an institutional securities business (trading, advisory) and a very large wealth and investment management arm.",
+  "rev": "Wealth management is roughly half of revenue and the stable half; institutional securities ~40%; investment management the rest.",
+  "gm": "Watch pre-tax margin in wealth (high 20s) and return on tangible equity (upper teens).",
+  "mgmt": "Ted Pick is CEO. Insider ownership small; MUFG remains a large strategic shareholder.",
+  "comp": "Goldman Sachs in institutional, Merrill (BAC), UBS and Schwab in wealth.",
+  "moat": "Advisor relationships and client assets that are sticky, plus a brand that wins mandates. Wealth flows are the moat.",
+  "moatTags": [
+   "Brand",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Wealth management is structurally growing with global financial assets; trading is cyclical.",
+  "risk": "A prolonged market drawdown cutting fee-based asset levels and freezing deal activity at the same time.",
+  "implied": "A mid-teens P/E implies wealth net new assets keeping up and capital markets activity staying normal.",
+  "debate": "Bulls like the shift toward recurring wealth fees deserving a higher multiple. Bears note it is still leveraged to markets.",
+  "disprove": "Net new assets slowing materially; wealth pre-tax margin falling; investment banking pipeline not converting."
+ },
+ "HD": {
+  "what": "Sells building materials, tools and home improvement products to DIY consumers and, increasingly, to professional contractors.",
+  "rev": "Roughly half professional contractor, half DIY; over 2,000 US stores plus the SRS acquisition in roofing and pool. Almost entirely North America.",
+  "gm": "Gross margin around 33-34%. Scale buying plus a store network that doubles as distribution; professional customers buy larger baskets at lower margin.",
+  "mgmt": "Ted Decker is CEO. Insider ownership small; long record of buybacks and high returns on capital.",
+  "comp": "Lowes, Menards, Ace, Amazon in small parts and speciality distributors in pro.",
+  "moat": "Store density near population, supply chain scale and a pro ecosystem that is hard to replicate, plus a brand that owns the category.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Housing turnover has been depressed by mortgage rates - the cycle, not the business, is the issue.",
+  "risk": "Mortgage rates staying high for years, keeping existing home sales at generational lows and suppressing big-ticket renovation.",
+  "implied": "A mid-20s P/E implies a housing recovery that has not yet arrived.",
+  "debate": "Bulls say pent-up renovation demand releases when rates fall. Bears say comps have been negative and the multiple assumes the turn.",
+  "disprove": "Comparable sales still negative when mortgage rates fall; pro segment growth slowing; big-ticket transactions declining further."
+ },
+ "PANW": {
+  "what": "Sells network, cloud and security operations software to large enterprises, increasingly as one consolidated platform.",
+  "rev": "Network security roughly 55-60%, Prisma Cloud and Cortex the rest and growing faster. Subscription and support is the large majority of revenue.",
+  "gm": "Gross margin around 74-77%. Software with appliance hardware attached - the hardware drags the blend down slightly.",
+  "mgmt": "Nikesh Arora is CEO and drove the platformisation strategy; his compensation is large and heavily equity-linked.",
+  "comp": "CrowdStrike, Fortinet, Zscaler, Microsoft Defender (the most dangerous, because it is bundled).",
+  "moat": "Switching costs once a customer consolidates firewalls, cloud and SOC onto one platform, plus certification and integration depth.",
+  "moatTags": [
+   "Switching costs",
+   "Brand",
+   "Scale"
+  ],
+  "ind": "Security budgets grow faster than IT overall; consolidation favours the large platforms.",
+  "risk": "Microsoft bundling good-enough security into E5 licences and collapsing the standalone market.",
+  "implied": "A high multiple on free cash flow implies the platform strategy keeps lifting deal sizes and retention.",
+  "debate": "Bulls say platformisation locks in customers for a decade. Bears say discounting to win platform deals is buying growth with margin.",
+  "disprove": "Next-generation security ARR growth slowing; billings decelerating; remaining performance obligation growth below revenue growth; Microsoft security revenue accelerating."
+ },
+ "PM": {
+  "what": "Sells cigarettes outside the US and, increasingly, smoke-free products - IQOS heated tobacco and ZYN nicotine pouches.",
+  "rev": "Smoke-free products are now around 40% of revenue and the majority of the growth; combustibles the rest. Truly global, no single dominant market.",
+  "gm": "Gross margin around 65%. Excise-heavy pricing with an addictive product - the classic tobacco economics, and smoke-free carries even higher margin.",
+  "mgmt": "Jacek Olczak is CEO. Insider ownership minimal; the dividend is the centrepiece of the equity story.",
+  "comp": "British American Tobacco, Japan Tobacco, Altria (in the US for ZYN distribution), plus illicit trade.",
+  "moat": "Brand loyalty in an addictive category, regulatory barriers that ban advertising and therefore freeze share, and a first-mover lead in heated tobacco.",
+  "moatTags": [
+   "Brand",
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "Cigarette volumes decline 2-3% a year; smoke-free is growing fast enough to more than offset.",
+  "risk": "Regulators treating pouches and heated tobacco like cigarettes - flavour bans on ZYN would hit the growth engine directly.",
+  "implied": "A low-20s P/E implies smoke-free growth continues to outrun combustible decline for years.",
+  "debate": "Bulls say it is a growth company hiding inside a tobacco multiple. Bears point at regulatory risk concentrated in exactly the growth product.",
+  "disprove": "ZYN shipment growth slowing sharply; IQOS user additions declining; a US or EU flavour ban on pouches; currency-neutral net revenue growth below 5%."
+ }
+}

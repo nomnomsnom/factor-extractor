@@ -1,0 +1,365 @@
+{
+ "NOW": {
+  "what": "Sells a workflow platform that automates IT, HR, customer service and now AI agent operations for large enterprises.",
+  "rev": "Subscription revenue is over 97%. Public sector and financial services are large verticals. North America ~62%.",
+  "gm": "Subscription gross margin around 81-83%. A single multi-instance platform serving very large contracts.",
+  "mgmt": "Bill McDermott is CEO. Insider ownership small; renewal rates near 98% are the metric management points to.",
+  "comp": "Salesforce, Atlassian, BMC and Microsoft in adjacent workflow; internal build for some processes.",
+  "moat": "Once ServiceNow is the system of action for IT and HR workflows, replacing it means re-engineering how a company runs. Renewal rates near 98% show it.",
+  "moatTags": [
+   "Switching costs",
+   "Scale",
+   "Brand"
+  ],
+  "ind": "Enterprise workflow automation and AI agent budgets both growing.",
+  "risk": "Seat-based pricing coming under pressure as AI reduces headcount in exactly the functions ServiceNow charges for.",
+  "implied": "A very high multiple of earnings implies 20%+ subscription growth continuing for years with margins expanding.",
+  "debate": "Bulls say it becomes the control plane for enterprise AI agents. Bears say the law of large numbers plus seat-based pricing risk catch up.",
+  "disprove": "Current remaining performance obligation growth slowing below 18%; renewal rate falling; large deal count declining; AI product pricing not landing."
+ },
+ "DHR": {
+  "what": "Sells bioprocessing equipment and consumables, diagnostics systems and life science instruments to biopharma and hospitals.",
+  "rev": "Biotechnology (bioprocessing) ~25%, life sciences ~25%, diagnostics ~50%. Recurring consumables are the majority of revenue.",
+  "gm": "Gross margin around 58-60%, higher than peers because of the consumables mix and the Danaher Business System cost discipline.",
+  "mgmt": "Rainer Blair is CEO. The Rales family remains influential; the Danaher Business System is a genuine operational culture.",
+  "comp": "Thermo Fisher, Sartorius, Merck KGaA in bioprocessing; Roche and Abbott in diagnostics.",
+  "moat": "Validated bioprocessing consumables written into drug manufacturing filings - changing supplier means regulatory re-validation, so customers do not.",
+  "moatTags": [
+   "Switching costs",
+   "Regulation",
+   "Scale",
+   "Brand"
+  ],
+  "ind": "Bioprocessing is recovering from destocking; diagnostics is steady; China remains weak.",
+  "risk": "Biotech funding staying tight and pharma cutting R&D, so bioprocessing orders never return to trend.",
+  "implied": "A high-20s P/E implies bioprocessing returns to high single-digit growth.",
+  "debate": "Bulls say the consumables annuity plus the business system make it a quality compounder at a discount to history. Bears note organic growth has been roughly flat for three years.",
+  "disprove": "Bioprocessing orders not recovering; China revenue declining further; respiratory diagnostics normalising lower; organic growth below 3% again."
+ },
+ "TJX": {
+  "what": "Sells branded apparel and home goods at discount prices through TJ Maxx, Marshalls and HomeGoods - buying opportunistically from excess inventory.",
+  "rev": "Marmaxx (US apparel) ~50%, HomeGoods ~17%, TJX Canada and International the rest. US around 75%.",
+  "gm": "Gross margin around 30-31%. Off-price buying at discounts, low advertising spend and fast inventory turns make the model work.",
+  "mgmt": "Ernie Herrman is CEO. Insider ownership small; the buying organisation is the real asset.",
+  "comp": "Ross Stores, Burlington, Amazon and the full-price retailers whose excess inventory TJX buys.",
+  "moat": "A buying network of over 21,000 vendors, scale that lets it absorb any lot size, and a treasure-hunt store experience that resists online replication.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Off-price keeps taking share from department stores, and does well when consumers trade down.",
+  "risk": "Tariffs and supply chain normalisation reducing the availability of cheap excess inventory, which is the raw material of the model.",
+  "implied": "A high-20s P/E implies mid single-digit comparable sales growth continuing and margins holding.",
+  "debate": "Bulls say it wins in both good and bad consumer environments. Bears say the multiple is full for a retailer and tariffs complicate sourcing.",
+  "disprove": "Comparable sales below 3%; merchandise margin declining; inventory availability commentary turning negative; new store productivity falling."
+ },
+ "ISRG": {
+  "what": "Sells the da Vinci surgical robot systems, and the instruments and services that every procedure consumes.",
+  "rev": "Instruments and accessories ~60% and recurring, systems ~25%, services ~15%. Roughly 70% US.",
+  "gm": "Gross margin around 66-68%. The razor-and-blade model: systems seed the installed base, instruments generate recurring high-margin revenue per procedure.",
+  "mgmt": "David Rosa is CEO, succeeding Gary Guthart. Insider ownership small; the company reinvests heavily in surgeon training and new platforms.",
+  "comp": "Medtronic Hugo, J&J Ottava, CMR Surgical - all trying to break a near-monopoly that has held for twenty years.",
+  "moat": "Surgeon training and habit, hospital capital already sunk, procedure data, and an instrument ecosystem. Surgeons trained on da Vinci do not switch easily.",
+  "moatTags": [
+   "Switching costs",
+   "Brand",
+   "IP/Patents",
+   "Scale"
+  ],
+  "ind": "Robotic surgery penetration is still low in most procedure categories - a long runway.",
+  "risk": "A credible competitor winning approvals and undercutting on price, or hospital capital budgets tightening.",
+  "implied": "A P/E near 60 implies procedure volume growth in the mid-teens continuing for many years with no share loss.",
+  "debate": "Bulls say it is a monopoly on a growing surgical standard with a recurring revenue annuity. Bears say competition is finally arriving and the multiple leaves no margin for error.",
+  "disprove": "Procedure growth slowing below 12%; da Vinci 5 placements disappointing; a competitor winning a major hospital system; instrument pricing pressure."
+ },
+ "BKNG": {
+  "what": "Runs online travel marketplaces - Booking.com, Priceline, Agoda, OpenTable, Kayak - taking commission on accommodation and travel bookings.",
+  "rev": "Accommodation is the large majority of gross bookings; Europe is the historical stronghold, with Asia growing through Agoda.",
+  "gm": "Take rate around 14-15% of gross bookings, with EBITDA margins above 35%. Marketing spend is the main variable cost and the key discipline.",
+  "mgmt": "Glenn Fogel is CEO. Insider ownership small; the company has retired a very large share count over the past decade.",
+  "comp": "Airbnb, Expedia, Google Travel and hotel direct booking channels.",
+  "moat": "Two-sided network effects between millions of properties and travellers, plus brand search dominance in Europe.",
+  "moatTags": [
+   "Network effects",
+   "Brand",
+   "Scale"
+  ],
+  "ind": "Global travel demand keeps growing; the risk is that AI assistants become the new booking interface.",
+  "risk": "Google or an AI assistant intermediating the traveller before they reach Booking.com, which would turn a marketplace into a supplier.",
+  "implied": "A mid-20s P/E implies high single-digit bookings growth plus continued aggressive buybacks.",
+  "debate": "Bulls say enormous free cash flow, shrinking share count and the best European lodging supply. Bears say the traffic acquisition channel is controlled by Google and AI changes it.",
+  "disprove": "Room nights growth slowing; marketing spend rising as a share of bookings; direct traffic mix falling; take rate compression."
+ },
+ "VRTX": {
+  "what": "Sells the only approved medicines for the underlying cause of cystic fibrosis, plus a gene therapy for sickle cell and a new non-opioid painkiller.",
+  "rev": "Cystic fibrosis franchise (Trikafta/Alyftrek) is roughly 90% of revenue. Casgevy and Journavx are the diversification attempts. US ~60%.",
+  "gm": "Gross margin around 85-88% - among the highest in pharma. A monopoly in a rare disease with no alternative therapy.",
+  "mgmt": "Reshma Kewalramani is CEO. Insider ownership small; R&D is focused on serial monopolies in defined biology.",
+  "comp": "None in cystic fibrosis today; Sionna and others are in development. In pain, the entire opioid and NSAID market.",
+  "moat": "A genuine monopoly protected by patents, deep biology expertise and the fact that treating nearly the whole addressable patient population leaves little room for a rival to run trials.",
+  "moatTags": [
+   "IP/Patents",
+   "Regulation",
+   "Brand"
+  ],
+  "ind": "Cystic fibrosis is a fixed patient population - growth comes from label expansion and geographic reimbursement. Pain is a vast new market.",
+  "risk": "Concentration: any threat to the cystic fibrosis franchise - a competitor or a patent challenge - hits nearly all the revenue.",
+  "implied": "A P/E in the 20s-30s implies Journavx becoming a large product and the pipeline diversifying revenue away from cystic fibrosis.",
+  "debate": "Bulls say a protected cash monopoly funding shots on goal in pain and kidney disease. Bears say one product is 90% of revenue and the new launches are unproven.",
+  "disprove": "Journavx prescription uptake and payer coverage disappointing; a competitor CFTR modulator advancing; pipeline failures in kidney disease; CF revenue growth flattening."
+ },
+ "PLD": {
+  "what": "Owns and develops logistics warehouses near major cities and leases them to retailers, parcel carriers and manufacturers.",
+  "rev": "Rental income from roughly 1.2 billion square feet globally, plus a strategic capital (fund management) business. US is the majority.",
+  "gm": "REIT economics: watch funds from operations per share, same-store net operating income growth and the spread between in-place and market rents.",
+  "mgmt": "Hamid Moghadam co-founded and led the company for decades; Dan Letter is now CEO. Insider ownership modest.",
+  "comp": "Other industrial REITs, private capital (Blackstone), and developers in each local market.",
+  "moat": "Infill land near population centres that cannot be replicated - supply is constrained by zoning, not by capital. Plus data on rents nobody else has.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Brand"
+  ],
+  "ind": "E-commerce still drives warehouse demand, but a development wave in 2022-2023 created temporary oversupply.",
+  "risk": "Tariffs and a goods recession cutting leasing demand while new supply is still being delivered.",
+  "implied": "The price implies the mark-to-market on expiring leases keeps converting into double-digit rent growth.",
+  "debate": "Bulls say in-place rents are far below market, guaranteeing growth as leases roll. Bears see vacancy rising and demand weakening.",
+  "disprove": "Occupancy falling below 95%; net effective rent change on renewals declining; development starts outpacing leasing; the lease mark-to-market gap narrowing."
+ },
+ "BMY": {
+  "what": "Sells oncology, haematology, immunology and cardiovascular medicines, in the middle of a large patent cliff.",
+  "rev": "Legacy portfolio (Revlimid, Eliquis, Opdivo) declining; growth portfolio (Reblozyl, Camzyos, Breyanzi, Cobenfy) rising. US ~65%.",
+  "gm": "Gross margin around 70-75%, pressured by the mix shift and by acquisition amortisation.",
+  "mgmt": "Christopher Boerner is CEO. Insider ownership small; the company has done large deals to buy growth.",
+  "comp": "Merck and AstraZeneca in oncology, Pfizer in cardiovascular, J&J in immunology.",
+  "moat": "Patents and oncology trial infrastructure, but the moat is visibly eroding as key products lose exclusivity.",
+  "moatTags": [
+   "IP/Patents",
+   "Scale",
+   "Regulation"
+  ],
+  "ind": "Oncology and neuroscience are growing; the company-specific issue is replacing expiring revenue.",
+  "risk": "Cobenfy and the growth portfolio failing to offset Eliquis and Opdivo losses, leaving a decade of declining revenue.",
+  "implied": "A high single-digit to low-teens P/E implies the market expects revenue decline. The bar is low.",
+  "debate": "Bulls say a very cheap multiple with a large dividend and an underrated schizophrenia launch. Bears say declining revenue is rarely a good place to invest.",
+  "disprove": "Cobenfy uptake below expectations; growth portfolio not offsetting legacy declines; further large debt-funded acquisitions; dividend coverage weakening."
+ },
+ "NEM": {
+  "what": "Mines gold, plus copper, silver and zinc as by-products, from operations across the Americas, Australia and Africa.",
+  "rev": "Gold is roughly 85-90% of revenue. Tier-one assets in Nevada (joint venture with Barrick), Australia, Peru and Ghana.",
+  "gm": "All-in sustaining cost per ounce is the metric - roughly $1,400-1,600 against a much higher gold price, so margins are currently very wide.",
+  "mgmt": "Natascha Viljoen is CEO, succeeding Tom Palmer. Insider ownership small; the Newcrest acquisition was the big strategic bet.",
+  "comp": "Barrick, Agnico Eagle, AngloGold Ashanti and gold ETFs as the alternative way to own the metal.",
+  "moat": "Reserve quality and scale in a business with no pricing power - the only durable advantage is low cost per ounce and long reserve life.",
+  "moatTags": [
+   "Scale"
+  ],
+  "ind": "Gold demand has been strong on central bank buying and currency debasement concerns.",
+  "risk": "The gold price falling while costs stay elevated - miners lose money far faster than the metal falls.",
+  "implied": "The multiple implies gold stays near current levels, which is a commodity bet, not a business bet.",
+  "debate": "Bulls say it is operating leverage on a rising gold price plus free cash flow at last. Bears note decades of cost overruns and value destruction across the sector.",
+  "disprove": "All-in sustaining costs rising above guidance; reserve replacement below production; a large acquisition at a high gold price; free cash flow not converting."
+ },
+ "PGR": {
+  "what": "Sells personal auto and property insurance directly to consumers and through agents, pricing by telematics and data.",
+  "rev": "Personal auto is the bulk, with property and commercial lines growing. US only.",
+  "gm": "Combined ratio is the metric - Progressive targets 96 and has often delivered in the low 90s, meaning genuine underwriting profit before investment income.",
+  "mgmt": "Tricia Griffith is CEO. Insider ownership small; the company is famously disciplined about pricing over growth.",
+  "comp": "GEICO (Berkshire), State Farm, Allstate, plus Root and other insurtechs.",
+  "moat": "Decades of driver data and segmentation models that price risk more accurately than rivals, plus brand and direct distribution scale.",
+  "moatTags": [
+   "Scale",
+   "Brand",
+   "IP/Patents"
+  ],
+  "ind": "Auto insurance rates rose sharply after the claims inflation of 2022-23; the cycle is now softening.",
+  "risk": "A soft pricing cycle: rivals cutting rates to win back share, forcing Progressive to choose between growth and margin.",
+  "implied": "A mid-teens P/E implies the underwriting margin normalises rather than collapses as competition returns.",
+  "debate": "Bulls say the best underwriter in US personal lines keeps taking share. Bears say margins are at cyclical peaks and rate cuts are coming.",
+  "disprove": "Combined ratio rising above 96; policies in force growth slowing while rates fall; advertising spend rising without unit growth; severity trends re-accelerating."
+ },
+ "COF": {
+  "what": "Issues credit cards to US consumers, lends on autos, and now owns the Discover network after the 2025 acquisition.",
+  "rev": "Domestic card is the majority of revenue, consumer banking (auto and deposits) and commercial banking the rest, plus Discover network fees.",
+  "gm": "Watch net interest margin (very high, card-driven), charge-off rates and the efficiency ratio.",
+  "mgmt": "Founder Richard Fairbank has run it since 1994 and holds a large stake - rare founder alignment in banking.",
+  "comp": "American Express, JPMorgan (Chase), Citi and Synchrony in cards.",
+  "moat": "Underwriting data on subprime and near-prime borrowers, and now ownership of a payment network - which is a genuinely different asset from being an issuer alone.",
+  "moatTags": [
+   "Scale",
+   "Network effects",
+   "Brand"
+  ],
+  "ind": "Card balances have grown strongly; credit normalisation after the pandemic is the key variable.",
+  "risk": "A consumer credit cycle hitting a card book that skews lower prime, while Discover integration is still underway.",
+  "implied": "The price implies Discover synergies land and charge-offs stay near current levels.",
+  "debate": "Bulls say owning a network transforms the economics and the stock is cheap on normalised earnings. Bears say subprime card losses rise fastest in a downturn.",
+  "disprove": "Net charge-offs rising above 6%; 30-day delinquencies climbing; Discover integration costs above plan; deposit costs rising."
+ },
+ "FTNT": {
+  "what": "Sells network security appliances, SD-WAN and security software to mid-market and enterprise customers.",
+  "rev": "Product (appliances) plus service (subscriptions and support) - service is roughly 70% and recurring. Global, with strength in mid-market and EMEA.",
+  "gm": "Gross margin around 80-82%, unusually high for a hardware-inclusive vendor, because Fortinet designs its own security chips.",
+  "mgmt": "Co-founder Ken Xie is CEO and the Xie family holds a large stake - strong founder alignment.",
+  "comp": "Palo Alto Networks, Check Point, Cisco, Zscaler in secure access.",
+  "moat": "Custom ASICs give a price-performance advantage that competitors using general-purpose silicon cannot match, plus a large installed base and channel.",
+  "moatTags": [
+   "IP/Patents",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "Firewall refresh cycles drive lumpy demand; SASE and OT security are the growth areas.",
+  "risk": "The firewall refresh cycle ending, as it did in 2023, leaving billings growth flat for a year.",
+  "implied": "A P/E in the 30s implies billings growth re-accelerating and unified SASE gaining share.",
+  "debate": "Bulls say the best margins in security with a hardware cost advantage. Bears say appliance-led security is structurally challenged by cloud-delivered rivals.",
+  "disprove": "Billings growth decelerating; product revenue declining; SASE and SecOps growth not offsetting firewall weakness; margin guidance cut."
+ },
+ "GLW": {
+  "what": "Makes speciality glass and ceramics - optical fibre, display glass, Gorilla Glass and now optical connectivity for AI data centres.",
+  "rev": "Optical communications (fastest growing, AI-driven), display technologies, speciality materials, environmental technologies and life sciences.",
+  "gm": "Gross margin around 37-39%, improving as the optical mix grows. Manufacturing is capital-intensive with long asset lives.",
+  "mgmt": "Wendell Weeks has been CEO since 2005. Insider ownership small; the company has a long record of patient R&D investment.",
+  "comp": "Coherent and Lumentum in optical, AGC and Nippon Electric Glass in display, Chinese fibre manufacturers.",
+  "moat": "Glass science know-how accumulated over 170 years, deep customer co-development (Apple in Gorilla Glass), and manufacturing processes that are hard to copy.",
+  "moatTags": [
+   "IP/Patents",
+   "Switching costs",
+   "Scale"
+  ],
+  "ind": "AI data centre optical connectivity demand has transformed the growth outlook for the optical segment.",
+  "risk": "The AI optical order surge proving to be an inventory build rather than sustained demand.",
+  "implied": "A P/E in the 30s implies optical communications keeps growing at a high rate and display stays stable.",
+  "debate": "Bulls say a slow-growth industrial has become an AI infrastructure supplier. Bears note the display business is mature and the optical cycle has turned before.",
+  "disprove": "Optical communications order growth slowing; enterprise fibre demand normalising; display glass pricing falling; capex rising without revenue response."
+ },
+ "SPGI": {
+  "what": "Rates debt issues, publishes market indices (S&P 500), and sells market data and commodity price benchmarks.",
+  "rev": "Ratings ~33% and the most profitable, market intelligence ~33%, indices ~13% with the best margins, commodity insights and mobility the rest.",
+  "gm": "Operating margins in the high 40s overall; the indices business runs above 65% because the index is a licence, not a product.",
+  "mgmt": "Martina Cheung became CEO in 2024. Insider ownership small; the company is planning to separate the mobility business.",
+  "comp": "Moodys in ratings, MSCI and FTSE Russell in indices, Bloomberg and FactSet in data.",
+  "moat": "A regulated duopoly in credit ratings, indices that are industry standards written into fund mandates, and data sets embedded in client workflows.",
+  "moatTags": [
+   "Regulation",
+   "Network effects",
+   "Brand",
+   "Switching costs"
+  ],
+  "ind": "Debt issuance is cyclical; index and data revenue grow with assets and are highly recurring.",
+  "risk": "A prolonged freeze in debt issuance, which would hit the highest-margin ratings revenue directly.",
+  "implied": "A high-20s to 30s P/E implies mid-to-high single-digit revenue growth and continued margin expansion.",
+  "debate": "Bulls say it is a toll on global capital markets with near-monopoly positions. Bears note ratings revenue is cyclical and the multiple assumes issuance stays healthy.",
+  "disprove": "Billed issuance declining for multiple quarters; index assets under management growth slowing; market intelligence organic growth below 5%."
+ },
+ "CVS": {
+  "what": "Runs retail pharmacies, a pharmacy benefit manager (Caremark) and a health insurer (Aetna) - the whole drug supply chain in one company.",
+  "rev": "Health services (Caremark PBM) ~45%, health care benefits (Aetna) ~35%, pharmacy and consumer wellness ~20%. US only.",
+  "gm": "Gross margin is low single digits to mid teens depending on segment - the PBM handles enormous revenue at thin spreads.",
+  "mgmt": "David Joyner became CEO in late 2024 after Aetna underperformance. Insider ownership small; debt is significant.",
+  "comp": "UnitedHealth/Optum, Cigna/Express Scripts, Walgreens, Amazon Pharmacy.",
+  "moat": "Vertical integration and scale in drug purchasing - though it is a moat built on an intermediary role that politicians are actively attacking.",
+  "moatTags": [
+   "Scale",
+   "Regulation",
+   "Switching costs"
+  ],
+  "ind": "Medicare Advantage margins have been under severe pressure; PBM economics face reform proposals.",
+  "risk": "PBM reform legislation removing the spread and rebate economics that underpin the most profitable segment.",
+  "implied": "A low-teens P/E implies partial Aetna margin recovery and PBM reform not being catastrophic.",
+  "debate": "Bulls say a cheap multiple on a recovering insurer with an integrated pharmacy. Bears say the whole PBM business model is politically indefensible.",
+  "disprove": "Aetna medical loss ratio not improving; PBM legislation advancing; Medicare star ratings falling; debt not being reduced."
+ },
+ "LMT": {
+  "what": "Builds fighter aircraft (F-35), missiles, missile defence systems, helicopters and space systems for the US and allied governments.",
+  "rev": "Aeronautics (F-35) ~40%, missiles and fire control ~17%, rotary and mission systems ~25%, space ~18%. US government is roughly 73% of sales.",
+  "gm": "Operating margin around 10-11%. Cost-plus and fixed-price defence contracts cap profitability by design.",
+  "mgmt": "Jim Taiclet is CEO. Insider ownership small; the F-35 programme dominates the strategic picture.",
+  "comp": "RTX, Northrop Grumman, Boeing Defense, General Dynamics, plus new entrants like Anduril and SpaceX in space.",
+  "moat": "Programme incumbency: once a platform is selected it runs for decades with sustainment revenue attached. Certification and security clearance barriers are absolute.",
+  "moatTags": [
+   "Regulation",
+   "Switching costs",
+   "Scale",
+   "IP/Patents"
+  ],
+  "ind": "Global defence spending is rising, especially in Europe, but US procurement priorities are shifting toward cheaper autonomous systems.",
+  "risk": "F-35 procurement being cut in favour of unmanned systems, plus classified programme losses on fixed-price contracts.",
+  "implied": "A high-teens P/E implies steady programme execution and international F-35 orders offsetting US budget shifts.",
+  "debate": "Bulls say a rearming world buys more of exactly what Lockheed makes. Bears note charges on fixed-price programmes and a US preference for cheaper autonomy.",
+  "disprove": "F-35 delivery or order reductions; further classified programme charges; free cash flow guidance cut; international orders not materialising."
+ },
+ "MO": {
+  "what": "Sells cigarettes (Marlboro) and oral nicotine products in the United States only.",
+  "rev": "Smokeable products are roughly 88% of revenue; oral tobacco (on! and Copenhagen) the rest. It also holds a large stake in ABI.",
+  "gm": "Gross margin around 70%. Pricing power in an addictive category with no advertising costs allowed - the purest pricing machine in consumer goods.",
+  "mgmt": "Salvatore Mancuso is CEO, succeeding Billy Gifford. Insider ownership minimal; the dividend payout ratio is around 80% by policy.",
+  "comp": "Reynolds (BAT), ITG Brands, plus illicit disposable vapes which have taken real volume.",
+  "moat": "Marlboro brand loyalty and regulation that freezes market share by banning advertising - the moat is partly built by the regulator.",
+  "moatTags": [
+   "Brand",
+   "Regulation",
+   "Scale"
+  ],
+  "ind": "US cigarette volumes decline roughly 8-10% a year now, faster than historically, as illicit vapes take share.",
+  "risk": "Volume decline accelerating past the point where price increases can offset - the elasticity wall.",
+  "implied": "A low-teens P/E with a high dividend yield implies continued volume decline offset by pricing, with no growth.",
+  "debate": "Bulls collect a large, well-covered dividend from a business with no capital needs. Bears see terminal decline and failed attempts at nicotine alternatives (JUUL, NJOY).",
+  "disprove": "Shipment volumes declining more than 10%; net price realisation below 8%; on! growth stalling; FDA enforcement against illicit vapes failing."
+ },
+ "PH": {
+  "what": "Sells motion and control technologies - hydraulics, filtration, aerospace systems - to industrial and aerospace customers.",
+  "rev": "Diversified industrial ~65%, aerospace systems ~35% and the highest-margin segment after the Meggitt acquisition. North America ~60%.",
+  "gm": "Gross margin around 35-37%. The aftermarket - replacement parts through distributors - is the profit engine, not original equipment.",
+  "mgmt": "Jenny Parmentier is CEO. Insider ownership small; the Win Strategy operating system has driven consistent margin expansion.",
+  "comp": "Eaton, Honeywell, Danaher in filtration, Safran and RTX in aerospace components.",
+  "moat": "Hundreds of thousands of engineered parts sold through a distribution network, with aerospace parts locked in by certification for the life of the aircraft.",
+  "moatTags": [
+   "Switching costs",
+   "Scale",
+   "Regulation",
+   "IP/Patents"
+  ],
+  "ind": "Aerospace aftermarket is strong; general industrial demand has been soft.",
+  "risk": "An industrial recession while aerospace growth decelerates, exposing the leverage from the Meggitt debt.",
+  "implied": "A high-20s P/E implies aerospace margin expansion continues and industrial recovers.",
+  "debate": "Bulls say a proven margin-expansion machine with a growing aerospace annuity. Bears note industrial orders are weak and the multiple has re-rated a long way.",
+  "disprove": "Industrial orders declining; aerospace aftermarket growth slowing; margin expansion stalling; debt reduction slower than planned."
+ },
+ "SBUX": {
+  "what": "Sells coffee and food through company-operated and licensed stores, mainly in the US and China.",
+  "rev": "North America ~75% of revenue, China ~8% and strategically important, international licensed the rest.",
+  "gm": "Store-level margins depend on labour and traffic; the North America operating margin has fallen sharply as labour investment increased.",
+  "mgmt": "Brian Niccol became CEO in 2024 to execute a turnaround after years of falling traffic. Insider ownership small.",
+  "comp": "Luckin Coffee in China, Dutch Bros and local independents in the US, McDonalds and convenience chains.",
+  "moat": "Brand, store density and the loyalty programme with tens of millions of active members - genuinely valuable but not preventing traffic decline.",
+  "moatTags": [
+   "Brand",
+   "Scale",
+   "Switching costs"
+  ],
+  "ind": "US coffee traffic has been declining; China is intensely price-competitive.",
+  "risk": "The turnaround failing: traffic not returning while labour costs stay higher, so margins never recover.",
+  "implied": "A P/E in the 30s on depressed earnings implies a successful turnaround with margin recovery - the market is paying for the plan, not the results.",
+  "debate": "Bulls back Niccols record at Chipotle and see a brand that can be fixed. Bears note multiple quarters of negative comparable sales and a China business under structural attack.",
+  "disprove": "US comparable transactions still negative; China same-store sales declining; operating margin not recovering; loyalty member growth stalling."
+ },
+ "APP": {
+  "what": "Sells an AI-driven advertising and monetisation platform to mobile app developers, and increasingly to e-commerce advertisers.",
+  "rev": "Advertising software platform is now almost all of revenue after the apps business was sold. Global, with a heavy games advertiser base.",
+  "gm": "Gross margin around 80%+ and EBITDA margins above 70% - extraordinary for an ad-tech business, driven by the Axon bidding engine.",
+  "mgmt": "Co-founder Adam Foroughi is CEO with a large stake. Aggressive buybacks have shrunk the share count meaningfully.",
+  "comp": "Meta and Google for advertiser budgets, Unity and ironSource in mobile game monetisation, The Trade Desk in broader programmatic.",
+  "moat": "The Axon machine learning model improves with data volume, and the install base of SDKs in mobile games creates a supply advantage.",
+  "moatTags": [
+   "Network effects",
+   "Scale",
+   "IP/Patents"
+  ],
+  "ind": "Mobile advertising is growing; the e-commerce advertiser expansion is the new frontier and is unproven at scale.",
+  "risk": "Platform dependency - Apple or Google changing attribution or privacy rules could reset the model overnight - plus short-seller allegations about data practices.",
+  "implied": "A very high multiple implies the e-commerce expansion works and growth stays above 30% with 70%+ margins.",
+  "debate": "Bulls say a self-improving ad model with software margins and a founder who buys back stock. Bears point at platform dependency, short-seller reports and a very demanding multiple.",
+  "disprove": "Advertising revenue growth decelerating; e-commerce advertiser cohort churn; Apple or Google policy change; margins compressing."
+ }
+}

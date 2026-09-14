@@ -1,0 +1,802 @@
+[
+{
+"ticker": "SE",
+"name": "Sea Limited",
+"mkt": "US",
+"mcap": "",
+"price": "",
+"rev": ""
+},
+{
+"ticker": "GRAB",
+"name": "Grab Holdings Limited",
+"mkt": "US",
+"mcap": "",
+"price": "",
+"rev": ""
+},
+{
+"ticker": "KARO",
+"name": "Karooooo Ltd.",
+"mkt": "US",
+"mcap": "",
+"price": "",
+"rev": ""
+},
+{
+"ticker": "D05",
+"name": "DBS Group Holdings Ltd",
+"mcap": "220.65B",
+"price": "77.66",
+"rev": "22.67B",
+"mkt": "SGX"
+},
+{
+"ticker": "O39",
+"name": "Oversea-Chinese Banking Corporation Limited",
+"mcap": "143.00B",
+"price": "31.85",
+"rev": "14.70B",
+"mkt": "SGX"
+},
+{
+"ticker": "Z74",
+"name": "Singapore Telecommunications Limited",
+"mcap": "72.81B",
+"price": "4.460",
+"rev": "14.43B",
+"mkt": "SGX"
+},
+{
+"ticker": "U11",
+"name": "United Overseas Bank Limited",
+"mcap": "69.84B",
+"price": "42.33",
+"rev": "11.82B",
+"mkt": "SGX"
+},
+{
+"ticker": "K6S",
+"name": "Prudential plc",
+"mcap": "41.53B",
+"price": "14.20",
+"rev": "18.52B",
+"mkt": "SGX"
+},
+{
+"ticker": "S63",
+"name": "Singapore Technologies Engineering Ltd",
+"mcap": "31.88B",
+"price": "10.22",
+"rev": "13.00B",
+"mkt": "SGX"
+},
+{
+"ticker": "S68",
+"name": "Singapore Exchange Limited",
+"mcap": "24.48B",
+"price": "22.91",
+"rev": "1.56B",
+"mkt": "SGX"
+},
+{
+"ticker": "F34",
+"name": "Wilmar International Limited",
+"mcap": "23.22B",
+"price": "3.720",
+"rev": "98.46B",
+"mkt": "SGX"
+},
+{
+"ticker": "H78",
+"name": "Hongkong Land Holdings Limited",
+"mcap": "22.71B",
+"price": "8.38",
+"rev": "1.72B",
+"mkt": "SGX"
+},
+{
+"ticker": "J36",
+"name": "Jardine Matheson Holdings Limited",
+"mcap": "21.72B",
+"price": "58.31",
+"rev": "42.79B",
+"mkt": "SGX"
+},
+{
+"ticker": "Q0F",
+"name": "IHH Healthcare Berhad",
+"mcap": "21.34B",
+"price": "2.580",
+"rev": "8.48B",
+"mkt": "SGX"
+},
+{
+"ticker": "C6L",
+"name": "Singapore Airlines Limited",
+"mcap": "20.89B",
+"price": "6.63",
+"rev": "20.52B",
+"mkt": "SGX"
+},
+{
+"ticker": "BN4",
+"name": "Keppel Ltd.",
+"mcap": "20.31B",
+"price": "11.33",
+"rev": "6.73B",
+"mkt": "SGX"
+},
+{
+"ticker": "BS6",
+"name": "Yangzijiang Shipbuilding (Holdings) Ltd.",
+"mcap": "20.11B",
+"price": "5.11",
+"rev": "6.32B",
+"mkt": "SGX"
+},
+{
+"ticker": "G07",
+"name": "Great Eastern Holdings Limited",
+"mcap": "19.06B",
+"price": "20.13",
+"rev": "8.55B",
+"mkt": "SGX"
+},
+{
+"ticker": "C38U",
+"name": "CapitaLand Integrated Commercial Trust",
+"mcap": "18.22B",
+"price": "2.290",
+"rev": "1.68B",
+"mkt": "SGX"
+},
+{
+"ticker": "9CI",
+"name": "CapitaLand Investment Limited",
+"mcap": "13.23B",
+"price": "2.650",
+"rev": "2.11B",
+"mkt": "SGX"
+},
+{
+"ticker": "A17U",
+"name": "CapitaLand Ascendas REIT",
+"mcap": "11.59B",
+"price": "2.320",
+"rev": "1.61B",
+"mkt": "SGX"
+},
+{
+"ticker": "Y92",
+"name": "Thai Beverage Public Company Limited",
+"mcap": "11.31B",
+"price": "0.450",
+"rev": "13.03B",
+"mkt": "SGX"
+},
+{
+"ticker": "C07",
+"name": "Jardine Cycle & Carriage Limited",
+"mcap": "10.77B",
+"price": "27.26",
+"rev": "26.59B",
+"mkt": "SGX"
+},
+{
+"ticker": "U96",
+"name": "Sembcorp Industries Ltd",
+"mcap": "10.77B",
+"price": "6.05",
+"rev": "6.63B",
+"mkt": "SGX"
+},
+{
+"ticker": "G13",
+"name": "Genting Singapore Limited",
+"mcap": "7.42B",
+"price": "0.615",
+"rev": "2.44B",
+"mkt": "SGX"
+},
+{
+"ticker": "U14",
+"name": "UOL Group Limited",
+"mcap": "7.32B",
+"price": "8.54",
+"rev": "3.12B",
+"mkt": "SGX"
+},
+{
+"ticker": "C09",
+"name": "City Developments Limited",
+"mcap": "7.28B",
+"price": "8.15",
+"rev": "4.62B",
+"mkt": "SGX"
+},
+{
+"ticker": "5E2",
+"name": "Seatrium Limited",
+"mcap": "7.20B",
+"price": "2.130",
+"rev": "11.72B",
+"mkt": "SGX"
+},
+{
+"ticker": "EB5",
+"name": "First Resources Limited",
+"mcap": "7.17B",
+"price": "4.630",
+"rev": "2.54B",
+"mkt": "SGX"
+},
+{
+"ticker": "N2IU",
+"name": "Mapletree Pan Asia Commercial Trust",
+"mcap": "6.34B",
+"price": "1.200",
+"rev": "865.26M",
+"mkt": "SGX"
+},
+{
+"ticker": "D01",
+"name": "DFI Retail Group Holdings Limited",
+"mcap": "6.09B",
+"price": "3.540",
+"rev": "11.16B",
+"mkt": "SGX"
+},
+{
+"ticker": "S58",
+"name": "SATS Ltd.",
+"mcap": "5.75B",
+"price": "3.870",
+"rev": "6.35B",
+"mkt": "SGX"
+},
+{
+"ticker": "M44U",
+"name": "Mapletree Logistics Trust",
+"mcap": "5.68B",
+"price": "1.110",
+"rev": "709.77M",
+"mkt": "SGX"
+},
+{
+"ticker": "ME8U",
+"name": "Mapletree Industrial Trust",
+"mcap": "5.45B",
+"price": "1.910",
+"rev": "657.72M",
+"mkt": "SGX"
+},
+{
+"ticker": "OV8",
+"name": "Sheng Siong Group Ltd",
+"mcap": "4.89B",
+"price": "3.250",
+"rev": "1.66B",
+"mkt": "SGX"
+},
+{
+"ticker": "V03",
+"name": "Venture Corporation Limited",
+"mcap": "4.83B",
+"price": "16.79",
+"rev": "2.63B",
+"mkt": "SGX"
+},
+{
+"ticker": "U06",
+"name": "Singapore Land Group Limited",
+"mcap": "4.64B",
+"price": "3.240",
+"rev": "869.05M",
+"mkt": "SGX"
+},
+{
+"ticker": "8A8",
+"name": "China Medical System Holdings Limited",
+"mcap": "4.39B",
+"price": "1.800",
+"rev": "1.66B",
+"mkt": "SGX"
+},
+{
+"ticker": "T14",
+"name": "Tianjin Pharmaceutical Da Ren Tang Group Corporation Limited",
+"mcap": "4.37B",
+"price": "2.470",
+"rev": "899.47M",
+"mkt": "SGX"
+},
+{
+"ticker": "J69U",
+"name": "Frasers Centrepoint Trust",
+"mcap": "4.26B",
+"price": "2.090",
+"rev": "498.85M",
+"mkt": "SGX"
+},
+{
+"ticker": "K71U",
+"name": "Keppel REIT",
+"mcap": "4.20B",
+"price": "0.845",
+"rev": "444.64M",
+"mkt": "SGX"
+},
+{
+"ticker": "E5H",
+"name": "Golden Agri-Resources Ltd",
+"mcap": "4.18B",
+"price": "0.330",
+"rev": "17.34B",
+"mkt": "SGX"
+},
+{
+"ticker": "T82U",
+"name": "Suntec Real Estate Investment Trust",
+"mcap": "4.11B",
+"price": "1.390",
+"rev": "609.49M",
+"mkt": "SGX"
+},
+{
+"ticker": "U10",
+"name": "UOB-Kay Hian Holdings Limited",
+"mcap": "3.95B",
+"price": "4.010",
+"rev": "845.48M",
+"mkt": "SGX"
+},
+{
+"ticker": "TQ5",
+"name": "Frasers Property Limited",
+"mcap": "3.91B",
+"price": "0.995",
+"rev": "3.32B",
+"mkt": "SGX"
+},
+{
+"ticker": "VC2",
+"name": "Olam Group Limited",
+"mcap": "3.88B",
+"price": "1.030",
+"rev": "26.90B",
+"mkt": "SGX"
+},
+{
+"ticker": "P8Z",
+"name": "Bumitama Agri Ltd.",
+"mcap": "3.82B",
+"price": "2.200",
+"rev": "1.61B",
+"mkt": "SGX"
+},
+{
+"ticker": "S59",
+"name": "SIA Engineering Company Limited",
+"mcap": "3.48B",
+"price": "3.100",
+"rev": "1.42B",
+"mkt": "SGX"
+},
+{
+"ticker": "A7RU",
+"name": "Keppel Infrastructure Trust",
+"mcap": "3.13B",
+"price": "0.515",
+"rev": "2.51B",
+"mkt": "SGX"
+},
+{
+"ticker": "H02",
+"name": "Haw Par Corporation Limited",
+"mcap": "2.99B",
+"price": "13.51",
+"rev": "219.55M",
+"mkt": "SGX"
+},
+{
+"ticker": "C52",
+"name": "ComfortDelGro Corporation Limited",
+"mcap": "2.77B",
+"price": "1.280",
+"rev": "5.20B",
+"mkt": "SGX"
+},
+{
+"ticker": "C2PU",
+"name": "Parkway Life Real Estate Investment Trust",
+"mcap": "2.62B",
+"price": "4.010",
+"rev": "155.07M",
+"mkt": "SGX"
+},
+{
+"ticker": "F17",
+"name": "GuocoLand Limited",
+"mcap": "2.50B",
+"price": "2.240",
+"rev": "1.43B",
+"mkt": "SGX"
+},
+{
+"ticker": "H15",
+"name": "Hotel Properties Limited",
+"mcap": "2.44B",
+"price": "4.600",
+"rev": "735.35M",
+"mkt": "SGX"
+},
+{
+"ticker": "H22",
+"name": "Hong Leong Asia Ltd.",
+"mcap": "2.38B",
+"price": "2.890",
+"rev": "5.65B",
+"mkt": "SGX"
+},
+{
+"ticker": "S07",
+"name": "Shangri-La Asia Limited",
+"mcap": "2.33B",
+"price": "4.070",
+"rev": "2.98B",
+"mkt": "SGX"
+},
+{
+"ticker": "NS8U",
+"name": "Hutchison Port Holdings Trust",
+"mcap": "2.26B",
+"price": "0.205",
+"rev": "2.05B",
+"mkt": "SGX"
+},
+{
+"ticker": "558",
+"name": "UMS Integration Limited",
+"mcap": "2.23B",
+"price": "2.510",
+"rev": "282.59M",
+"mkt": "SGX"
+},
+{
+"ticker": "F99",
+"name": "Fraser and Neave, Limited",
+"mcap": "2.04B",
+"price": "1.400",
+"rev": "2.22B",
+"mkt": "SGX"
+},
+{
+"ticker": "8YZ",
+"name": "Yangzijiang Maritime Development Ltd.",
+"mcap": "1.97B",
+"price": "0.565",
+"rev": "219.09M",
+"mkt": "SGX"
+},
+{
+"ticker": "TS0U",
+"name": "OUE Real Estate Investment Trust",
+"mcap": "1.96B",
+"price": "0.355",
+"rev": "289.05M",
+"mkt": "SGX"
+},
+{
+"ticker": "8C8U",
+"name": "Centurion Accommodation REIT",
+"mcap": "1.94B",
+"price": "1.120",
+"rev": "131.22M",
+"mkt": "SGX"
+},
+{
+"ticker": "CC3",
+"name": "StarHub Ltd",
+"mcap": "1.90B",
+"price": "1.100",
+"rev": "2.19B",
+"mkt": "SGX"
+},
+{
+"ticker": "9A4U",
+"name": "ESR-REIT",
+"mcap": "1.78B",
+"price": "2.200",
+"rev": "449.29M",
+"mkt": "SGX"
+},
+{
+"ticker": "CY6U",
+"name": "CapitaLand India Trust",
+"mcap": "1.41B",
+"price": "0.945",
+"rev": "282.70M",
+"mkt": "SGX"
+},
+{
+"ticker": "A50",
+"name": "Thomson Medical Group Limited",
+"mcap": "1.40B",
+"price": "0.0530",
+"rev": "426.59M",
+"mkt": "SGX"
+},
+{
+"ticker": "F03",
+"name": "Food Empire Holdings Limited",
+"mcap": "1.40B",
+"price": "2.120",
+"rev": "799.66M",
+"mkt": "SGX"
+},
+{
+"ticker": "H13",
+"name": "Ho Bee Land Limited",
+"mcap": "1.35B",
+"price": "2.030",
+"rev": "499.56M",
+"mkt": "SGX"
+},
+{
+"ticker": "P15",
+"name": "Pacific Century Regional Developments Limited",
+"mcap": "1.30B",
+"price": "0.490",
+"rev": "3.02M",
+"mkt": "SGX"
+},
+{
+"ticker": "OU8",
+"name": "Centurion Corporation Limited",
+"mcap": "1.27B",
+"price": "1.510",
+"rev": "347.75M",
+"mkt": "SGX"
+},
+{
+"ticker": "NC2",
+"name": "Sri Trang Agro-Industry Public Company Limited",
+"mcap": "1.23B",
+"price": "0.800",
+"rev": "4.13B",
+"mkt": "SGX"
+},
+{
+"ticker": "P40U",
+"name": "Starhill Global Real Estate Investment Trust",
+"mcap": "1.21B",
+"price": "0.520",
+"rev": "192.49M",
+"mkt": "SGX"
+},
+{
+"ticker": "G92",
+"name": "China Aviation Oil (Singapore) Corporation Ltd",
+"mcap": "1.20B",
+"price": "1.400",
+"rev": "20.30B",
+"mkt": "SGX"
+},
+{
+"ticker": "AP4",
+"name": "Riverstone Holdings Limited",
+"mcap": "1.20B",
+"price": "0.810",
+"rev": "310.27M",
+"mkt": "SGX"
+},
+{
+"ticker": "P52",
+"name": "Pan-United Corporation Ltd",
+"mcap": "1.20B",
+"price": "1.710",
+"rev": "1.05B",
+"mkt": "SGX"
+},
+{
+"ticker": "O5RU",
+"name": "AIMS APAC REIT",
+"mcap": "1.17B",
+"price": "1.430",
+"rev": "190.67M",
+"mkt": "SGX"
+},
+{
+"ticker": "W05",
+"name": "Wing Tai Holdings Limited",
+"mcap": "1.17B",
+"price": "1.530",
+"rev": "617.35M",
+"mkt": "SGX"
+},
+{
+"ticker": "S61",
+"name": "SBS Transit Ltd",
+"mcap": "1.16B",
+"price": "3.710",
+"rev": "1.56B",
+"mkt": "SGX"
+},
+{
+"ticker": "B61",
+"name": "Bukit Sembawang Estates Limited",
+"mcap": "1.13B",
+"price": "4.380",
+"rev": "345.55M",
+"mkt": "SGX"
+},
+{
+"ticker": "E28",
+"name": "Frencken Group Limited",
+"mcap": "1.13B",
+"price": "2.380",
+"rev": "861.55M",
+"mkt": "SGX"
+},
+{
+"ticker": "S41",
+"name": "Hong Leong Finance Limited",
+"mcap": "1.11B",
+"price": "2.470",
+"rev": "195.17M",
+"mkt": "SGX"
+},
+{
+"ticker": "Q5T",
+"name": "Far East Hospitality Trust",
+"mcap": "1.11B",
+"price": "0.540",
+"rev": "108.27M",
+"mkt": "SGX"
+},
+{
+"ticker": "AU8U",
+"name": "CapitaLand China Trust",
+"mcap": "1.10B",
+"price": "0.625",
+"rev": "296.77M",
+"mkt": "SGX"
+},
+{
+"ticker": "EH5",
+"name": "United Overseas Australia Ltd",
+"mcap": "1.07B",
+"price": "0.600",
+"rev": "250.77M",
+"mkt": "SGX"
+},
+{
+"ticker": "Z25",
+"name": "Yanlord Land Group Limited",
+"mcap": "975.43M",
+"price": "0.505",
+"rev": "2.15B",
+"mkt": "SGX"
+},
+{
+"ticker": "J85",
+"name": "CDL Hospitality Trusts",
+"mcap": "960.57M",
+"price": "0.750",
+"rev": "269.35M",
+"mkt": "SGX"
+},
+{
+"ticker": "T6I",
+"name": "ValueMax Group Limited",
+"mcap": "942.21M",
+"price": "0.995",
+"rev": "655.52M",
+"mkt": "SGX"
+},
+{
+"ticker": "RE4",
+"name": "Geo Energy Resources Limited",
+"mcap": "941.39M",
+"price": "0.530",
+"rev": "621.45M",
+"mkt": "SGX"
+},
+{
+"ticker": "F9D",
+"name": "Boustead Singapore Limited",
+"mcap": "883.27M",
+"price": "1.750",
+"rev": "624.44M",
+"mkt": "SGX"
+},
+{
+"ticker": "544",
+"name": "CSE Global Limited",
+"mcap": "875.09M",
+"price": "1.200",
+"rev": "1.09B",
+"mkt": "SGX"
+},
+{
+"ticker": "P9D",
+"name": "Civmec Limited",
+"mcap": "822.49M",
+"price": "1.570",
+"rev": "808.40M",
+"mkt": "SGX"
+},
+{
+"ticker": "S20",
+"name": "The Straits Trading Company Limited",
+"mcap": "766.02M",
+"price": "1.580",
+"rev": "771.64M",
+"mkt": "SGX"
+},
+{
+"ticker": "5WJ",
+"name": "MoneyMax Financial Services Ltd.",
+"mcap": "735.68M",
+"price": "0.770",
+"rev": "624.71M",
+"mkt": "SGX"
+},
+{
+"ticker": "5UF",
+"name": "Aspial Lifestyle Limited",
+"mcap": "732.10M",
+"price": "0.355",
+"rev": "927.07M",
+"mkt": "SGX"
+},
+{
+"ticker": "H30",
+"name": "Hong Fok Corporation Limited",
+"mcap": "726.23M",
+"price": "0.910",
+"rev": "106.21M",
+"mkt": "SGX"
+},
+{
+"ticker": "LJ3",
+"name": "OUE Limited",
+"mcap": "724.80M",
+"price": "0.965",
+"rev": "632.55M",
+"mkt": "SGX"
+},
+{
+"ticker": "S08",
+"name": "Singapore Post Limited",
+"mcap": "720.78M",
+"price": "0.320",
+"rev": "376.05M",
+"mkt": "SGX"
+},
+{
+"ticker": "H07",
+"name": "Stamford Land Corporation Ltd",
+"mcap": "697.30M",
+"price": "0.470",
+"rev": "161.15M",
+"mkt": "SGX"
+},
+{
+"ticker": "YF8",
+"name": "Yangzijiang Financial Holding Ltd.",
+"mcap": "696.09M",
+"price": "0.200",
+"rev": "87.64M",
+"mkt": "SGX"
+},
+{
+"ticker": "A31",
+"name": "Addvalue Technologies Ltd",
+"mcap": "685.11M",
+"price": "0.186",
+"rev": "32.01M",
+"mkt": "SGX"
+}
+]
