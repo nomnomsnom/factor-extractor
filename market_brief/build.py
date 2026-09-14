@@ -412,13 +412,22 @@ doc = {
   "gaps": gaps,
 }
 
-# Derived from the assembled document, not from the fetch, so the bullets always
-# quote the same series the charts plot. See why_from_doc.py.
-from why_from_doc import build_why
-doc["why"] = build_why(doc)
+# The read is written by hand each run, so build.py carries the previous brief's
+# bullets forward to keep the document structurally valid. That is deliberately
+# NOT good enough to ship: validate.py fails a document whose bullets did not
+# change while the market did, which is what forces the rewrite. Carrying forward
+# beats regenerating from why_from_doc.py, whose fixed sentences are both stale
+# and written in jargon the reader does not want.
+import subprocess as _sp
+try:
+    _prev = json.loads(_sp.run(["git", "show", "HEAD:market_brief/market-latest.json"],
+                               capture_output=True, text=True, check=True,
+                               cwd=os.path.dirname(SP) or ".").stdout)
+    doc["why"] = _prev.get("why") or []
+except Exception:
+    doc["why"] = []
 if not doc["why"]:
-    raise SystemExit("refusing to write: no `why` bullets could be derived, "
-                     "which would leave the page's top panel empty")
+    print("NOTE: no previous bullets to carry forward - write `why` before publishing")
 
 out = os.path.join(SP, "market-latest.json")
 with open(out, "w") as f:

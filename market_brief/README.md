@@ -119,6 +119,32 @@ bank more likely to raise rates, dearer borrowing, shares worth less.
 python3 why_facts.py market-latest.json        # what changed this session
 python3 why_facts.py market-latest.json --json # same, for a script
 ```
+
+`build.py` carries the previous brief's bullets forward so the document stays
+structurally valid. That is deliberately not good enough to ship: the staleness
+check then fails, which is what forces the rewrite. It does NOT regenerate from
+`why_from_doc.py`, whose fixed sentences are both stale and written in the jargon
+the reader asked us to drop.
+
+## Finding finance and quant-industry news
+
+This is the reader's stated first interest after market events, and it is the
+part that most often comes up empty, because those stories do not break daily.
+The 15 September run found nothing that survived checking: a quant drawdown
+piece and a China quant selloff piece both turned out to be from January and
+July, and an SEC cross-margining approval turned out to be April. It said so in
+`gaps` rather than padding the list, which is the right call.
+
+So the bar is the date, not the age. An item up to about two weeks old is fine
+if it is genuinely notable and carries its real date — the page shows dates and
+sorts by them, so nothing is passed off as newer than it is. Places worth
+checking, in rough order of how often they yield something dateable:
+SEC and CFTC press rooms, the Federal Register, FINRA and exchange notices, HFR
+monthly index releases, Hedgeweek, With Intelligence, Risk.net, and the 8-K and
+13-D filings of the listed exchanges and brokers.
+
+What does not count: an undated listicle, a "top quant firms 2026" SEO page, or
+a search summary whose date you have not confirmed on the source page itself.
  They are the point
 of the dashboard, and they are the part a script cannot do: the headlines have to
 be read, the figures checked against a primary source where one exists, and
