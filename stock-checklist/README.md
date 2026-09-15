@@ -16,7 +16,16 @@ the browser (and to your Claude account when the page runs as an Artifact).
 | `app.js` | Filtering, sorting, search, checklist rendering, note storage |
 | `data-us.js` | 100 S&P 500 companies: metrics, 5-year history, segments, research notes |
 | `data-sg.js` | 100 Singapore-listed companies, same shape |
+| `rulebook.js` | Per-industry rulebooks: which metrics decide, thresholds, what to ignore |
 | `build/` | The scripts and source data used to generate the two data files |
+
+## Prices
+
+No price data ships with the page. Multiples are the ones compiled with the fundamentals.
+Paste your own bars into the Prices panel (CSV or TSV, with or without a header; a `Symbol`
+column loads many companies at once) and P/E, P/B, P/S, P/FCF, dividend yield and market cap
+are recomputed as your close divided by the per-share figures from the filings. EV-based
+multiples are left alone, since enterprise value needs the debt and cash of the same date.
 
 ## Refreshing the data
 

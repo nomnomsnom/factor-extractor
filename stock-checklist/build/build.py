@@ -160,6 +160,7 @@ def build(listfile, out_var, outfile, qglob, market_default):
          'divy': pick(st,'Dividend Yield'), 'dps': pick(st,'Dividend Per Share'), 'payout': pick(st,'Payout Ratio'),
          'divgrow': pick(st,'Years of Dividend Growth'), 'buyback': pick(st,'Buyback Yield'),
          'fcfy': pick(st,'FCF Yield'), 'ey': pick(st,'Earnings Yield'),
+         'fcfps': pick(st,'FCF Per Share'), 'ncps': pick(st,'Net Cash Per Share'),
          'beta': pick(st,'Beta (5Y)'), 'chg52': pick(st,'52-Week Price Change'),
          'altman': pick(st,'Altman Z-Score'), 'piotroski': pick(st,'Piotroski F-Score'),
          'pt': pick(st,'Price Target'), 'ptd': pick(st,'Price Target Difference'),
