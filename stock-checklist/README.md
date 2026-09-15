@@ -22,6 +22,7 @@ the browser (and to your Claude account when the page runs as an Artifact).
 | `fetch_prices.py` | Writes `prices.js`, a dated price snapshot the page loads on its own |
 | `rulebook-explained.html` | Plain-English guide, with a generated reference of all 25 rulebooks |
 | `build/gen_reference.js` | Regenerates that reference from `rulebook.js` + the data files |
+| `rulebook-why.js` | One explanation per measure — why it is on the rulebook at all |
 
 ## Where each number comes from
 
@@ -76,8 +77,14 @@ and the median across the companies on this list that use it. That section is **
 node build/gen_reference.js     # writes /tmp/industry_ref.html
 ```
 
-so it cannot drift from `rulebook.js`. Re-run it and paste the output into the page's
-reference section after changing any rulebook.
+so it cannot drift from `rulebook.js`. The generated block sits between `<!--REF:START-->`
+and `<!--REF:END-->` in the page; re-run the script and swap that block after changing any
+rulebook.
+
+Each of the 112 distinct measures has an explanation in `rulebook-why.js`, keyed by its exact
+label. The guide prints it under the threshold; the checklist shows it as hover text on the
+measure name. Adding a measure to a rulebook without adding its explanation is harmless — both
+surfaces just omit it — but the check is `node -e` over both files if you want to be sure.
 
 ## The journal
 

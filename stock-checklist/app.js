@@ -514,8 +514,10 @@
     if (!rb) return '';
     var rows = ev.rows.map(function (o) {
       var w = o.w, disp = o.disp, cls = o.cls, extra = o.extra, src = o.src;
+      var why = (window.RULE_WHY || {})[w.l] || '';
       return '<li class="rl"><span class="rl-dot ' + cls + '" aria-hidden="true"></span>' +
-        '<span class="rl-l">' + esc(w.l) + '</span>' +
+        '<span class="rl-l' + (why ? ' haswhy' : '') + '"' + (why ? ' title="' + esc(why) + '"' : '') + '>' +
+        esc(w.l) + '</span>' +
         '<span class="rl-v">' + esc(disp || '—') + '</span>' +
         '<span class="rl-t">' + esc(w.t) + (extra ? ' · ' + esc(extra) : '') +
         (src ? '<span class="rl-src">' + esc(src) + '</span>' : '') + '</span></li>';

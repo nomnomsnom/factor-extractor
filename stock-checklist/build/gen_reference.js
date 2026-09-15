@@ -3,6 +3,7 @@
 const fs = require('fs');
 global.window = {};
 require('/home/user/factor-extractor/stock-checklist/rulebook.js');
+require('/home/user/factor-extractor/stock-checklist/rulebook-why.js');
 eval(fs.readFileSync('/home/user/factor-extractor/stock-checklist/data-us.js', 'utf8'));
 eval(fs.readFileSync('/home/user/factor-extractor/stock-checklist/data-sg.js', 'utf8'));
 const ALL = [].concat(window.DATA_US, window.DATA_SG);
@@ -72,11 +73,13 @@ order.forEach(name => {
     const med = median(vals);
     const tested = !!w.ok;
     const where = w.f ? '<span class="refwhere">' + esc(w.f) + '</span>' : '';
+    const why = (window.RULE_WHY || {})[w.l];
     out += '<tr>' +
       '<td><span class="refdot ' + (tested ? 'ok' : 'na') + '" title="' +
         (tested ? 'the checklist tests this for you' : 'judge it in context') + '"></span>' +
         esc(w.l) + (w.f && !w.fill ? ' <em>read the filing</em>' : '') + '</td>' +
-      '<td>' + esc(w.t) + where + '</td>' +
+      '<td>' + esc(w.t) + where +
+        (why ? '<span class="refwhy">' + esc(why) + '</span>' : '') + '</td>' +
       '<td class="refmed">' + (med != null ? esc(fmt(med, unit)) : '&mdash;') + '</td>' +
       '</tr>';
   });
