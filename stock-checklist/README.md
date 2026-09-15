@@ -20,6 +20,8 @@ the browser (and to your Claude account when the page runs as an Artifact).
 | `build/` | The scripts and source data used to generate the two data files |
 | `serve.py` | Local server: serves the page **and** fetches live prices for it |
 | `fetch_prices.py` | Writes `prices.js`, a dated price snapshot the page loads on its own |
+| `rulebook-explained.html` | Plain-English guide, with a generated reference of all 25 rulebooks |
+| `build/gen_reference.js` | Regenerates that reference from `rulebook.js` + the data files |
 
 ## Where each number comes from
 
@@ -63,6 +65,19 @@ column loads many companies at once. Benchmark tickers are recognised too.
 However the price arrives, P/E, P/B, P/S, P/FCF, dividend yield and market cap are recomputed
 as that close divided by the per-share figures from the filings. EV-based multiples are left
 alone, since enterprise value needs the debt and cash of the same date.
+
+## The guide
+
+`rulebook-explained.html` explains the rulebooks for someone with no finance background,
+and ends with a reference: every rulebook, its measures, the level that counts as healthy,
+and the median across the companies on this list that use it. That section is **generated**:
+
+```bash
+node build/gen_reference.js     # writes /tmp/industry_ref.html
+```
+
+so it cannot drift from `rulebook.js`. Re-run it and paste the output into the page's
+reference section after changing any rulebook.
 
 ## The journal
 
