@@ -60,6 +60,9 @@
       c.q.what, c.q.rev, c.q.gm, c.q.mgmt, c.q.comp, c.q.moat, c.q.ind, c.q.risk, c.q.implied, c.q.debate, c.q.disprove,
       (c.q.moatTags || []).join(' '), (c.segs || []).map(function (s) { return s.n; }).join(' ')
     ].join(' ').toLowerCase();
+    var ev = rbEval(c);
+    c.rbPass = ev.pass; c.rbFail = ev.fail; c.rbTested = ev.tested;
+    c.flags.rbClean = ev.fail === 0 && ev.tested >= 2;
     (SECTORS[c.secKey] = SECTORS[c.secKey] || []).push(c);
   });
   var PEERS = {};
@@ -350,9 +353,11 @@
     }
     return '';
   }
-  function rulebookCard(c) {
+  /* One evaluation, used by the card and by the filter. */
+  function rbEval(c) {
     var rb = rbOf(c);
-    if (!rb) return '';
+    if (!rb) return { rb: null, rows: [], pass: 0, fail: 0, tested: 0 };
+    var pass = 0, fail = 0;
     var rows = rb.watch.map(function (w) {
       var got = null, disp = '', cls = 'na', extra = '', src = '';
       if (w.k) { var v = num(c.M[w.k]); if (v !== null) { got = v; disp = txt(c.M[w.k]); } }
@@ -368,8 +373,18 @@
       }
       if (w.f && got === null) { disp = 'not in this data'; extra = 'read it in the ' + w.f; }
       else if (w.f) { extra = 'verify in the ' + w.f; }
-      if (got !== null && w.ok) cls = w.ok(got) ? 'ok' : 'no';
+      if (got !== null && w.ok) { if (w.ok(got)) { cls = 'ok'; pass++; } else { cls = 'no'; fail++; } }
       else if (got !== null) cls = 'have';
+      return { w: w, disp: disp, cls: cls, extra: extra, src: src };
+    });
+    return { rb: rb, rows: rows, pass: pass, fail: fail, tested: pass + fail };
+  }
+
+  function rulebookCard(c) {
+    var ev = rbEval(c), rb = ev.rb;
+    if (!rb) return '';
+    var rows = ev.rows.map(function (o) {
+      var w = o.w, disp = o.disp, cls = o.cls, extra = o.extra, src = o.src;
       return '<li class="rl"><span class="rl-dot ' + cls + '" aria-hidden="true"></span>' +
         '<span class="rl-l">' + esc(w.l) + '</span>' +
         '<span class="rl-v">' + esc(disp || '—') + '</span>' +
@@ -379,6 +394,8 @@
     var ign = (rb.ignore || []).map(function (x) { return '<span class="tag ignore">' + esc(x) + '</span>'; }).join('');
     return '<div class="rulecard">' +
       '<div class="rulehead"><span class="rulebadge">Rulebook</span><b>' + esc(rb.name) + '</b>' +
+      (ev.tested ? '<span class="rulescore ' + (ev.fail ? 'miss' : 'clean') + '">' + ev.pass + ' of ' + ev.tested +
+        ' testable measures met</span>' : '') +
       '<span class="rulelegend">&#9679; meets the rule of thumb &nbsp;&#9675; does not &nbsp;&#9678; read the filing</span></div>' +
       '<p class="ruledecides"><strong>What decides it:</strong> ' + esc(rb.decides) + '</p>' +
       '<ul class="rulelist">' + rows + '</ul>' +
@@ -630,6 +647,7 @@
     if (f.netcash) out.push(['good', 'Net cash']);
     if (f.highroic) out.push(['good', 'ROIC 15%+']);
     if (f.growth) out.push(['good', 'Grower']);
+    if (f.rbClean) out.push(['good', 'Rulebook ' + c.rbPass + '/' + c.rbTested]);
     if (f.buyback) out.push(['good', 'Buybacks']);
     if (f.diluting) out.push(['warn', 'Diluting']);
     if (f.cheapvshist) out.push(['', 'Below own P/E']);
@@ -671,7 +689,8 @@
   var FLAG_DEFS = [
     ['profit', 'Profitable'], ['fcfpos', 'Positive free cash flow'], ['netcash', 'Net cash'],
     ['divpay', 'Pays a dividend'], ['buyback', 'Buying back shares'], ['highroic', 'ROIC 15% or better'],
-    ['growth', 'Revenue CAGR 10%+'], ['cheapvshist', 'Below its own 5-year P/E']
+    ['growth', 'Revenue CAGR 10%+'], ['cheapvshist', 'Below its own 5-year P/E'],
+    ['rbClean', 'Fails no rulebook test']
   ];
 
   function matches(c) {

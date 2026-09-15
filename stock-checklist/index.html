@@ -159,7 +159,10 @@ table.fin td.neg{color:var(--bad)}
 .rulehead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .rulebadge{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3)}
 .rulehead b{font-family:var(--slab);font-size:16px;font-weight:600}
-.rulelegend{margin-left:auto;font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+.rulescore{margin-left:auto;font-family:var(--mono);font-size:11px;padding:2px 9px;border-radius:99px;background:var(--sunk);color:var(--ink-2);border:1px solid var(--rule)}
+.rulescore.clean{background:var(--good-bg);color:var(--good);border-color:transparent}
+.rulescore.miss{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.rulelegend{font-size:10.5px;color:var(--ink-3);white-space:nowrap;flex-basis:100%;text-align:right}
 .ruledecides{margin:9px 0 10px;font-size:13.5px;color:var(--ink-2);max-width:78ch}
 .rulelist{list-style:none;margin:0;padding:0}
 li.rl{display:grid;grid-template-columns:14px minmax(0,1.2fr) minmax(0,.75fr) minmax(0,1.7fr);gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--rule-2);font-size:13px}
@@ -235,6 +238,7 @@ footer.foot p{max-width:74ch;margin:0 0 9px}
       <span>Figures <b id="asof">loading</b></span>
       <span>Source <b>stockanalysis.com</b>, company filings</span>
       <span>US in <b>US$</b> &middot; Singapore in <b>S$</b></span>
+      <span><a href="https://claude.ai/artifact/Mx7To5mmEQKDp4NRN5B6sN" target="_blank" rel="noopener">How the rulebooks work &rarr;</a></span>
       <span id="pricestate">Prices <b>not loaded</b> &mdash; multiples are as compiled</span>
       <span id="syncstate">Notes saved <b>on this device</b></span>
     </div>
