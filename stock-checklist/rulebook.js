@@ -7,10 +7,12 @@ window.RULEBOOKS = [
   watch: [
     { l: 'Return on equity', k: 'roe', t: 'above 12%; above 15% is excellent', ok: v => v >= 12 },
     { l: 'Price to book vs its own history', k: 'pb', t: 'the multiple that matters for a bank, not P/E' },
-    { l: 'Cost-to-income ratio', f: 'quarterly results presentation', t: 'below 50% is strong (DBS runs low 40s)' },
-    { l: 'CET1 capital ratio', f: 'capital adequacy note in the annual report', t: 'comfortably above the regulator minimum' },
-    { l: 'Non-performing loans', f: 'asset quality section', t: 'below 2% and, more importantly, not rising' },
-    { l: 'Net interest margin', f: 'results presentation', t: 'watch the direction as rates move' }],
+    { l: 'Cost-to-income ratio', fill: 'cti', u: '%', f: 'quarterly results presentation', t: 'below 50% is strong (DBS runs low 40s)', ok: v => v <= 55 },
+    { l: 'CET1 capital ratio', fill: 'cet1', u: '%', f: 'capital adequacy note in the annual report', t: 'comfortably above the regulator minimum' },
+    { l: 'Non-performing loans', fill: 'npl', u: '%', f: 'asset quality section', t: 'below 2% and, more importantly, not rising', ok: v => v <= 2 },
+    { l: 'Allowance for loan losses / gross loans', fill: 'allowPct', u: '%', t: 'a reserve proxy, not the NPL ratio — read it alongside the real one' },
+    { l: 'Loans / deposits', fill: 'ldr', u: '%', t: 'below 100% means deposits fund the book' },
+    { l: 'Net interest margin', fill: 'nim', u: '%', f: 'results presentation', t: 'watch the direction as rates move' }],
   ignore: ['Gross margin', 'EV / EBITDA', 'Debt / EBITDA', 'Free cash flow', 'Price / sales'] },
 
 { m: /Insurance/, name: 'Insurers',
@@ -46,7 +48,7 @@ window.RULEBOOKS = [
 { m: /REIT/, name: 'REITs',
   decides: 'Refinancing. A REIT rarely dies of low occupancy; it dies of debt maturing into higher rates, which forces an asset sale or an equity raise at a discount.',
   watch: [
-    { l: 'Gearing (debt to assets)', f: 'financial review', t: 'below 40%; the MAS limit for S-REITs is 50%' },
+    { l: 'Gearing (debt to assets)', fill: 'gearing', u: '%', f: 'financial review', t: 'below 40%; the MAS limit for S-REITs is 50%. Managers report aggregate leverage on the MAS definition, which differs where assets sit in joint ventures', ok: v => v <= 40 },
     { l: 'Distribution per unit, five-year trend', c: 'dpsTrend', t: 'flat or rising; a falling DPU is the story' },
     { l: 'Interest coverage', k: 'icov', t: 'above 3x; below 2.5x the manager has no room', ok: v => v >= 3 },
     { l: 'Rental reversion', f: 'quarterly results', t: 'positive means leases renew at higher rents' },
@@ -59,6 +61,7 @@ window.RULEBOOKS = [
   decides: 'The cost basis of the land bank and how much debt sits against it. Profits arrive in lumps when projects complete, so any single year is meaningless.',
   watch: [
     { l: 'Net gearing', k: 'de', t: 'below 1.0x equity; above 1.5x you are leveraged to property prices' },
+    { l: 'Debt to total assets', fill: 'gearing', u: '%', t: 'below 45% for a developer that can survive a downturn', ok: v => v <= 45 },
     { l: 'Price to book vs net asset value', k: 'pb', t: 'developers usually trade below book — ask why this discount, not whether' },
     { l: 'Unsold inventory and its age', f: 'development properties note', t: 'ageing unsold stock is trapped capital' },
     { l: 'Recurring rental income vs development profit', f: 'segment note', t: 'recurring income is what supports the dividend' },
@@ -69,7 +72,7 @@ window.RULEBOOKS = [
   decides: 'Where you are in the cycle. These businesses look cheapest on trailing earnings exactly when earnings are at a peak.',
   watch: [
     { l: 'Operating margin across five years, not today', c: 'omRange', t: 'use the mid-cycle average as your earnings base' },
-    { l: 'Inventory days', f: 'balance sheet', t: 'rising inventory into flat revenue precedes every downturn' },
+    { l: 'Inventory days', fill: 'invDays', u: 'days', f: 'balance sheet', t: 'rising inventory into flat revenue precedes every downturn' },
     { l: 'Capex as % of revenue', c: 'capexPct', t: 'fabless is asset-light; fabs and memory are not' },
     { l: 'Customer concentration', f: '10-K risk factors / customer note', t: 'over 10% from one customer is a real risk' },
     { l: 'Book-to-bill or backlog', f: 'earnings call', t: 'above 1.0 means orders exceed shipments' },
@@ -83,8 +86,8 @@ window.RULEBOOKS = [
     { l: 'Gross margin', k: 'gm', t: 'above 70%; below that it is a services business', ok: v => v >= 70 },
     { l: 'Rule of 40 (growth + FCF margin)', c: 'rule40', t: 'above 40 is healthy', ok: v => v >= 40 },
     { l: 'Net revenue retention', f: 'investor presentation', t: 'above 110% means the installed base grows by itself' },
-    { l: 'Stock-based comp as % of revenue', f: 'cash flow statement', t: 'above 15% and reported profit overstates the economics' },
-    { l: 'Remaining performance obligation growth', f: 'revenue note', t: 'should track or lead revenue growth' }],
+    { l: 'Stock-based comp as % of revenue', fill: 'sbcPct', u: '%', f: 'cash flow statement', t: 'above 15% and reported profit overstates the economics', ok: v => v <= 15 },
+    { l: 'Remaining performance obligation', fill: 'rpo', u: 'money', f: 'revenue note', t: 'contracted revenue not yet booked; should track or lead revenue growth' }],
   ignore: ['Price / book', 'Book value', 'Inventory', 'Asset turnover'] },
 
 { m: /Computer Hardware|Consumer Electronics|Electronic Components|Hardware, Equipment|Communication Equipment/, name: 'Hardware and components',
@@ -92,7 +95,7 @@ window.RULEBOOKS = [
   watch: [
     { l: 'Gross margin trend', k: 'gm', t: 'flat or rising; falling means commoditisation' },
     { l: 'Free cash flow margin', k: 'fcfm', t: 'above 8%', ok: v => v >= 8 },
-    { l: 'Inventory days', f: 'balance sheet', t: 'the first place a demand slowdown shows up' },
+    { l: 'Inventory days', fill: 'invDays', u: 'days', f: 'balance sheet', t: 'the first place a demand slowdown shows up' },
     { l: 'Customer concentration', f: '10-K risk factors', t: 'assembly businesses often have two or three customers' },
     { l: 'ROIC', k: 'roic', t: 'above 12%, but check it is not flattered by buybacks shrinking equity', ok: v => v >= 12 }],
   ignore: ['ROE where buybacks have shrunk equity to near zero'] },
@@ -103,7 +106,7 @@ window.RULEBOOKS = [
     { l: 'Revenue concentration in the top product', c: 'topSeg', t: 'above 40% from one drug is a single-product company' },
     { l: 'Patent expiry dates by product', f: '10-K, intellectual property section', t: 'the single most important fact about a pharma company' },
     { l: 'Phase III pipeline and readout dates', f: 'pipeline page of the annual report', t: 'what replaces the revenue that expires' },
-    { l: 'R&D as % of revenue', f: 'income statement', t: '15-25% is typical for large pharma' },
+    { l: 'R&D as % of revenue', fill: 'rdPct', u: '%', f: 'income statement', t: '15-25% is typical for large pharma' },
     { l: 'Gross margin', k: 'gm', t: 'above 70% for patented drugs', ok: v => v >= 70 }],
   ignore: ['Past revenue growth as a trend — it steps down at expiry, it does not decay smoothly'] },
 
@@ -142,7 +145,7 @@ window.RULEBOOKS = [
   watch: [
     { l: 'Comparable store sales, traffic vs ticket', f: 'quarterly results', t: 'positive traffic is the healthy version' },
     { l: 'Gross margin', k: 'gm', t: 'stable; discounting shows up here first' },
-    { l: 'Inventory turns', f: 'balance sheet', t: 'slowing turns mean stock nobody wants' },
+    { l: 'Inventory days', fill: 'invDays', u: 'days', f: 'balance sheet', t: 'rising days mean stock nobody wants' },
     { l: 'New store returns / payback period', f: 'investor day materials', t: 'if new stores earn less than old ones, growth is value-destroying' },
     { l: 'Operating margin', k: 'om', t: 'thin by nature — 5-12% is normal, so small changes matter' }],
   ignore: ['Revenue growth driven purely by store openings'] },
@@ -150,7 +153,7 @@ window.RULEBOOKS = [
 { m: /Aerospace/, name: 'Aerospace and defence',
   decides: 'The split between original equipment and aftermarket. Engines are sold near cost and earn for twenty-five years on spare parts.',
   watch: [
-    { l: 'Backlog and book-to-bill', f: 'results presentation', t: 'above 1.0; backlog leads revenue by years' },
+    { l: 'Backlog (contracted, not yet booked)', fill: 'rpo', u: 'money', f: 'results presentation for book-to-bill', t: 'backlog leads revenue by years; book-to-bill above 1.0' },
     { l: 'Aftermarket share of revenue', f: 'segment note', t: 'the higher the better — it is the profit' },
     { l: 'Charges on fixed-price contracts', f: 'income statement, one-off items', t: 'recurring charges mean systematic underbidding' },
     { l: 'Operating margin', k: 'om', t: '10-15% is normal; defence margins are capped by contract structure' },
@@ -160,7 +163,7 @@ window.RULEBOOKS = [
 { m: /Machinery|Conglomerates|Engineering|Industrial|Building Materials|Specialty Chemicals/, p: 80, name: 'Industrials and machinery',
   decides: 'The order book and where you are in the cycle. Record margins in a cyclical business are a warning, not a virtue.',
   watch: [
-    { l: 'Orders and backlog', f: 'quarterly results', t: 'the leading indicator; revenue is the lagging one' },
+    { l: 'Backlog (contracted, not yet booked)', fill: 'rpo', u: 'money', f: 'quarterly results for order intake', t: 'the leading indicator; revenue is the lagging one' },
     { l: 'Operating margin across five years', c: 'omRange', t: 'use the average, not the peak, as your base' },
     { l: 'Dealer or channel inventory', f: 'earnings call', t: 'rising channel inventory is demand being pulled forward' },
     { l: 'ROIC vs cost of capital', c: 'spread', t: 'positive spread across the whole cycle', ok: v => v > 0 },
@@ -242,7 +245,7 @@ window.RULEBOOKS = [
   watch: [
     { l: 'Gross margin excluding regulatory credits', f: 'income statement detail', t: 'credits are not a business' },
     { l: 'Unit deliveries and average selling price', f: 'quarterly production report', t: 'price cuts to defend volume show up here' },
-    { l: 'Inventory days on hand', f: 'earnings call', t: 'rising days precedes discounting' },
+    { l: 'Inventory days (company, not dealer)', fill: 'invDays', u: 'days', f: 'earnings call for dealer days on hand', t: 'rising days precedes discounting' },
     { l: 'Capex and R&D commitment', c: 'capexPct', t: 'non-negotiable, and it does not stop in a downturn' },
     { l: 'Net cash', k: 'netcash', t: 'autos need a cash buffer to survive a cycle' }],
   ignore: ['P/E on peak-cycle earnings'] },

@@ -90,6 +90,12 @@ def pick(d, *keys):
         if k in d and d[k] not in ('', '-', 'n/a', 'Upgrade'): return d[k]
     return None
 
+FILLS = {}
+try:
+    FILLS = json.load(open('fills.json'))
+except Exception:
+    pass
+
 def build(listfile, out_var, outfile, qglob, market_default):
     universe = json.load(open(listfile))
     qual = {}
@@ -220,6 +226,7 @@ def build(listfile, out_var, outfile, qglob, market_default):
          'country': country, 'exch': exch, 'rcur': rcur, 'fyend': fyend, 'execs': execs,
          'desc': desc, 'M': M, 'S': S, 'R': R, 'fy': fyears, 'ry': ryears, 'segs': segs,
          'pe_med': pe_med, 'vs_hist': vs_hist, 'rev5': rev5, 'flags': flags, 'q': q,
+         'F': FILLS.get(tk, {}),
         })
     with open(outfile, 'w') as f:
         f.write(f'window.{out_var} = ' + json.dumps(res, separators=(',', ':')) + ';\n')

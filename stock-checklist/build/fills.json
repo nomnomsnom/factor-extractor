@@ -1,0 +1,2703 @@
+{
+"NVDA": {
+"gearing": {
+"v": 12.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 8.6,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 3.0,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 184,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 3200000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 1
+}
+},
+"AAPL": {
+"gearing": {
+"v": 22.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 8.3,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 3.1,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 18,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"GOOG": {
+"gearing": {
+"v": 13.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 13.7,
+"p": "FY2025 over TTM revenue",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 5.6,
+"p": "FY2025 over TTM revenue",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 22,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 519500000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 117
+}
+},
+"MSFT": {
+"gearing": {
+"v": 17.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 11.5,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 4.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 6,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 684000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 206
+}
+},
+"AMZN": {
+"gearing": {
+"v": 23.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 2.7,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 39,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"META": {
+"gearing": {
+"v": 25.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 28.5,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 10.2,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"AVGO": {
+"gearing": {
+"v": 31.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 17.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 11.8,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 80,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 179200000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 201
+}
+},
+"TSLA": {
+"gearing": {
+"v": 10.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 6.8,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 3.0,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 65,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 10050000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 10
+}
+},
+"MU": {
+"gearing": {
+"v": 4.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 10.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 2.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 139,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 5000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 6
+}
+},
+"BRK.B": {
+"gearing": {
+"v": 10.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"LLY": {
+"gearing": {
+"v": 38.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.0,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 555,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"JPM": {
+"gearing": {
+"v": 26.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 1.71,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 55,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+},
+"sbcPct": {
+"v": 2.0,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 52.4,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+}
+},
+"WMT": {
+"gearing": {
+"v": 25.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"invDays": {
+"v": 42,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"AMD": {
+"gearing": {
+"v": 5.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 23.4,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 4.7,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 177,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 222000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 1
+}
+},
+"V": {
+"gearing": {
+"v": 25.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 2.2,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"XOM": {
+"gearing": {
+"v": 9.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"JNJ": {
+"gearing": {
+"v": 24.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 0.1,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 1.4,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 183,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"INTC": {
+"gearing": {
+"v": 25.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 26.1,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 4.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 132,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"MA": {
+"gearing": {
+"v": 42.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.8,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"ABBV": {
+"gearing": {
+"v": 52.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 103,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"CSCO": {
+"gearing": {
+"v": 24.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 16.4,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 6.4,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 105,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 46734000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 74
+}
+},
+"ORCL": {
+"gearing": {
+"v": 55.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 15.3,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 7.1,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 638000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 889
+}
+},
+"PLTR": {
+"gearing": {
+"v": 1.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 12.5,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 15.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 4900000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 80
+}
+},
+"CVX": {
+"gearing": {
+"v": 11.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 0.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"invDays": {
+"v": 35,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"BAC": {
+"gearing": {
+"v": 22.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 1.08,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 59,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+},
+"sbcPct": {
+"v": 3.5,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 61.7,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+}
+},
+"COST": {
+"gearing": {
+"v": 9.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 30,
+"p": "FY2026 Q1 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"KO": {
+"gearing": {
+"v": 41.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 92,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"CAT": {
+"gearing": {
+"v": 44.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 3.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"invDays": {
+"v": 153650,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 44100000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 59
+}
+},
+"MRK": {
+"gearing": {
+"v": 41.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 24.3,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 1.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 138,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"UNH": {
+"gearing": {
+"v": 23.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.2,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 24,
+"p": "FY2025 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 10700000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 2
+}
+},
+"LRCX": {
+"gearing": {
+"v": 17.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 10.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 1.7,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 136,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 2433996000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 10
+}
+},
+"DELL": {
+"gearing": {
+"v": 27.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 2.8,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 86,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 132000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 87
+}
+},
+"PG": {
+"gearing": {
+"v": 27.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 2.5,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 72,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"AMAT": {
+"gearing": {
+"v": 16.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 12.6,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 2.4,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 165,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"NFLX": {
+"gearing": {
+"v": 28.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 7.5,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.8,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"GE": {
+"gearing": {
+"v": 15.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 3.4,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"rpo": {
+"v": 210790000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 416
+}
+},
+"MS": {
+"gearing": {
+"v": 36.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 2.5,
+"p": "FY2025 over TTM revenue",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 68.4,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+},
+"cet1": {
+"v": 16.5,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, Tier 1 risk-based capital ratio (this is Tier 1, not CET1)"
+}
+},
+"HD": {
+"gearing": {
+"v": 57.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 89,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 1000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 1
+}
+},
+"PANW": {
+"gearing": {
+"v": 5.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 21.5,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 14.0,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 17,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 21200000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 185
+}
+},
+"PM": {
+"gearing": {
+"v": 72.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 1.9,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"invDays": {
+"v": 312,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"GS": {
+"gearing": {
+"v": 42.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 5.1,
+"p": "FY2025 over TTM revenue",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 64.4,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+}
+},
+"WFC": {
+"gearing": {
+"v": 21.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 1.35,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 68,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+},
+"sbcPct": {
+"v": 1.8,
+"p": "FY2025 over TTM revenue",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 65.5,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+}
+},
+"RTX": {
+"gearing": {
+"v": 22.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 3.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 289000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 309
+}
+},
+"CRWD": {
+"gearing": {
+"v": 6.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 25.6,
+"p": "FY2025 over TTM revenue",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 20.3,
+"p": "FY2025 over TTM revenue",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 10700000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 198
+}
+},
+"TXN": {
+"gearing": {
+"v": 39.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 11.8,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 2.4,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 221,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"ANET": {
+"rdPct": {
+"v": 13.7,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 4.9,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 286,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"IBM": {
+"gearing": {
+"v": 42.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 12.3,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 2.5,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 23,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 68000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 98
+}
+},
+"GEV": {
+"gearing": {
+"v": 4.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 3.1,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"invDays": {
+"v": 152,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 176284000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 426
+}
+},
+"C": {
+"gearing": {
+"v": 30.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 2.51,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 52,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+},
+"cti": {
+"v": 64.7,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+}
+},
+"SNDK": {
+"gearing": {
+"v": 0.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 15.4,
+"p": "FY2024",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 2.5,
+"p": "FY2024",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 191,
+"p": "FY2026 Q2 inventory over FY2024 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 59800000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 295
+}
+},
+"TMO": {
+"gearing": {
+"v": 37.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 3.1,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.7,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 29700000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 64
+}
+},
+"AXP": {
+"gearing": {
+"v": 19.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 73.6,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+}
+},
+"KLAC": {
+"gearing": {
+"v": 34.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 11.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 2.2,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 280,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"CRM": {
+"gearing": {
+"v": 38.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 14.4,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 8.5,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 66300000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 151
+}
+},
+"VZ": {
+"gearing": {
+"v": 47.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"AMGN": {
+"gearing": {
+"v": 59.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 189,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"MRVL": {
+"gearing": {
+"v": 19.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 25.3,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 7.2,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 124,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"TMUS": {
+"gearing": {
+"v": 56.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.9,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"APH": {
+"gearing": {
+"v": 42.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 2.8,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 114,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"QCOM": {
+"gearing": {
+"v": 26.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 20.4,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 6.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 155,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"DIS": {
+"gearing": {
+"v": 22.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.4,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 16000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 16
+}
+},
+"PEP": {
+"gearing": {
+"v": 47.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 0.9,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 57,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"SCHW": {
+"gearing": {
+"v": 14.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 106.1,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+}
+},
+"DE": {
+"gearing": {
+"v": 60.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 5.1,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 1871000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 4
+}
+},
+"MCD": {
+"gearing": {
+"v": 91.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"T": {
+"gearing": {
+"v": 38.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rpo": {
+"v": 44582000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 35
+}
+},
+"GILD": {
+"gearing": {
+"v": 53.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 3.0,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 114,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"ABT": {
+"gearing": {
+"v": 30.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 6.6,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 1.5,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 138,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"ADI": {
+"gearing": {
+"v": 18.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 16.0,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 2.9,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 166,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"BLK": {
+"gearing": {
+"v": 8.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 5.4,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cet1": {
+"v": 11.4,
+"p": "FY2025",
+"s": "SEC XBRL, Tier 1 risk-based capital ratio (this is Tier 1, not CET1)"
+}
+},
+"NEE": {
+"gearing": {
+"v": 47.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"UNP": {
+"gearing": {
+"v": 43.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rpo": {
+"v": 157000000,
+"p": "FY2025",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 1
+}
+},
+"WELL": {
+"gearing": {
+"v": 28.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 18.4,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"BA": {
+"gearing": {
+"v": 29.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 4.0,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.5,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 715261000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 761
+}
+},
+"COP": {
+"gearing": {
+"v": 18.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 0.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"invDays": {
+"v": 31,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"PFE": {
+"gearing": {
+"v": 31.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.3,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 226,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"IBKR": {
+"gearing": {
+"v": 18.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 4.8,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 23.1,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+}
+},
+"WDC": {
+"gearing": {
+"v": 8.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 2.8,
+"p": "FY2024",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 95,
+"p": "FY2026 Q2 inventory over FY2024 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"BX": {
+"gearing": {
+"v": 30.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 10.0,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"UBER": {
+"gearing": {
+"v": 22.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 6.5,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 3.5,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"NOW": {
+"gearing": {
+"v": 26.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 22.3,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 14.7,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 29000000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 197
+}
+},
+"DHR": {
+"gearing": {
+"v": 30.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 6.5,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 1.2,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 118,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 7500000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 30
+}
+},
+"TJX": {
+"gearing": {
+"v": 38.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.3,
+"p": "FY2025 over TTM revenue",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 69,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"ISRG": {
+"rdPct": {
+"v": 13.0,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 7.8,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 216,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"BKNG": {
+"gearing": {
+"v": 70.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"VRTX": {
+"gearing": {
+"v": 7.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 5.7,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 390,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"PLD": {
+"gearing": {
+"v": 36.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 2.1,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"BMY": {
+"gearing": {
+"v": 51.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 20.6,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 1.1,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 72,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"NEM": {
+"gearing": {
+"v": 9.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 0.7,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+}
+},
+"PGR": {
+"gearing": {
+"v": 6.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"COF": {
+"gearing": {
+"v": 7.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 5.02,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 90,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+},
+"sbcPct": {
+"v": 9.6,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"cti": {
+"v": 57.1,
+"p": "FY2025",
+"s": "SEC XBRL, noninterest expense over total income"
+},
+"cet1": {
+"v": 15.3,
+"p": "FY2025",
+"s": "SEC XBRL, Tier 1 risk-based capital ratio (this is Tier 1, not CET1)"
+}
+},
+"FTNT": {
+"gearing": {
+"v": 5.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 12.0,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 4.1,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 117,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 7730000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 103
+}
+},
+"GLW": {
+"gearing": {
+"v": 28.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 5.1,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 1.8,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 125,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"SPGI": {
+"gearing": {
+"v": 25.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 1.5,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"rpo": {
+"v": 5800000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 36
+}
+},
+"CVS": {
+"gearing": {
+"v": 30.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.1,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 29,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"LMT": {
+"gearing": {
+"v": 32.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 2.7,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.4,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 24,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 230400000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 299
+}
+},
+"MO": {
+"gearing": {
+"v": 73.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 0.8,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"invDays": {
+"v": 69,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+}
+},
+"PH": {
+"gearing": {
+"v": 28.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 1.2,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 0.8,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+},
+"invDays": {
+"v": 92,
+"p": "FY2026 Q2 inventory over FY2025 cost of sales",
+"s": "SEC XBRL, inventory over cost of sales"
+},
+"rpo": {
+"v": 12800000000,
+"p": "FY2026 Q2",
+"s": "SEC XBRL, remaining performance obligation",
+"pct": 60
+}
+},
+"SBUX": {
+"gearing": {
+"v": 79.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"sbcPct": {
+"v": 0.9,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"APP": {
+"gearing": {
+"v": 42.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"rdPct": {
+"v": 4.1,
+"p": "FY2025",
+"s": "SEC XBRL, R&D expense over revenue"
+},
+"sbcPct": {
+"v": 3.8,
+"p": "FY2025",
+"s": "SEC XBRL, share-based compensation over revenue"
+}
+},
+"SE": {
+"gearing": {
+"v": 12.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"GRAB": {
+"gearing": {
+"v": 15.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"KARO": {
+"gearing": {
+"v": 17.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"D05": {
+"gearing": {
+"v": 22.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 1.23,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 74,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+},
+"cti": {
+"v": 38.6,
+"p": "2Q26",
+"s": "DBS 2Q26 performance summary, cost/income ratio"
+},
+"nim": {
+"v": 1.88,
+"p": "2Q26",
+"s": "DBS 2Q26 performance summary, group net interest margin"
+},
+"npl": {
+"v": 1.0,
+"p": "2Q26",
+"s": "DBS 2Q26 performance summary, NPL ratio"
+},
+"cet1": {
+"v": 16.6,
+"p": "2Q26",
+"s": "DBS 2Q26 performance summary, Common Equity Tier 1 ratio"
+}
+},
+"O39": {
+"gearing": {
+"v": 7.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 1.26,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 74,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+},
+"cti": {
+"v": 38.5,
+"p": "1H26",
+"s": "OCBC 1H26 results release, cost-to-income ratio"
+},
+"nim": {
+"v": 1.73,
+"p": "1H26",
+"s": "OCBC 1H26 results release, net interest margin"
+},
+"npl": {
+"v": 0.9,
+"p": "1H26",
+"s": "OCBC 1H26 results release, NPL ratio"
+},
+"cet1": {
+"v": 15.7,
+"p": "30 Jun 2026",
+"s": "OCBC 1H26 results release, CET1 CAR"
+}
+},
+"U11": {
+"gearing": {
+"v": 9.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 1.15,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 76,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+},
+"cti": {
+"v": 44.9,
+"p": "1H26",
+"s": "UOB 1H26 results release, cost-to-income ratio"
+},
+"nim": {
+"v": 1.74,
+"p": "2Q26",
+"s": "UOB 1H26 results release, net interest margin"
+},
+"npl": {
+"v": 1.6,
+"p": "2Q26",
+"s": "UOB 1H26 results release, non-performing loan ratio"
+},
+"cet1": {
+"v": 15.4,
+"p": "1H26",
+"s": "UOB 1H26 results release, Common Equity Tier 1 CAR"
+}
+},
+"S63": {
+"gearing": {
+"v": 28.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"S68": {
+"gearing": {
+"v": 14.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"F34": {
+"gearing": {
+"v": 48.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"H78": {
+"gearing": {
+"v": 15.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"J36": {
+"gearing": {
+"v": 21.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"C6L": {
+"gearing": {
+"v": 24.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"BN4": {
+"gearing": {
+"v": 43.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"BS6": {
+"gearing": {
+"v": 7.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"G07": {
+"gearing": {
+"v": 0.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"C38U": {
+"gearing": {
+"v": 36.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"9CI": {
+"gearing": {
+"v": 34.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"A17U": {
+"gearing": {
+"v": 40.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"Y92": {
+"gearing": {
+"v": 45.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"C07": {
+"gearing": {
+"v": 23.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"U96": {
+"gearing": {
+"v": 60.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"G13": {
+"gearing": {
+"v": 0.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"U14": {
+"gearing": {
+"v": 23.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"C09": {
+"gearing": {
+"v": 53.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"5E2": {
+"gearing": {
+"v": 14.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"EB5": {
+"gearing": {
+"v": 32.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"N2IU": {
+"gearing": {
+"v": 37.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"D01": {
+"gearing": {
+"v": 52.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"S58": {
+"gearing": {
+"v": 45.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"M44U": {
+"gearing": {
+"v": 40.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"ME8U": {
+"gearing": {
+"v": 33.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"OV8": {
+"gearing": {
+"v": 15.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"V03": {
+"gearing": {
+"v": 0.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"U06": {
+"gearing": {
+"v": 9.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"J69U": {
+"gearing": {
+"v": 34.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"K71U": {
+"gearing": {
+"v": 28.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"E5H": {
+"gearing": {
+"v": 30.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"T82U": {
+"gearing": {
+"v": 38.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"U10": {
+"gearing": {
+"v": 33.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"TQ5": {
+"gearing": {
+"v": 48.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"VC2": {
+"gearing": {
+"v": 42.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"P8Z": {
+"gearing": {
+"v": 14.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"S59": {
+"gearing": {
+"v": 7.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"A7RU": {
+"gearing": {
+"v": 55.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"H02": {
+"gearing": {
+"v": 1.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"C52": {
+"gearing": {
+"v": 30.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"C2PU": {
+"gearing": {
+"v": 34.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"F17": {
+"gearing": {
+"v": 44.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"H15": {
+"gearing": {
+"v": 44.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"H22": {
+"gearing": {
+"v": 10.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"NS8U": {
+"gearing": {
+"v": 30.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"558": {
+"gearing": {
+"v": 1.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"TS0U": {
+"gearing": {
+"v": 35.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"8C8U": {
+"gearing": {
+"v": 29.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"CC3": {
+"gearing": {
+"v": 48.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"9A4U": {
+"gearing": {
+"v": 47.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"CY6U": {
+"gearing": {
+"v": 36.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"A50": {
+"gearing": {
+"v": 63.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"F03": {
+"gearing": {
+"v": 19.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"H13": {
+"gearing": {
+"v": 38.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"P15": {
+"gearing": {
+"v": 140.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"OU8": {
+"gearing": {
+"v": 34.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"P40U": {
+"gearing": {
+"v": 35.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"G92": {
+"gearing": {
+"v": 0.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"AP4": {
+"gearing": {
+"v": 0.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"P52": {
+"gearing": {
+"v": 10.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"O5RU": {
+"gearing": {
+"v": 28.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"W05": {
+"gearing": {
+"v": 20.4,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"S61": {
+"gearing": {
+"v": 0.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"B61": {
+"gearing": {
+"v": 11.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"E28": {
+"gearing": {
+"v": 15.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"S41": {
+"gearing": {
+"v": 0.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+},
+"allowPct": {
+"v": 0.08,
+"p": "latest balance sheet",
+"s": "computed: allowance for loan losses over gross loans"
+},
+"ldr": {
+"v": 97,
+"p": "latest balance sheet",
+"s": "computed: net loans over total deposits"
+}
+},
+"Q5T": {
+"gearing": {
+"v": 29.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"AU8U": {
+"gearing": {
+"v": 38.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"Z25": {
+"gearing": {
+"v": 23.1,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"J85": {
+"gearing": {
+"v": 38.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"T6I": {
+"gearing": {
+"v": 60.0,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"RE4": {
+"gearing": {
+"v": 23.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"F9D": {
+"gearing": {
+"v": 6.7,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"544": {
+"gearing": {
+"v": 35.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"S20": {
+"gearing": {
+"v": 39.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"5WJ": {
+"gearing": {
+"v": 69.9,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"5UF": {
+"gearing": {
+"v": 50.2,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"H30": {
+"gearing": {
+"v": 18.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"LJ3": {
+"gearing": {
+"v": 39.5,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"S08": {
+"gearing": {
+"v": 17.8,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"H07": {
+"gearing": {
+"v": 8.6,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+},
+"A31": {
+"gearing": {
+"v": 0.3,
+"p": "latest balance sheet",
+"s": "computed: total debt over total assets"
+}
+}
+}

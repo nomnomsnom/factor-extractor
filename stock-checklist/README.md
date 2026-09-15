@@ -19,6 +19,20 @@ the browser (and to your Claude account when the page runs as an Artifact).
 | `rulebook.js` | Per-industry rulebooks: which metrics decide, thresholds, what to ignore |
 | `build/` | The scripts and source data used to generate the two data files |
 
+## Where each number comes from
+
+| Source | What it fills |
+|---|---|
+| stockanalysis.com (4 pages/ticker) | ~106 standard metrics, 5-year history, segments, per-share figures |
+| stockanalysis.com balance sheets | debt/assets gearing, allowance/gross loans, loans/deposits |
+| SEC XBRL frames API (`data.sec.gov`) | R&D %, stock comp %, inventory days, remaining performance obligation, bank cost-to-income, Tier 1 ratio — US filers only |
+| DBS, OCBC and UOB results documents | cost-to-income, NIM, NPL, CET1 for the three Singapore banks (read by hand; not in any feed) |
+| `build/qual/*.json` | the written research answers |
+
+Industry metrics that exist only in a specific filing (occupancy, rental reversion,
+RevPAR, load factor, same-store sales, net revenue retention) are not filled. Those rows
+name the document to read instead.
+
 ## Prices
 
 No price data ships with the page. Multiples are the ones compiled with the fundamentals.
@@ -33,8 +47,13 @@ Figures were pulled on 14 September 2026. To refresh:
 
 ```bash
 cd build
-python3 crawl.py          # fetches 4 pages per ticker into build/cache/ (~800 requests)
-python3 build.py          # merges scraped metrics with qual/*.json into data-*.js
+python3 crawl.py          # 4 pages per ticker into build/cache/ (~800 requests)
+python3 crawl_bs.py       # balance sheets, one more page per ticker
+python3 sec_fetch.py      # SEC XBRL frames (~45 requests, all filers per tag)
+python3 sec_join.py       # map tickers to CIK, slice the frames
+python3 sec_derive.py     # ratios from the SEC values
+python3 fills.py          # merge SEC + balance sheet + hand-read bank figures -> fills.json
+python3 build.py          # merge everything with qual/*.json into data-*.js
 cp data-us.js data-sg.js ..
 ```
 

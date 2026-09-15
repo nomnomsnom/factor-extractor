@@ -354,16 +354,27 @@
     var rb = rbOf(c);
     if (!rb) return '';
     var rows = rb.watch.map(function (w) {
-      var got = null, disp = '', cls = 'na', extra = '';
+      var got = null, disp = '', cls = 'na', extra = '', src = '';
       if (w.k) { var v = num(c.M[w.k]); if (v !== null) { got = v; disp = txt(c.M[w.k]); } }
       else if (w.c) { var r = computed(c, w.c); if (r) { got = r.v; disp = r.d; } }
-      if (w.f) { disp = disp || 'not in this data'; extra = 'read it in the ' + w.f; }
+      if (w.fill && c.F && c.F[w.fill]) {
+        var fl = c.F[w.fill];
+        got = fl.v;
+        disp = w.u === 'money' ? money(fl.v, c.cur) + (fl.pct ? ' · ' + fl.pct + '% of revenue' : '')
+             : w.u === 'days' ? Math.round(fl.v) + ' days'
+             : w.u === '%' ? (fl.v < 10 ? fl.v.toFixed(fl.v % 1 ? 2 : 1) : fl.v.toFixed(fl.v % 1 ? 1 : 0)) + '%'
+             : String(fl.v);
+        src = fl.s + (fl.p ? ' · ' + fl.p : '');
+      }
+      if (w.f && got === null) { disp = 'not in this data'; extra = 'read it in the ' + w.f; }
+      else if (w.f) { extra = 'verify in the ' + w.f; }
       if (got !== null && w.ok) cls = w.ok(got) ? 'ok' : 'no';
       else if (got !== null) cls = 'have';
       return '<li class="rl"><span class="rl-dot ' + cls + '" aria-hidden="true"></span>' +
         '<span class="rl-l">' + esc(w.l) + '</span>' +
         '<span class="rl-v">' + esc(disp || '—') + '</span>' +
-        '<span class="rl-t">' + esc(w.t) + (extra ? ' · ' + esc(extra) : '') + '</span></li>';
+        '<span class="rl-t">' + esc(w.t) + (extra ? ' · ' + esc(extra) : '') +
+        (src ? '<span class="rl-src">' + esc(src) + '</span>' : '') + '</span></li>';
     }).join('');
     var ign = (rb.ignore || []).map(function (x) { return '<span class="tag ignore">' + esc(x) + '</span>'; }).join('');
     return '<div class="rulecard">' +
