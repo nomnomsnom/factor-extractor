@@ -197,6 +197,44 @@ li.rl{display:grid;grid-template-columns:14px minmax(0,1.2fr) minmax(0,.75fr) mi
 .barmsg.ok{color:var(--good)} .barmsg.bad{color:var(--bad)}
 .pricehint{font-size:12px;color:var(--ink-3);margin:9px 0 0;max-width:80ch}
 .pricehint code{font-family:var(--mono);font-size:11.5px;background:var(--sunk);padding:1px 5px;border-radius:3px}
+/* live mode */
+.liveblock{border:1px solid var(--good);background:var(--good-bg);border-radius:8px;padding:12px 14px;margin-top:11px}
+.liveblock p{margin:0 0 9px;font-size:13px;color:var(--ink)}
+.liveblock code{font-family:var(--mono);font-size:12px;background:var(--card);padding:1px 5px;border-radius:3px}
+.liveblock button{padding:8px 13px;border:1px solid var(--rule);border-radius:7px;background:var(--card);cursor:pointer;font-size:13.5px;margin-right:7px}
+.liveblock button:disabled{opacity:.55;cursor:default}
+/* journal */
+.jgrid{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 10px}
+.jf{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-3)}
+.jf em{font-style:normal;opacity:.75}
+.jf input,.jf select{border:1px solid var(--rule);border-radius:6px;background:var(--card);padding:8px 10px;font-size:13.5px;font-family:var(--mono);min-width:150px}
+.jbtn{border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:7px;padding:9px 15px;font-size:13.5px;cursor:pointer;font-weight:600}
+.jbtn:disabled{opacity:.4;cursor:default}
+.jbtn.ghost{background:none;color:var(--ink-2);border-color:var(--rule);font-weight:400}
+.jstamp{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ink-3);border-radius:0 8px 8px 0;padding:13px 15px;margin-bottom:12px}
+.jstamp.due{border-left-color:var(--warn)}
+.jhead{display:flex;flex-wrap:wrap;gap:9px;align-items:baseline}
+.jbadge{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.jhead b{font-family:var(--mono);font-size:14px}
+.jsub{font-size:11.5px;color:var(--ink-3)}
+.jdue{font-size:11px;background:var(--warn-bg);color:var(--warn);border-radius:99px;padding:2px 9px;margin-left:auto;font-weight:600}
+.jthesis{margin:10px 0 0;padding:0 0 0 12px;border-left:2px solid var(--rule);font-size:14px;color:var(--ink-2);max-width:74ch}
+.jline{display:block;margin-top:6px;font-size:13px}
+.jline b{color:var(--ink);font-weight:600}
+.jperf{margin-top:11px;padding-top:10px;border-top:1px dashed var(--rule);font-family:var(--mono);font-size:13px}
+.jperf .up{color:var(--good)} .jperf .down{color:var(--bad)}
+.jrevs{display:grid;gap:9px;margin-bottom:12px}
+.jrev{background:var(--card);border:1px solid var(--rule-2);border-radius:8px;padding:11px 13px}
+.jrevhead{display:flex;flex-wrap:wrap;gap:9px;align-items:baseline;margin-bottom:6px;font-family:var(--mono);font-size:12px}
+.jverdict{font-family:var(--sans);font-size:11px;border-radius:99px;padding:2px 9px;background:var(--sunk);color:var(--ink-2)}
+.jverdict.v-thesis-holding{background:var(--good-bg);color:var(--good)}
+.jverdict.v-wrong{background:var(--bad-bg);color:var(--bad)}
+.jverdict.v-partly-wrong{background:var(--warn-bg);color:var(--warn)}
+.jrev .ans{font-size:13px;margin:0 0 5px}
+.jlesson{border-left:2px solid var(--good);padding-left:9px}
+.jform{margin-top:6px}
+.jform summary{cursor:pointer;font-size:13.5px;color:var(--ink-2);padding:7px 0}
+.jform[open] summary{margin-bottom:6px}
 figure.chart{margin:12px 0 0;padding:0}
 figcaption{font-size:11.5px;color:var(--ink-3);margin-bottom:6px}
 .note{display:block;margin-top:8px}
@@ -280,11 +318,17 @@ footer.foot p{max-width:74ch;margin:0 0 9px}
           <button id="clearbars">Clear</button>
         </div>
       </div>
+      <div class="liveblock" id="liveblock" hidden>
+        <p><b>Live mode.</b> This page is being served by <code>serve.py</code>, so it can fetch real quotes.</p>
+        <button id="refreshvisible">Refresh the companies shown</button>
+        <button id="refreshall">Refresh all 200</button>
+      </div>
       <p class="barmsg" id="barmsg" role="status"></p>
-      <p class="pricehint">Paste bars from wherever you get them &mdash; CSV or tab-separated, with or without a header. A <code>Symbol</code> column covers many companies at once; without one, put the ticker in the box and paste a single company&rsquo;s bars. Only the close is used, and only the latest one sets the multiples; earlier rows draw the line chart. Prices must be in the listing currency: US$ for the S&amp;P names, S$ for the SGX ones. Nothing is sent anywhere &mdash; it stays in this browser, and on your account if sync is on.</p>
+      <p class="pricehint">Paste bars from wherever you get them &mdash; CSV or tab-separated, with or without a header. A <code>Symbol</code> column covers many companies at once; without one, put the ticker in the box and paste a single company&rsquo;s bars. Only the close is used, and only the latest one sets the multiples; earlier rows draw the line chart. Prices must be in the listing currency: US$ for the S&amp;P names, S$ for the SGX ones. Nothing is sent anywhere &mdash; it stays in this browser, and on your account if sync is on. To fetch quotes instead of pasting them, run <code>python3 serve.py</code> from the project folder and open the address it prints &mdash; this page, published as an Artifact, is sandboxed and cannot make outside requests; served locally it can.</p>
     </div>
     <div class="statusline">
       <span id="showing">Loading the ledger…</span>
+      <span id="duestat" hidden></span>
       <span id="notestat"></span>
     </div>
   </div>

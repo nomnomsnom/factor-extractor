@@ -18,6 +18,8 @@ the browser (and to your Claude account when the page runs as an Artifact).
 | `data-sg.js` | 100 Singapore-listed companies, same shape |
 | `rulebook.js` | Per-industry rulebooks: which metrics decide, thresholds, what to ignore |
 | `build/` | The scripts and source data used to generate the two data files |
+| `serve.py` | Local server: serves the page **and** fetches live prices for it |
+| `fetch_prices.py` | Writes `prices.js`, a dated price snapshot the page loads on its own |
 
 ## Where each number comes from
 
@@ -36,10 +38,41 @@ name the document to read instead.
 ## Prices
 
 No price data ships with the page. Multiples are the ones compiled with the fundamentals.
-Paste your own bars into the Prices panel (CSV or TSV, with or without a header; a `Symbol`
-column loads many companies at once) and P/E, P/B, P/S, P/FCF, dividend yield and market cap
-are recomputed as your close divided by the per-share figures from the filings. EV-based
-multiples are left alone, since enterprise value needs the debt and cash of the same date.
+There are three ways to put a current price in front of them.
+
+**1. Live, locally.** A published Artifact is sandboxed and cannot make any outbound
+request, so it can never call Yahoo itself. Run the page from here instead:
+
+```bash
+python3 serve.py            # then open http://localhost:8765
+```
+
+The page detects the local service and the Prices panel gains *Refresh the companies shown*
+and *Refresh all 200*. Quotes come from Yahoo Finance (`query1.finance.yahoo.com`, no key),
+falling back to stockanalysis.com when Yahoo rate-limits the caller. SGX codes are mapped
+automatically (`D05` → `D05.SI`), as are `BRK.B` → `BRK-B` and the two benchmarks
+(`^GSPC`, `^STI`).
+
+**2. A snapshot baked in.** `python3 fetch_prices.py` writes `prices.js`; add
+`<script src="prices.js"></script>` before `app.js` and the page opens with those prices
+applied, labelled *Snapshot price* with the date taken.
+
+**3. Paste.** The Prices panel accepts CSV or TSV bars with or without a header; a `Symbol`
+column loads many companies at once. Benchmark tickers are recognised too.
+
+However the price arrives, P/E, P/B, P/S, P/FCF, dividend yield and market cap are recomputed
+as that close divided by the per-share figures from the filings. EV-based multiples are left
+alone, since enterprise value needs the debt and cash of the same date.
+
+## The journal
+
+Section 6 of each company stamps your thesis with the date and the price, freezes it, and
+sets a review date. When that date arrives the company is flagged *Review due* and the page
+asks three questions borrowed from TradingAgents' reflection step: which part of the thesis
+held, which part broke, and one lesson. Returns are shown against the S&P 500 or the Straits
+Times Index over the same window, so a review tells you whether you beat owning the index
+rather than whether the number went up. The stamped thesis is read-only — *Restate the
+thesis* keeps the old one in history rather than editing it.
 
 ## Refreshing the data
 

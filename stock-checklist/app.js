@@ -157,6 +157,11 @@
 
   /* ---------------- price bars (optional, supplied by you) ---------------- */
   var BAR_KEY = 'tf.bars.v1';
+  var BENCH = { US: { k: '^GSPC', n: 'S&P 500' }, SG: { k: '^STI', n: 'Straits Times Index' } };
+  var BENCH_ALIAS = { 'SPX': '^GSPC', 'GSPC': '^GSPC', '^GSPC': '^GSPC', 'SPY': '^GSPC', '.INX': '^GSPC',
+                      'STI': '^STI', '^STI': '^STI', 'ES3': '^STI', 'ES3.SI': '^STI' };
+  function benchOf(c) { return BENCH[c.list] || BENCH.US; }
+  function benchPx(c) { var b = bars[benchOf(c).k]; return b && b.px ? b.px : null; }
   var bars = {};
   try { bars = JSON.parse(localStorage.getItem(BAR_KEY) || '{}') || {}; } catch (e) { bars = {}; }
 
@@ -218,19 +223,52 @@
     var known = {}, added = 0, unknown = [];
     ALL.forEach(function (c) { known[c.t.toUpperCase()] = c.t; });
     Object.keys(out.rows).forEach(function (t) {
-      var real = known[t] || known[t.replace(/\.(SI|US)$/i, '')];
+      var real = known[t] || known[t.replace(/\.(SI|US)$/i, '')] || BENCH_ALIAS[t];
       if (!real) { unknown.push(t); return; }
       var list = out.rows[t];
       list.sort(function (a, b) { return String(a.d).localeCompare(String(b.d)); });
       var closes = list.map(function (x) { return x.c; }).slice(-90);
       var last = list[list.length - 1];
-      bars[real] = { px: last.c, d: last.d || '', s: closes, n: list.length };
+      var dated = list.filter(function (x) { return x.d; })
+                      .map(function (x) { return [x.d, x.c]; }).slice(-120);
+      bars[real] = { px: last.c, d: last.d || '', s: closes, n: list.length, src: 'you' };
+      if (dated.length) bars[real].h = dated;
       added++;
     });
     if (added) saveBars();
     return { n: added, unknown: unknown, skipped: out.skipped, err: null };
   }
 
+  function closeOn(key, date) {
+    var b = bars[key];
+    if (!b) return null;
+    if (b.h && b.h.length) {
+      var best = null;
+      for (var i = 0; i < b.h.length; i++) if (b.h[i][0] <= date) best = b.h[i][1];
+      if (best !== null) return best;
+    }
+    return (b.d && b.d <= date) ? b.px : null;
+  }
+  function mergeSnapshot() {
+    var P = window.PRICES;
+    if (!P || !P.bars) return;
+    Object.keys(P.bars).forEach(function (t) {
+      if (!bars[t]) {
+        var b = P.bars[t];
+        bars[t] = { px: b.px, d: b.d, n: b.n, src: 'snapshot',
+                    s: (b.h || []).map(function (x) { return x[1]; }).slice(-90),
+                    h: (b.h || []).slice(-120) };
+      }
+    });
+  }
+  function barSource() {
+    var seen = {};
+    Object.keys(bars).forEach(function (t) { seen[bars[t].src || 'you'] = 1; });
+    if (seen.live) return 'live';
+    if (seen.you) return 'yours';
+    if (seen.snapshot) return 'snapshot';
+    return '';
+  }
   function latestBarDate() {
     var d = '';
     Object.keys(bars).forEach(function (t) { if (bars[t].d && bars[t].d > d) d = bars[t].d; });
@@ -254,6 +292,97 @@
     o.vsHist = (o.pe && c.pe_med) ? Math.round((o.pe / c.pe_med - 1) * 100) : null;
     var oldPe = num(M.pe);
     o.peMove = (o.pe && oldPe) ? Math.round((o.pe / oldPe - 1) * 100) : null;
+    return o;
+  }
+
+  /* Live prices, when the page is served by serve.py rather than the artifact
+     sandbox (which blocks every outbound request). */
+  var LIVE = false;
+  function probeLive() {
+    if (!location.protocol.indexOf('file')) return;
+    fetch('api/health', { cache: 'no-store' }).then(function (r) {
+      return r.ok ? r.json() : null;
+    }).then(function (j) {
+      if (j && j.ok) {
+        LIVE = true;
+        var el = document.getElementById('liveblock');
+        if (el) el.hidden = false;
+      }
+    }).catch(function () {});
+  }
+  function refreshPrices(list, btn, msgEl) {
+    var todo = list.slice(), done = 0, failed = [], srcs = {};
+    var bench = [{ t: '^GSPC', m: 'US' }, { t: '^STI', m: 'SGX' }];
+    var queue = bench.concat(todo.map(function (c) { return { t: c.t, m: c.list === 'SG' ? 'SGX' : 'US' }; }));
+    var total = queue.length;
+    btn.disabled = true;
+    function step() {
+      if (!queue.length) {
+        btn.disabled = false;
+        msgEl.className = 'barmsg ok';
+        msgEl.textContent = 'Updated ' + done + ' of ' + total + ' — ' +
+          Object.keys(srcs).map(function (k) { return srcs[k] + ' from ' + k; }).join(', ') +
+          (failed.length ? ' · ' + failed.length + ' unavailable' : '');
+        saveBars(); render();
+        return;
+      }
+      var chunk = queue.splice(0, 20);
+      msgEl.className = 'barmsg';
+      msgEl.textContent = 'Fetching… ' + done + ' done, ' + queue.length + ' to go';
+      fetch('api/prices?tickers=' + chunk.map(function (x) { return encodeURIComponent(x.t); }).join(',') +
+            '&markets=' + chunk.map(function (x) { return x.m; }).join(','), { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          Object.keys(j.bars || {}).forEach(function (t) {
+            var b = j.bars[t];
+            bars[t] = { px: b.px, d: b.d, n: b.n, src: 'live',
+                        s: (b.h || []).map(function (x) { return x[1]; }).slice(-90),
+                        h: (b.h || []).slice(-120) };
+            done++;
+          });
+          (j.failed || []).forEach(function (t) { failed.push(t); });
+          Object.keys(j.sources || {}).forEach(function (k) { srcs[k] = (srcs[k] || 0) + j.sources[k]; });
+          step();
+        })
+        .catch(function (e) {
+          btn.disabled = false;
+          msgEl.className = 'barmsg bad';
+          msgEl.textContent = 'Could not reach the local price service. Is serve.py still running?';
+        });
+    }
+    step();
+  }
+
+  /* ---------------- the journal ---------------- */
+  function jour(t) { var r = rec(t); return r.j || null; }
+  function today() { return new Date().toISOString().slice(0, 10); }
+  function addMonths(iso, n) {
+    var d = new Date(iso + 'T00:00:00Z');
+    d.setUTCMonth(d.getUTCMonth() + n);
+    return d.toISOString().slice(0, 10);
+  }
+  function daysBetween(a, b) {
+    return Math.round((new Date(b + 'T00:00:00Z') - new Date(a + 'T00:00:00Z')) / 86400000);
+  }
+  function reviewDue(t) {
+    var j = jour(t);
+    return !!(j && j.review && j.review <= today());
+  }
+  function dueCount() {
+    return Object.keys(notes).filter(reviewDue).length;
+  }
+  function journalPerf(c) {
+    var j = jour(c.t);
+    if (!j || !j.px) return null;
+    var A = adj(c), now = A ? A.px : null;
+    if (!now) return null;
+    var o = { then: j.px, now: now, ret: (now / j.px - 1) * 100, bench: null, alpha: null,
+              bname: (j.bench && j.bench.n) || benchOf(c).n };
+    var bNow = benchPx(c), bThen = j.bench && j.bench.level;
+    if (bNow && bThen) {
+      o.bench = (bNow / bThen - 1) * 100;
+      o.alpha = o.ret - o.bench;
+    }
     return o;
   }
 
@@ -575,7 +704,8 @@
     var priceBlock = '';
     if (A) {
       var f2 = function (v) { return v === null ? '—' : v.toFixed(v < 10 ? 2 : 1); };
-      priceBlock = '<div class="atprice"><div class="apthead"><span class="aptbadge">At your price</span>' +
+      var srcLabel = { live: 'Live price', snapshot: 'Snapshot price', you: 'At your price' }[(bars[c.t] && bars[c.t].src) || 'you'];
+      priceBlock = '<div class="atprice"><div class="apthead"><span class="aptbadge">' + esc(srcLabel) + '</span>' +
         '<b>' + esc(c.cur === 'SGD' ? 'S$' : 'US$') + A.px.toFixed(A.px < 10 ? 3 : 2) + '</b>' +
         (A.d ? '<span class="aptdate">close of ' + esc(A.d) + '</span>' : '') +
         (A.peMove !== null ? '<span class="aptdate">P/E ' + (A.peMove > 0 ? 'up ' : 'down ') + Math.abs(A.peMove) + '% vs the compiled figure</span>' : '') +
@@ -625,19 +755,100 @@
     /* 5 — before you buy */
     h += '<section class="sec"><div class="sechead"><span class="secnum">5</span><h3 class="sectitle">Before you click buy</h3></div>';
     h += item(c, 's5a', 'Why is the price wrong?', 'Write it in two sentences. If you cannot, do not buy.',
-      noteField(c, 'why', 'Your answer', 'The market is assuming… but I think… because…', true));
+      noteField(c, 'why', 'Your answer', 'The market is assuming… but I think… because…', true) +
+      noteField(c, 'rebut', 'Now argue the other side, and answer it', 'The strongest case against me is… and my answer to that is…', true));
     h += item(c, 's5b', 'What would prove me wrong?', 'Name specific, observable things. Not the price falls.',
       '<p class="hint">Things worth watching for this company: ' + esc(c.q.disprove || '') + '</p>' +
       noteField(c, 'disprove', 'Your answer', 'I will know I am wrong if…', true));
     h += item(c, 's5c', 'At what point do I sell?', 'Decide now. You will rationalise later.',
       noteField(c, 'sell', 'Your answer', 'I sell if… (a business event, not a share price)', true));
-    h += item(c, 's5d', 'Position size', 'How much of the portfolio, and can I accept losing all of it?',
+    h += item(c, 's5d', 'Position size', 'Three questions, not one: if it halves, does the plan survive? If it triples, is the position big enough to matter? What does the middle case justify?',
       noteField(c, 'size', 'Your answer', 'e.g. 4% of the portfolio; yes, I could lose it all', false));
     h += item(c, 's5e', 'Time horizon', '',
       noteField(c, 'horizon', 'Your answer', 'e.g. five years, reviewed each annual report', false));
     h += links(c);
-    h += '</section></div>';
+    h += '</section>';
+    h += journalSection(c);
+    h += '</div>';
     return h;
+  }
+
+  function journalSection(c) {
+    var j = jour(c.t), n = (notes[c.t] && notes[c.t].n) || {};
+    var A = adj(c), bench = benchOf(c);
+    var h = '<section class="sec"><div class="sechead"><span class="secnum">6</span>' +
+      '<h3 class="sectitle">The journal</h3></div>';
+
+    if (!j) {
+      var ready = (n.why || '').trim().length > 20;
+      h += '<p class="ans">Stamp today&rsquo;s thesis and price, set a date to come back, and the page will ask you three questions when that date arrives: which part of your reasoning held, which broke, and what you learned. ' +
+        'Your answer is frozen at the moment you write it &mdash; that is the point. Hindsight edits memory unless something stops it.</p>';
+      if (!ready) {
+        h += '<p class="hint">Write section 5&rsquo;s <strong>Why is the price wrong?</strong> first &mdash; there is nothing to review without a thesis.</p>';
+      }
+      h += '<div class="jgrid">' +
+        '<label class="jf"><span>Price today (' + esc(c.cur === 'SGD' ? 'S$' : 'US$') + ')</span>' +
+        '<input id="j-px-' + esc(c.t) + '" inputmode="decimal" value="' + (A ? A.px : '') + '" placeholder="e.g. 225.40"></label>' +
+        '<label class="jf"><span>' + esc(bench.n) + ' level <em>(optional)</em></span>' +
+        '<input id="j-bench-' + esc(c.t) + '" inputmode="decimal" value="' + (benchPx(c) || '') + '" placeholder="for comparison"></label>' +
+        '<label class="jf"><span>Review on</span>' +
+        '<input id="j-rev-' + esc(c.t) + '" type="date" value="' + addMonths(today(), 6) + '"></label>' +
+        '</div>' +
+        '<button class="jbtn" data-jopen="' + esc(c.t) + '"' + (ready ? '' : ' disabled') + '>Open the journal for ' + esc(c.t) + '</button>';
+      return h + '</section>';
+    }
+
+    var perf = journalPerf(c), due = reviewDue(c.t), age = daysBetween(j.open, today());
+    h += '<div class="jstamp' + (due ? ' due' : '') + '">' +
+      '<div class="jhead"><span class="jbadge">Thesis stamped</span><b>' + esc(j.open) + '</b>' +
+      '<span class="jsub">at ' + esc(c.cur === 'SGD' ? 'S$' : 'US$') + j.px + ' &middot; ' + age + ' days ago</span>' +
+      (due ? '<span class="jdue">Review due</span>' : '<span class="jsub">review ' + esc(j.review) + '</span>') + '</div>';
+    h += '<blockquote class="jthesis">' + esc(j.thesis.why || '') +
+      (j.thesis.disprove ? '<span class="jline"><b>Would prove me wrong:</b> ' + esc(j.thesis.disprove) + '</span>' : '') +
+      (j.thesis.sell ? '<span class="jline"><b>I sell when:</b> ' + esc(j.thesis.sell) + '</span>' : '') +
+      (j.thesis.size ? '<span class="jline"><b>Size:</b> ' + esc(j.thesis.size) + '</span>' : '') +
+      '</blockquote>';
+    if (perf) {
+      h += '<div class="jperf"><span class="' + (perf.ret >= 0 ? 'up' : 'down') + '">' + pct(perf.ret) + '</span> the shares' +
+        (perf.bench !== null
+          ? ' &middot; <span class="' + (perf.bench >= 0 ? 'up' : 'down') + '">' + pct(perf.bench) + '</span> ' + esc(perf.bname) +
+            ' &middot; <strong>' + (perf.alpha >= 0 ? 'ahead by ' : 'behind by ') + Math.abs(perf.alpha).toFixed(1) + ' points</strong>'
+          : ' &middot; <span class="jsub">add a ' + esc(perf.bname) + ' level to compare</span>') + '</div>';
+    } else {
+      h += '<p class="hint">Load a current price (Prices panel) to see how the thesis has done.</p>';
+    }
+    h += '</div>';
+
+    if (j.reviews && j.reviews.length) {
+      h += '<div class="jrevs">';
+      j.reviews.slice().reverse().forEach(function (r) {
+        h += '<div class="jrev"><div class="jrevhead"><b>' + esc(r.d) + '</b>' +
+          '<span class="jverdict v-' + esc(r.verdict.replace(/\s+/g, '-').toLowerCase()) + '">' + esc(r.verdict) + '</span>' +
+          (r.ret !== null && r.ret !== undefined ? '<span class="jsub">' + pct(r.ret) + (r.alpha !== null && r.alpha !== undefined ? ' · ' + (r.alpha >= 0 ? '+' : '') + r.alpha.toFixed(1) + ' vs index' : '') + '</span>' : '') +
+          '</div>' +
+          (r.held ? '<p class="ans"><strong>Held:</strong> ' + esc(r.held) + '</p>' : '') +
+          (r.failed ? '<p class="ans"><strong>Broke:</strong> ' + esc(r.failed) + '</p>' : '') +
+          (r.lesson ? '<p class="ans jlesson"><strong>Lesson:</strong> ' + esc(r.lesson) + '</p>' : '') +
+          '</div>';
+      });
+      h += '</div>';
+    }
+
+    h += '<details class="jform"' + (due ? ' open' : '') + '><summary>Record a review</summary>' +
+      '<div class="jgrid">' +
+      '<label class="jf"><span>Verdict</span><select id="jv-' + esc(c.t) + '">' +
+      ['Thesis holding', 'Partly wrong', 'Wrong', 'Too early to tell'].map(function (v) {
+        return '<option>' + v + '</option>';
+      }).join('') + '</select></label>' +
+      '<label class="jf"><span>Next review</span><input id="jn-' + esc(c.t) + '" type="date" value="' + addMonths(today(), 6) + '"></label>' +
+      '</div>' +
+      '<span class="note"><label for="jh-' + esc(c.t) + '">Which part of the thesis held?</label><textarea id="jh-' + esc(c.t) + '" placeholder="The part I got right was…"></textarea></span>' +
+      '<span class="note"><label for="jb-' + esc(c.t) + '">Which part broke?</label><textarea id="jb-' + esc(c.t) + '" placeholder="What I assumed that turned out wrong…"></textarea></span>' +
+      '<span class="note"><label for="jl-' + esc(c.t) + '">One lesson for the next company</label><textarea id="jl-' + esc(c.t) + '" placeholder="Next time I will…"></textarea></span>' +
+      '<button class="jbtn" data-jsave="' + esc(c.t) + '">Save review</button> ' +
+      '<button class="jbtn ghost" data-jrestate="' + esc(c.t) + '">Restate the thesis</button>' +
+      '</details>';
+    return h + '</section>';
   }
 
   /* ---------------- row rendering ---------------- */
@@ -707,6 +918,8 @@
       if (state.prog === 'started' && !started) return false;
       if (state.prog === 'none' && started) return false;
       if (state.prog === 'done' && n < TOTAL_CHECKS) return false;
+      if (state.prog === 'journal' && !jour(c.t)) return false;
+      if (state.prog === 'due' && !reviewDue(c.t)) return false;
     }
     if (state.q) {
       var terms = state.q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -760,9 +973,16 @@
     var pe = document.getElementById('pricestate');
     if (pe) {
       var d = latestBarDate();
+      var srcWord = { live: 'live', yours: 'yours', snapshot: 'snapshot' }[barSource()] || 'yours';
       pe.innerHTML = nb
-        ? 'Prices <b>yours' + (d ? ', to ' + esc(d) : '') + '</b> for ' + nb + ' of ' + ALL.length
+        ? 'Prices <b>' + srcWord + (d ? ', to ' + esc(d) : '') + '</b> for ' + nb + ' of ' + ALL.length
         : 'Prices <b>not loaded</b> — multiples are as compiled';
+    }
+    var due = dueCount();
+    var dueEl = document.getElementById('duestat');
+    if (dueEl) {
+      dueEl.innerHTML = due ? '<b>' + due + '</b> ' + (due === 1 ? 'review' : 'reviews') + ' due' : '';
+      dueEl.hidden = !due;
     }
     var started = startedCount();
     document.getElementById('notestat').innerHTML = started
@@ -779,6 +999,14 @@
     row.querySelector('.rowhead').setAttribute('aria-expanded', 'true');
     openTickers[t] = 1;
     if (!silent) history.replaceState(null, '', '#' + t);
+  }
+  function rerenderDetail(t) {
+    var row = ledger.querySelector('.row[data-t="' + cssEsc(t) + '"]');
+    if (!row) return;
+    var d = row.querySelector('.detail');
+    if (d) d.remove();
+    var c = ALL.filter(function (x) { return x.t === t; })[0];
+    if (c) row.insertAdjacentHTML('beforeend', detail(c));
   }
   function collapse(row) {
     var t = row.getAttribute('data-t');
@@ -806,7 +1034,8 @@
       h += '<button class="chip" data-kind="moat" data-v="' + esc(m) + '" aria-pressed="false">' + esc(m) + '</button>';
     });
     h += '</div><div class="fgroup"><span class="flabel">My checklist</span>';
-    [['any', 'All'], ['none', 'Not started'], ['started', 'Started'], ['done', 'All 23 ticked']].forEach(function (p) {
+    [['any', 'All'], ['none', 'Not started'], ['started', 'Started'], ['done', 'All 23 ticked'],
+     ['journal', 'Journal open'], ['due', 'Review due']].forEach(function (p) {
       h += '<button class="chip" data-kind="prog" data-v="' + p[0] + '" aria-pressed="' + (p[0] === 'any') + '">' + esc(p[1]) + '</button>';
     });
     h += '</div>';
@@ -904,6 +1133,66 @@
       if (row.classList.contains('open')) collapse(row); else expand(row);
       return;
     }
+    var jo = e.target.closest('[data-jopen]');
+    if (jo) {
+      var t = jo.getAttribute('data-jopen');
+      var c = ALL.filter(function (x) { return x.t === t; })[0];
+      var px = parseFloat((document.getElementById('j-px-' + t) || {}).value);
+      var bl = parseFloat((document.getElementById('j-bench-' + t) || {}).value);
+      var rv = (document.getElementById('j-rev-' + t) || {}).value || addMonths(today(), 6);
+      if (!isFinite(px) || px <= 0) {
+        alert('Enter the price you are stamping this thesis at.');
+        return;
+      }
+      var n = rec(t).n;
+      rec(t).j = {
+        open: today(), px: px, cur: c.cur, review: rv,
+        bench: { k: benchOf(c).k, n: benchOf(c).n, level: isFinite(bl) && bl > 0 ? bl : null },
+        thesis: { why: n.why || '', rebut: n.rebut || '', disprove: n.disprove || '', sell: n.sell || '', size: n.size || '', horizon: n.horizon || '' },
+        reviews: [], history: []
+      };
+      save(t); rerenderDetail(t); render();
+      return;
+    }
+    var js = e.target.closest('[data-jsave]');
+    if (js) {
+      var t2 = js.getAttribute('data-jsave');
+      var c2 = ALL.filter(function (x) { return x.t === t2; })[0];
+      var j = jour(t2);
+      if (!j) return;
+      var perf = journalPerf(c2);
+      var v = (document.getElementById('jv-' + t2) || {}).value || 'Too early to tell';
+      j.reviews = j.reviews || [];
+      j.reviews.push({
+        d: today(), verdict: v,
+        px: perf ? perf.now : null,
+        ret: perf ? +perf.ret.toFixed(1) : null,
+        alpha: perf && perf.alpha !== null ? +perf.alpha.toFixed(1) : null,
+        held: (document.getElementById('jh-' + t2) || {}).value || '',
+        failed: (document.getElementById('jb-' + t2) || {}).value || '',
+        lesson: (document.getElementById('jl-' + t2) || {}).value || ''
+      });
+      j.review = (document.getElementById('jn-' + t2) || {}).value || addMonths(today(), 6);
+      save(t2); rerenderDetail(t2); render();
+      return;
+    }
+    var jr = e.target.closest('[data-jrestate]');
+    if (jr) {
+      var t3 = jr.getAttribute('data-jrestate');
+      var c3 = ALL.filter(function (x) { return x.t === t3; })[0];
+      var j3 = jour(t3);
+      if (!j3) return;
+      if (!confirm('Replace the stamped thesis with what section 5 says now? The old one is kept in the history.')) return;
+      var A3 = adj(c3);
+      j3.history = j3.history || [];
+      j3.history.push({ from: j3.open, px: j3.px, thesis: j3.thesis });
+      var n3 = rec(t3).n;
+      j3.thesis = { why: n3.why || '', rebut: n3.rebut || '', disprove: n3.disprove || '', sell: n3.sell || '', size: n3.size || '', horizon: n3.horizon || '' };
+      j3.open = today();
+      if (A3) { j3.px = A3.px; j3.bench.level = benchPx(c3) || j3.bench.level; }
+      save(t3); rerenderDetail(t3); render();
+      return;
+    }
     var cp = e.target.closest('.copybtn');
     if (cp) {
       var c = ALL.filter(function (x) { return x.t === cp.getAttribute('data-t'); })[0];
@@ -927,6 +1216,10 @@
     rec(t).n[f.getAttribute('data-n')] = f.value;
     clearTimeout(f._tm);
     f._tm = setTimeout(function () { save(t); }, 500);
+    if (f.getAttribute('data-n') === 'why') {
+      var ob = ledger.querySelector('[data-jopen="' + cssEsc(t) + '"]');
+      if (ob) ob.disabled = f.value.trim().length <= 20;
+    }
   });
 
   function copyPage(c, btn) {
@@ -990,8 +1283,17 @@
 
   /* ---------------- boot ---------------- */
   document.getElementById('asof').textContent = window.AS_OF || 'September 2026';
+  mergeSnapshot();
   buildPanel();
   render();
+  probeLive();
+  var rv = document.getElementById('refreshvisible'), ra = document.getElementById('refreshall');
+  if (rv) rv.addEventListener('click', function () {
+    refreshPrices(sortList(ALL.filter(matches)), this, document.getElementById('barmsg'));
+  });
+  if (ra) ra.addEventListener('click', function () {
+    refreshPrices(ALL.slice(), this, document.getElementById('barmsg'));
+  });
   var hash = (location.hash || '').replace('#', '');
   if (hash) {
     var row = ledger.querySelector('.row[data-t="' + cssEsc(hash) + '"]');
