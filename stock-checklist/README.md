@@ -81,10 +81,15 @@ so it cannot drift from `rulebook.js`. The generated block sits between `<!--REF
 and `<!--REF:END-->` in the page; re-run the script and swap that block after changing any
 rulebook.
 
-Each of the 112 distinct measures has an explanation in `rulebook-why.js`, keyed by its exact
-label. The guide prints it under the threshold; the checklist shows it as hover text on the
-measure name. Adding a measure to a rulebook without adding its explanation is harmless — both
-surfaces just omit it — but the check is `node -e` over both files if you want to be sure.
+`rulebook-why.js` holds two maps. `RULE_WHY` is one short description per measure (112 of
+them, keyed by label) — the guide shows it inside the measure's dropdown, the checklist as
+hover text. `RULE_LEVEL` is the threshold in as few words as possible, keyed
+`"<rulebook>|<measure>"` (139 rows), which is what the reference table prints; the full
+wording stays in `rulebook.js` and appears under the description when a row is opened.
+
+Adding a measure without adding either entry is harmless — the table falls back to the full
+wording and omits the description — but `node -e` over both files will tell you what is
+missing.
 
 ## The journal
 

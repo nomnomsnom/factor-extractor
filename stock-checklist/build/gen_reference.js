@@ -64,7 +64,7 @@ order.forEach(name => {
   out += '<h3>' + esc(name) + ' <span class="refn">' + cos.length + ' companies</span></h3>';
   out += '<p class="refdecides">' + esc(rb.decides) + '</p>';
   out += '<div class="scroller"><table class="reftab"><thead><tr>' +
-    '<th>Measure</th><th>Healthy level</th><th>Typical here</th></tr></thead><tbody>';
+    '<th>Measure</th><th>Level to want</th><th>Typical here</th></tr></thead><tbody>';
   rb.watch.forEach(w => {
     let vals = [], unit = w.u === '%' ? '%' : w.u === 'days' ? 'days' : w.u === 'money' ? 'money' : null;
     if (w.fill) vals = cos.map(c => (c.F && c.F[w.fill]) ? c.F[w.fill].v : null);
@@ -74,12 +74,17 @@ order.forEach(name => {
     const tested = !!w.ok;
     const where = w.f ? '<span class="refwhere">' + esc(w.f) + '</span>' : '';
     const why = (window.RULE_WHY || {})[w.l];
+    const level = (window.RULE_LEVEL || {})[rb.name + '|' + w.l] || w.t;
     out += '<tr>' +
-      '<td><span class="refdot ' + (tested ? 'ok' : 'na') + '" title="' +
-        (tested ? 'the checklist tests this for you' : 'judge it in context') + '"></span>' +
-        esc(w.l) + (w.f && !w.fill ? ' <em>read the filing</em>' : '') + '</td>' +
-      '<td>' + esc(w.t) + where +
-        (why ? '<span class="refwhy">' + esc(why) + '</span>' : '') + '</td>' +
+      '<td><details class="refd"><summary><span class="refdot ' + (tested ? 'ok' : 'na') + '"></span>' +
+        '<span class="reflbl">' + esc(w.l) + '</span>' +
+        '<span class="lvlm">' + esc(level) + '</span>' +
+        '</summary><div class="refbody">' +
+        (why ? '<p>' + esc(why) + '</p>' : '') +
+        (level !== w.t ? '<p class="reffull"><b>In full:</b> ' + esc(w.t) + '</p>' : '') +
+        (w.f ? '<p class="refwhere"><b>Where:</b> ' + esc(w.f) + '</p>' : '') +
+        '</div></details></td>' +
+      '<td class="reflevel">' + esc(level) + '</td>' +
       '<td class="refmed">' + (med != null ? esc(fmt(med, unit)) : '&mdash;') + '</td>' +
       '</tr>';
   });
